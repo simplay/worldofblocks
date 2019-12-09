@@ -85,6 +85,42 @@ public class Game {
     cleanup();
   }
 
+  private float dx = 0;
+  private float dy = 0;
+  private void handleUserInput() {
+    if (glfwGetKey(window, GLFW_KEY_A) == GL_TRUE) {
+      dx -= 0.01f;
+    }
+
+    if (glfwGetKey(window, GLFW_KEY_D) == GL_TRUE) {
+      dx += 0.01f;
+    }
+
+    if (glfwGetKey(window, GLFW_KEY_W) == GL_TRUE) {
+      dy += 0.01f;
+    }
+
+    if (glfwGetKey(window, GLFW_KEY_S) == GL_TRUE) {
+      dy  -= 0.01f;
+    }
+  }
+
+  private void drawPrimitives() {
+    glBegin(GL_QUADS);
+    glColor4f(1,0,0,0);
+    glVertex2f(-0.5f + dx, 0.5f + dy);
+
+    glColor4f(0,1,0,0);
+    glVertex2f(0.5f + dx, 0.5f + dy);
+
+    glColor4f(0,0,1,0);
+    glVertex2f(0.5f + dx, -0.5f + dy);
+
+    glColor4f(1,1,1,0);
+    glVertex2f(-0.5f + dx, -0.5f + dy);
+    glEnd();
+  }
+
   private void runMainLoop() {
     // This line is critical for LWJGL's interoperation with GLFW's
     // OpenGL context, or any context that is managed externally.
@@ -94,18 +130,19 @@ public class Game {
     GL.createCapabilities();
 
     // Set the clear color
-    glClearColor(1.0f, 0.0f, 0.0f, 0.0f);
+    glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
 
     // Run the rendering loop until the user has attempted to close
     // the window or has pressed the ESCAPE key.
     while (!glfwWindowShouldClose(window)) {
-      glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // clear the framebuffer
-
-      glfwSwapBuffers(window); // swap the color buffers
-
       // Poll for window events. The key callback above will only be
       // invoked during this call.
       glfwPollEvents();
+      handleUserInput();
+
+      glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // clear the framebuffer
+      drawPrimitives();
+      glfwSwapBuffers(window); // swap the color buffers
     }
   }
 
