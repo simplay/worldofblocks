@@ -56,7 +56,6 @@ public class Game implements Runnable {
     GL.createCapabilities();
 
     glEnable(GL_TEXTURE_2D);
-    texture = new Texture("./textures/trollface.png");
 
     float[] textureCoordinates = new float[] {
         0,0, 1,0,
@@ -68,7 +67,12 @@ public class Game implements Runnable {
         2,3,0
     };
 
-    shape = new Shape(getVertices(0, 0), textureCoordinates, indices);
+    shape = new Shape(
+        getVertices(0, 0),
+        textureCoordinates,
+        indices,
+        new Texture("./textures/trollface.png")
+    );
   }
 
   private void initRenderer() {
@@ -185,12 +189,10 @@ public class Game implements Runnable {
     return vertices;
   }
 
-  private Texture texture;
   private Shape shape;
   private void render() {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // clear the framebuffer
-    texture.bind();
-    shape.render(); // TODO: move this inside shape's render method, pass texture texture to constructor
+    shape.render();
     glfwSwapBuffers(window); // swap the color buffers
   }
 

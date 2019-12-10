@@ -59,4 +59,8 @@ public class Texture {
     // https://www.khronos.org/registry/OpenGL-Refpages/es2.0/xhtml/glBindTexture.xml
     glBindTexture(GL_TEXTURE_2D, id);
   }
+
+  public void unbind() {
+    glBindTexture(GL_TEXTURE_2D, 0);
+  }
 }

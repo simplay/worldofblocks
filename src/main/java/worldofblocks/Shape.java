@@ -13,16 +13,19 @@ public class Shape {
   private float[] textureCoordinates;
   private int[] indices;
 
+  private Texture texture;
+
   private int drawCount;
   private int vId;
   private int tId;
   private int fId;
 
-  public Shape(float[] vertices, float[] textureCoordinates, int[] indices) {
+  public Shape(float[] vertices, float[] textureCoordinates, int[] indices, Texture texture) {
     drawCount = indices.length; // we are drawing 3d points
     this.vertices = vertices;
     this.textureCoordinates = textureCoordinates;
     this.indices = indices;
+    this.texture = texture;
     initialize();
   }
 
@@ -56,6 +59,8 @@ public class Shape {
     glEnableClientState(GL_VERTEX_ARRAY);
     glEnableClientState(GL_TEXTURE_COORD_ARRAY);
 
+    texture.bind();
+
     glBindBuffer(GL_ARRAY_BUFFER, vId);
     glVertexPointer(3, GL_FLOAT, 0, 0);
 
@@ -69,6 +74,9 @@ public class Shape {
 
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
     glBindBuffer(GL_ARRAY_BUFFER, 0);
+
+    texture.unbind();
+
     glDisableClientState(GL_VERTEX_ARRAY);
     glDisableClientState(GL_TEXTURE_COORD_ARRAY);
   }
