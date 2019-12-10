@@ -47,6 +47,7 @@ public class Game implements Runnable {
     initShapes();
   }
 
+  private Shader shader;
   private void initShapes() {
     // This line is critical for LWJGL's interoperation with GLFW's
     // OpenGL context, or any context that is managed externally.
@@ -73,6 +74,8 @@ public class Game implements Runnable {
         indices,
         new Texture("./textures/trollface.png")
     );
+
+    shader = new Shader("shader");
   }
 
   private void initRenderer() {
@@ -192,6 +195,8 @@ public class Game implements Runnable {
   private Shape shape;
   private void render() {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // clear the framebuffer
+    shader.bind();
+    shader.setUniform("sampler", 0);
     shape.render();
     glfwSwapBuffers(window); // swap the color buffers
   }

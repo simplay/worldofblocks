@@ -7,6 +7,7 @@ import java.nio.IntBuffer;
 
 import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.opengl.GL15.*;
+import static org.lwjgl.opengl.GL20.*;
 
 public class Shape {
   private float[] vertices;
@@ -56,16 +57,30 @@ public class Shape {
   }
 
   public void render() {
-    glEnableClientState(GL_VERTEX_ARRAY);
-    glEnableClientState(GL_TEXTURE_COORD_ARRAY);
+    glEnableVertexAttribArray(VertexAttributes.VERTICES.getIndex());
+    glEnableVertexAttribArray(VertexAttributes.TEXTURES.getIndex());
 
-    texture.bind();
+    texture.bind(0);
 
     glBindBuffer(GL_ARRAY_BUFFER, vId);
-    glVertexPointer(3, GL_FLOAT, 0, 0);
+    glVertexAttribPointer(
+        VertexAttributes.VERTICES.getIndex(),
+        3,
+        GL_FLOAT,
+        false,
+        0,
+        0
+    );
 
     glBindBuffer(GL_ARRAY_BUFFER, tId);
-    glTexCoordPointer(2, GL_FLOAT, 0, 0);
+    glVertexAttribPointer(
+        VertexAttributes.TEXTURES.getIndex(),
+        2,
+        GL_FLOAT,
+        false,
+        0,
+        0
+    );
 
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, fId);
     glDrawElements(GL_TRIANGLES, drawCount, GL_UNSIGNED_INT, 0);
@@ -77,8 +92,8 @@ public class Shape {
 
     texture.unbind();
 
-    glDisableClientState(GL_VERTEX_ARRAY);
-    glDisableClientState(GL_TEXTURE_COORD_ARRAY);
+    glDisableVertexAttribArray(VertexAttributes.VERTICES.getIndex());
+    glDisableVertexAttribArray(VertexAttributes.TEXTURES.getIndex());
   }
 
   private FloatBuffer createBuffer(float[] data) {

@@ -1,6 +1,7 @@
 package worldofblocks;
 
 import static org.lwjgl.opengl.GL11.*;
+import static org.lwjgl.opengl.GL13.*;
 import org.lwjgl.BufferUtils;
 
 import javax.imageio.ImageIO;
@@ -55,7 +56,10 @@ public class Texture {
     }
   }
 
-  public void bind() {
+  public void bind(int sampler) {
+    if (sampler >= 0 && sampler <= 31) {
+      glActiveTexture(GL_TEXTURE0 + sampler);
+    }
     // https://www.khronos.org/registry/OpenGL-Refpages/es2.0/xhtml/glBindTexture.xml
     glBindTexture(GL_TEXTURE_2D, id);
   }
