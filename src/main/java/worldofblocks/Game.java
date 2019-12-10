@@ -5,6 +5,7 @@ import org.lwjgl.glfw.GLFWErrorCallback;
 import org.lwjgl.glfw.GLFWVidMode;
 import org.lwjgl.opengl.GL;
 import org.lwjgl.system.MemoryStack;
+import org.w3c.dom.Text;
 
 import java.nio.IntBuffer;
 
@@ -106,21 +107,24 @@ public class Game {
   }
 
   private void drawPrimitives() {
+    texture.bind();
+
     glBegin(GL_QUADS);
-    glColor4f(1,0,0,0);
+    glTexCoord2f(0, 0);
     glVertex2f(-0.5f + dx, 0.5f + dy);
 
-    glColor4f(0,1,0,0);
+    glTexCoord2f(1, 0);
     glVertex2f(0.5f + dx, 0.5f + dy);
 
-    glColor4f(0,0,1,0);
+    glTexCoord2f(1, 1);
     glVertex2f(0.5f + dx, -0.5f + dy);
 
-    glColor4f(1,1,1,0);
+    glTexCoord2f(0, 1);
     glVertex2f(-0.5f + dx, -0.5f + dy);
     glEnd();
   }
 
+  Texture texture;
   private void runMainLoop() {
     // This line is critical for LWJGL's interoperation with GLFW's
     // OpenGL context, or any context that is managed externally.
@@ -128,6 +132,9 @@ public class Game {
     // creates the GLCapabilities instance and makes the OpenGL
     // bindings available for use.
     GL.createCapabilities();
+
+    glEnable(GL_TEXTURE_2D);
+    texture = new Texture("./textures/trollface.png");
 
     // Set the clear color
     glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
