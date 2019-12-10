@@ -11,7 +11,7 @@ import static org.lwjgl.opengl.GL15.*;
 public class Shape {
   private float[] vertices;
   private float[] textureCoordinates;
-  int[] indices;
+  private int[] indices;
 
   private int drawCount;
   private int vId;
