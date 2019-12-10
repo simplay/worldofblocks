@@ -38,6 +38,7 @@ public class Shader {
 
     glBindAttribLocation(programId, VertexAttributes.VERTICES.getIndex(), "vertices");
     glBindAttribLocation(programId, VertexAttributes.TEXTURES.getIndex(), "textures");
+    glBindAttribLocation(programId, VertexAttributes.COLORS.getIndex(), "colors");
 
     glLinkProgram(programId);
     if (glGetProgrami(programId, GL_LINK_STATUS) != GL_TRUE) {

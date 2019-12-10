@@ -1,11 +1,14 @@
-#version 120
+#version 150
 
-attribute vec3 vertices;
-attribute vec2 textures;
+in vec3 vertices;
+in vec2 textures;
+in vec4 colors;
 
-varying vec2 tex_coords;
+out vec2 tex_coords;
+out vec4 passColor;
 
 void main() {
     tex_coords = textures;
+    passColor = colors;
     gl_Position = vec4(vertices, 1);
 }

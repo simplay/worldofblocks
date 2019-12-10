@@ -2,7 +2,8 @@ package worldofblocks;
 
 public enum VertexAttributes {
   VERTICES(0),
-  TEXTURES(1);
+  TEXTURES(1),
+  COLORS(2);
 
   private final int index;
 

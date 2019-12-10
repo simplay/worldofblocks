@@ -11,6 +11,7 @@ import static org.lwjgl.opengl.GL20.*;
 
 public class Shape {
   private float[] vertices;
+  private float[] colors;
   private float[] textureCoordinates;
   private int[] indices;
 
@@ -20,10 +21,12 @@ public class Shape {
   private int vId;
   private int tId;
   private int fId;
+  private int cId;
 
-  public Shape(float[] vertices, float[] textureCoordinates, int[] indices, Texture texture) {
+  public Shape(float[] vertices, float[] colors, float[] textureCoordinates, int[] indices, Texture texture) {
     drawCount = indices.length; // we are drawing 3d points
     this.vertices = vertices;
+    this.colors = colors;
     this.textureCoordinates = textureCoordinates;
     this.indices = indices;
     this.texture = texture;
@@ -39,6 +42,10 @@ public class Shape {
     vId = glGenBuffers();
     glBindBuffer(GL_ARRAY_BUFFER, vId);
     glBufferData(GL_ARRAY_BUFFER, createBuffer(vertices), GL_STATIC_DRAW);
+
+    cId = glGenBuffers();
+    glBindBuffer(GL_ARRAY_BUFFER, cId);
+    glBufferData(GL_ARRAY_BUFFER, createBuffer(colors), GL_STATIC_DRAW);
 
     tId = glGenBuffers();
     glBindBuffer(GL_ARRAY_BUFFER, tId);
@@ -59,6 +66,7 @@ public class Shape {
   public void render() {
     glEnableVertexAttribArray(VertexAttributes.VERTICES.getIndex());
     glEnableVertexAttribArray(VertexAttributes.TEXTURES.getIndex());
+    glEnableVertexAttribArray(VertexAttributes.COLORS.getIndex());
 
     texture.bind(0);
 
@@ -82,6 +90,16 @@ public class Shape {
         0
     );
 
+    glBindBuffer(GL_ARRAY_BUFFER, cId);
+    glVertexAttribPointer(
+        VertexAttributes.COLORS.getIndex(),
+        4,
+        GL_FLOAT,
+        false,
+        0,
+        0
+    );
+
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, fId);
     glDrawElements(GL_TRIANGLES, drawCount, GL_UNSIGNED_INT, 0);
 
@@ -94,6 +112,7 @@ public class Shape {
 
     glDisableVertexAttribArray(VertexAttributes.VERTICES.getIndex());
     glDisableVertexAttribArray(VertexAttributes.TEXTURES.getIndex());
+    glDisableVertexAttribArray(VertexAttributes.COLORS.getIndex());
   }
 
   private FloatBuffer createBuffer(float[] data) {

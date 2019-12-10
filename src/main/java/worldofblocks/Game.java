@@ -68,8 +68,16 @@ public class Game implements Runnable {
         2,3,0
     };
 
+    float[] colors = new float[] {
+        1,0,0,1,
+        0,1,0,1,
+        0,0,1,1,
+        1,1,1,1
+    };
+
     shape = new Shape(
         getVertices(0, 0),
+        colors,
         textureCoordinates,
         indices,
         new Texture("./textures/trollface.png")
