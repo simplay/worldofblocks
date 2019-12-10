@@ -1,11 +1,9 @@
 package worldofblocks;
 
-import org.lwjgl.Version;
 import org.lwjgl.glfw.GLFWErrorCallback;
 import org.lwjgl.glfw.GLFWVidMode;
 import org.lwjgl.opengl.GL;
 import org.lwjgl.system.MemoryStack;
-import org.w3c.dom.Text;
 
 import java.nio.IntBuffer;
 
@@ -16,15 +14,62 @@ import static org.lwjgl.opengl.GL11.GL_DEPTH_BUFFER_BIT;
 import static org.lwjgl.system.MemoryStack.stackPush;
 import static org.lwjgl.system.MemoryUtil.NULL;
 
-public class Game {
-  // The window handle
-  private final long window;
+// TODO: try to implement a more MVC like style or at least separate view-controller code from models
+public class Game implements Runnable {
+  // address to window object
+  private long window;
+
+  private int windowWidth;
+  private int windowHeight;
+
+  private Thread thread;
+  private boolean running = false;
+
+  public void start() {
+    this.running = true;
+    thread = new Thread(this, "Game");
+    thread.start();
+  }
 
   Game() {
     this(300, 300);
   }
 
   Game(int windowWidth, int windowHeight) {
+    this.windowWidth = windowWidth;
+    this.windowHeight = windowHeight;
+  }
+
+  private void init() {
+    initRenderer();
+    initShapes();
+  }
+
+  private void initShapes() {
+    // This line is critical for LWJGL's interoperation with GLFW's
+    // OpenGL context, or any context that is managed externally.
+    // LWJGL detects the context that is current in the current thread,
+    // creates the GLCapabilities instance and makes the OpenGL
+    // bindings available for use.
+    GL.createCapabilities();
+
+    glEnable(GL_TEXTURE_2D);
+    texture = new Texture("./textures/trollface.png");
+
+    float[] textureCoordinates = new float[] {
+        0,0, 1,0,
+        1,1, 0,1
+    };
+
+    int[] indices = new int[] {
+        0,1,2,
+        2,3,0
+    };
+
+    shape = new Shape(getVertices(0, 0), textureCoordinates, indices);
+  }
+
+  private void initRenderer() {
     // Setup an error callback. The default implementation
     // will print the error message in System.err.
     GLFWErrorCallback.createPrint(System.err).set();
@@ -82,8 +127,25 @@ public class Game {
   }
 
   public void run() {
-    runMainLoop();
+    init();
+    while(running) {
+      update();
+      render();
+
+      // Run the rendering loop until the user has attempted to close
+      // the window or has pressed the ESCAPE key.
+      if (glfwWindowShouldClose(window)) {
+        this.running = false;
+      }
+    }
     cleanup();
+  }
+
+  private void update() {
+    // Poll for window events. The key callback above will only be
+    // invoked during this call.
+    glfwPollEvents();
+    handleUserInput();
   }
 
   private float dx = 0;
@@ -119,44 +181,13 @@ public class Game {
     return vertices;
   }
 
-  Texture texture;
-  Shape shape;
-  private void runMainLoop() {
-    // This line is critical for LWJGL's interoperation with GLFW's
-    // OpenGL context, or any context that is managed externally.
-    // LWJGL detects the context that is current in the current thread,
-    // creates the GLCapabilities instance and makes the OpenGL
-    // bindings available for use.
-    GL.createCapabilities();
-
-    glEnable(GL_TEXTURE_2D);
-    texture = new Texture("./textures/trollface.png");
-
-    float[] textureCoordinates = new float[] {
-        0,0, 1,0,
-        1,1, 0,1
-    };
-
-    int[] indices = new int[] {
-        0,1,2,
-        2,3,0
-    };
-
-    shape = new Shape(getVertices(0, 0), textureCoordinates, indices);
-
-    // Run the rendering loop until the user has attempted to close
-    // the window or has pressed the ESCAPE key.
-    while (!glfwWindowShouldClose(window)) {
-      // Poll for window events. The key callback above will only be
-      // invoked during this call.
-      glfwPollEvents();
-      handleUserInput();
-
-      glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // clear the framebuffer
-      texture.bind();
-      shape.render();
-      glfwSwapBuffers(window); // swap the color buffers
-    }
+  private Texture texture;
+  private Shape shape;
+  private void render() {
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // clear the framebuffer
+    texture.bind();
+    shape.render(); // TODO: move this inside shape's render method, pass texture texture to constructor
+    glfwSwapBuffers(window); // swap the color buffers
   }
 
   private void cleanup() {
