@@ -25,6 +25,8 @@ public class Game implements Runnable {
   private Thread thread;
   private boolean running = false;
 
+  private InputHandler windowInputHandler;
+
   public void start() {
     this.running = true;
     thread = new Thread(this, "Game");
@@ -90,6 +92,8 @@ public class Game implements Runnable {
       throw new RuntimeException("Failed to create the GLFW window");
     }
 
+    windowInputHandler = new InputHandler(window);
+
     // Setup a key callback. It will be called every time a key is pressed, repeated or released.
     glfwSetKeyCallback(window, (window, key, scancode, action, mods) -> {
       if ( key == GLFW_KEY_ESCAPE && action == GLFW_RELEASE ) {
@@ -151,19 +155,19 @@ public class Game implements Runnable {
   private float dx = 0;
   private float dy = 0;
   private void handleUserInput() {
-    if (glfwGetKey(window, GLFW_KEY_A) == GL_TRUE) {
+    if (windowInputHandler.isKeyDown(GLFW_KEY_A)) {
       dx -= 0.01f;
     }
 
-    if (glfwGetKey(window, GLFW_KEY_D) == GL_TRUE) {
+    if (windowInputHandler.isKeyDown(GLFW_KEY_D)) {
       dx += 0.01f;
     }
 
-    if (glfwGetKey(window, GLFW_KEY_W) == GL_TRUE) {
+    if (windowInputHandler.isKeyDown(GLFW_KEY_W)) {
       dy += 0.01f;
     }
 
-    if (glfwGetKey(window, GLFW_KEY_S) == GL_TRUE) {
+    if (windowInputHandler.isKeyDown(GLFW_KEY_S)) {
       dy -= 0.01f;
     }
 
