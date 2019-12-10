@@ -102,29 +102,25 @@ public class Game {
     }
 
     if (glfwGetKey(window, GLFW_KEY_S) == GL_TRUE) {
-      dy  -= 0.01f;
+      dy -= 0.01f;
     }
+
+    shape.updateVertices(getVertices(dx, dy));
   }
 
-  private void drawPrimitives() {
-    texture.bind();
+  float[] getVertices(float dx, float dy) {
+    float[] vertices = new float[] {
+        -0.5f + dx, 0.5f + dy, 0, // 0
+        0.5f + dx, 0.5f + dy, 0, // 1
+        0.5f + dx, -0.5f + dy, 0, // 2
+        -0.5f + dx, -0.5f + dy, 0, // 3
+    };
 
-    glBegin(GL_QUADS);
-    glTexCoord2f(0, 0);
-    glVertex2f(-0.5f + dx, 0.5f + dy);
-
-    glTexCoord2f(1, 0);
-    glVertex2f(0.5f + dx, 0.5f + dy);
-
-    glTexCoord2f(1, 1);
-    glVertex2f(0.5f + dx, -0.5f + dy);
-
-    glTexCoord2f(0, 1);
-    glVertex2f(-0.5f + dx, -0.5f + dy);
-    glEnd();
+    return vertices;
   }
 
   Texture texture;
+  Shape shape;
   private void runMainLoop() {
     // This line is critical for LWJGL's interoperation with GLFW's
     // OpenGL context, or any context that is managed externally.
@@ -136,8 +132,17 @@ public class Game {
     glEnable(GL_TEXTURE_2D);
     texture = new Texture("./textures/trollface.png");
 
-    // Set the clear color
-    glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
+    float[] textureCoordinates = new float[] {
+        0,0, 1,0,
+        1,1, 0,1
+    };
+
+    int[] indices = new int[] {
+        0,1,2,
+        2,3,0
+    };
+
+    shape = new Shape(getVertices(0, 0), textureCoordinates, indices);
 
     // Run the rendering loop until the user has attempted to close
     // the window or has pressed the ESCAPE key.
@@ -148,7 +153,8 @@ public class Game {
       handleUserInput();
 
       glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // clear the framebuffer
-      drawPrimitives();
+      texture.bind();
+      shape.render();
       glfwSwapBuffers(window); // swap the color buffers
     }
   }
