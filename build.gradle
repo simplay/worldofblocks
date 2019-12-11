@@ -33,9 +33,15 @@ switch (OperatingSystem.current()) {
 
 repositories {
     mavenCentral()
+    maven {
+        url "https://oss.sonatype.org/content/repositories/snapshots/"
+    }
 }
+project.ext.jomlVersion = "1.9.19"
 
 dependencies {
+    compile "org.joml:joml:${jomlVersion}"
+
     implementation platform("org.lwjgl:lwjgl-bom:$lwjglVersion")
 
     implementation "org.lwjgl:lwjgl"
