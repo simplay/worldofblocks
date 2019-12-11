@@ -1,5 +1,6 @@
 package worldofblocks;
 
+import org.joml.Matrix4f;
 import org.lwjgl.glfw.GLFWErrorCallback;
 import org.lwjgl.glfw.GLFWVidMode;
 import org.lwjgl.opengl.GL;
@@ -43,8 +44,26 @@ public class Game implements Runnable {
   }
 
   private void init() {
+    initProjections();
     initRenderer();
     initShapes();
+  }
+
+  // result of orthogonal projection
+  // TODO: define this as frustum
+  // TODO: add camera matrix
+  private Matrix4f target;
+  private float scale = 32f;
+  private void initProjections() {
+    Matrix4f projection = new Matrix4f().ortho2D(
+        -windowWidth / 2,
+        windowWidth / 2,
+        -windowHeight /2,
+        windowHeight / 2
+    );
+    Matrix4f scale = new Matrix4f().scale(this.scale);
+    target = new Matrix4f();
+    projection.mul(scale, target);
   }
 
   private Shader shader;
@@ -186,6 +205,16 @@ public class Game implements Runnable {
       dy -= 0.01f;
     }
 
+    if (windowInputHandler.isKeyDown(GLFW_KEY_E)) {
+      scale += 1;
+      initProjections();
+    }
+
+    if (windowInputHandler.isKeyDown(GLFW_KEY_Q)) {
+      scale -= 1;
+      initProjections();
+    }
+
     shape.updateVertices(getVertices(dx, dy));
   }
 
@@ -205,6 +234,7 @@ public class Game implements Runnable {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // clear the framebuffer
     shader.bind();
     shader.setUniform("sampler", 0);
+    shader.setUniform("projection", target);
     shape.render();
     glfwSwapBuffers(window); // swap the color buffers
   }
