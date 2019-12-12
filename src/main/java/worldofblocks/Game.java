@@ -5,7 +5,6 @@ import org.joml.Vector3f;
 import org.lwjgl.glfw.GLFWErrorCallback;
 import org.lwjgl.glfw.GLFWVidMode;
 import org.lwjgl.opengl.GL;
-import org.lwjgl.opengl.GL11;
 import org.lwjgl.system.MemoryStack;
 
 import java.nio.IntBuffer;
@@ -21,6 +20,7 @@ import static org.lwjgl.system.MemoryUtil.NULL;
 public class Game implements Runnable {
   // address to window object
   private long window;
+  private final float EPS = 0.1f;
 
   private int windowWidth;
   private int windowHeight;
@@ -59,7 +59,7 @@ public class Game implements Runnable {
 
   private void initProjections() {
     camera = new Camera(eye, lookAtPoint, up);
-    frustum = new Frustum(windowWidth / windowHeight, 0.1f, 5000, 60.0f);
+    frustum = new Frustum(windowWidth / windowHeight, EPS, 5000, 60.0f);
   }
 
   private Shader shader;
@@ -72,13 +72,13 @@ public class Game implements Runnable {
     // bindings available for use.
     GL.createCapabilities();
 
-//    glEnable(GL_TEXTURE_2D);
-     glEnable(GL_DEPTH_TEST);
+    glEnable(GL_TEXTURE_2D);
+    glEnable(GL_DEPTH_TEST);
     glDepthFunc(GL_LESS);
 
     float[] textureCoordinates = new float[]{
-            0, 0,
             1, 0,
+            0, 0,
             1, 1,
             0, 1,
             0, 0,
@@ -303,14 +303,14 @@ public class Game implements Runnable {
   float[] getVertices(float dx, float dy) {
     float[] vertices = new float[]{
             // front
-            0.0f + dx,  0.0f + dy,  0.0f,
-            0.0f + dx,  0.0f + dy,  1.0f,
-            0.0f + dx,  1.0f + dy,  0.0f,
-            0.0f + dx,  1.0f + dy,  1.0f,
-            1.0f + dx,  0.0f + dy,  0.0f,
-            1.0f + dx,  0.0f + dy,  1.0f,
-            1.0f + dx,  1.0f + dy,  0.0f,
-            1.0f + dx,  1.0f + dy,  1.0f
+            0.0f + dx, 0.0f + dy, 0.0f,
+            0.0f + dx, 0.0f + dy, 1.0f,
+            0.0f + dx, 1.0f + dy, 0.0f,
+            0.0f + dx, 1.0f + dy, 1.0f,
+            1.0f + dx, 0.0f + dy, 0.0f,
+            1.0f + dx, 0.0f + dy, 1.0f,
+            1.0f + dx, 1.0f + dy, 0.0f,
+            1.0f + dx, 1.0f + dy, 1.0f
     };
 
     for (int k = 0; k < vertices.length; k++) {
