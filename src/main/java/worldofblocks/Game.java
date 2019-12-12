@@ -50,31 +50,14 @@ public class Game implements Runnable {
     initShapes();
   }
 
-  // result of orthogonal projection
-  // TODO: define this as frustum
-  // TODO: add camera matrix
-  private Matrix4f target;
-  private float scale = 32f;
-
   Camera camera;
   Frustum frustum;
-  Vector3f eye = new Vector3f(0, 0, 10f);
+  Vector3f eye = new Vector3f(0, 0, 2f);
   Vector3f lookAtPoint = new Vector3f(0.0f, 0.1f, 0.0f);
   Vector3f up = new Vector3f(0, 0, 1);
 
   private void initProjections() {
-    Matrix4f projection = new Matrix4f().ortho2D(
-            -windowWidth / 2,
-            windowWidth / 2,
-            -windowHeight / 2,
-            windowHeight / 2
-    );
-    Matrix4f scale = new Matrix4f().scale(this.scale);
-    target = new Matrix4f();
-    projection.mul(scale, target);
-
     camera = new Camera(eye, lookAtPoint, up);
-
     frustum = new Frustum(windowWidth / windowHeight, 0f, 200f, 60.0f);
   }
 
