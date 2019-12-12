@@ -72,32 +72,32 @@ public class Shape {
 
     glBindBuffer(GL_ARRAY_BUFFER, vId);
     glVertexAttribPointer(
-        VertexAttributes.VERTICES.getIndex(),
-        3,
-        GL_FLOAT,
-        false,
-        0,
-        0
+            VertexAttributes.VERTICES.getIndex(),
+            3,
+            GL_FLOAT,
+            false,
+            0,
+            0
     );
 
     glBindBuffer(GL_ARRAY_BUFFER, tId);
     glVertexAttribPointer(
-        VertexAttributes.TEXTURES.getIndex(),
-        2,
-        GL_FLOAT,
-        false,
-        0,
-        0
+            VertexAttributes.TEXTURES.getIndex(),
+            2,
+            GL_FLOAT,
+            false,
+            0,
+            0
     );
 
     glBindBuffer(GL_ARRAY_BUFFER, cId);
     glVertexAttribPointer(
-        VertexAttributes.COLORS.getIndex(),
-        4,
-        GL_FLOAT,
-        false,
-        0,
-        0
+            VertexAttributes.COLORS.getIndex(),
+            4,
+            GL_FLOAT,
+            false,
+            0,
+            0
     );
 
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, fId);

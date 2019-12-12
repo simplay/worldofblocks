@@ -1,6 +1,7 @@
 package worldofblocks;
 
 import org.joml.Matrix4f;
+import org.joml.Vector3f;
 import org.lwjgl.glfw.GLFWErrorCallback;
 import org.lwjgl.glfw.GLFWVidMode;
 import org.lwjgl.opengl.GL;
@@ -54,19 +55,31 @@ public class Game implements Runnable {
   // TODO: add camera matrix
   private Matrix4f target;
   private float scale = 32f;
+
+  Camera camera;
+  Frustum frustum;
+  Vector3f eye = new Vector3f(0, 0, 10f);
+  Vector3f lookAtPoint = new Vector3f(0.0f, 0.1f, 0.0f);
+  Vector3f up = new Vector3f(0, 0, 1);
+
   private void initProjections() {
     Matrix4f projection = new Matrix4f().ortho2D(
-        -windowWidth / 2,
-        windowWidth / 2,
-        -windowHeight /2,
-        windowHeight / 2
+            -windowWidth / 2,
+            windowWidth / 2,
+            -windowHeight / 2,
+            windowHeight / 2
     );
     Matrix4f scale = new Matrix4f().scale(this.scale);
     target = new Matrix4f();
     projection.mul(scale, target);
+
+    camera = new Camera(eye, lookAtPoint, up);
+
+    frustum = new Frustum(windowWidth / windowHeight, 0f, 200f, 60.0f);
   }
 
   private Shader shader;
+
   private void initShapes() {
     // This line is critical for LWJGL's interoperation with GLFW's
     // OpenGL context, or any context that is managed externally.
@@ -77,29 +90,29 @@ public class Game implements Runnable {
 
     glEnable(GL_TEXTURE_2D);
 
-    float[] textureCoordinates = new float[] {
-        0,0, 1,0,
-        1,1, 0,1
+    float[] textureCoordinates = new float[]{
+            0, 0, 1, 0,
+            1, 1, 0, 1
     };
 
-    int[] indices = new int[] {
-        0,1,2,
-        2,3,0
+    int[] indices = new int[]{
+            0, 1, 2,
+            2, 3, 0
     };
 
-    float[] colors = new float[] {
-        1,0,0,1,
-        0,1,0,1,
-        0,0,1,1,
-        1,1,1,1
+    float[] colors = new float[]{
+            1, 0, 0, 1,
+            0, 1, 0, 1,
+            0, 0, 1, 1,
+            1, 1, 1, 1
     };
 
     shape = new Shape(
-        getVertices(0, 0),
-        colors,
-        textureCoordinates,
-        indices,
-        new Texture("./textures/trollface.png")
+            getVertices(0, 0),
+            colors,
+            textureCoordinates,
+            indices,
+            new Texture("./textures/trollface.png")
     );
 
     shader = new Shader("shader");
@@ -130,13 +143,13 @@ public class Game implements Runnable {
 
     // Setup a key callback. It will be called every time a key is pressed, repeated or released.
     glfwSetKeyCallback(window, (window, key, scancode, action, mods) -> {
-      if ( key == GLFW_KEY_ESCAPE && action == GLFW_RELEASE ) {
+      if (key == GLFW_KEY_ESCAPE && action == GLFW_RELEASE) {
         glfwSetWindowShouldClose(window, true); // We will detect this in the rendering loop
       }
     });
 
     // Get the thread stack and push a new frame
-    try ( MemoryStack stack = stackPush() ) {
+    try (MemoryStack stack = stackPush()) {
       IntBuffer pWidth = stack.mallocInt(1); // int*
       IntBuffer pHeight = stack.mallocInt(1); // int*
 
@@ -148,9 +161,9 @@ public class Game implements Runnable {
 
       // Center the window
       glfwSetWindowPos(
-          window,
-          (videoMode.width() - pWidth.get(0)) / 2,
-          (videoMode.height() - pHeight.get(0)) / 2
+              window,
+              (videoMode.width() - pWidth.get(0)) / 2,
+              (videoMode.height() - pHeight.get(0)) / 2
       );
     } // the stack frame is popped automatically
 
@@ -166,7 +179,7 @@ public class Game implements Runnable {
 
   public void run() {
     init();
-    while(running) {
+    while (running) {
       update();
       render();
 
@@ -188,30 +201,77 @@ public class Game implements Runnable {
 
   private float dx = 0;
   private float dy = 0;
+
+  // w/s, a/d, q/e move camera
+  // arrows: move plane
   private void handleUserInput() {
     if (windowInputHandler.isKeyDown(GLFW_KEY_A)) {
-      dx -= 0.01f;
+      Matrix4f m = new Matrix4f(
+              1, 0, 0, -0.01f,
+              0, 1, 0, 0,
+              0, 0, 1, 0,
+              0, 0, 0, 1
+      );
+      camera.updateCamera(m);
     }
 
     if (windowInputHandler.isKeyDown(GLFW_KEY_D)) {
-      dx += 0.01f;
+      Matrix4f m = new Matrix4f(
+              1, 0, 0, 0.01f,
+              0, 1, 0, 0,
+              0, 0, 1, 0,
+              0, 0, 0, 1
+      );
+      camera.updateCamera(m);
     }
 
     if (windowInputHandler.isKeyDown(GLFW_KEY_W)) {
-      dy += 0.01f;
+      eye.add(0, 0, -0.1f);
+      camera.updateEye(eye);
     }
 
     if (windowInputHandler.isKeyDown(GLFW_KEY_S)) {
-      dy -= 0.01f;
-    }
-
-    if (windowInputHandler.isKeyDown(GLFW_KEY_E)) {
-      scale += 1;
-      initProjections();
+      eye.add(0, 0, 0.1f);
+      camera.updateEye(eye);
     }
 
     if (windowInputHandler.isKeyDown(GLFW_KEY_Q)) {
-      scale -= 1;
+      Matrix4f m = new Matrix4f(
+              1, 0, 0, 0,
+              0, 1, 0, -0.01f,
+              0, 0, 1, 0,
+              0, 0, 0, 1
+      );
+      camera.updateCamera(m);
+    }
+
+    if (windowInputHandler.isKeyDown(GLFW_KEY_E)) {
+      Matrix4f m = new Matrix4f(
+              1, 0, 0, 0,
+              0, 1, 0, 0.01f,
+              0, 0, 1, 0,
+              0, 0, 0, 1
+      );
+      camera.updateCamera(m);
+    }
+
+    if (windowInputHandler.isKeyDown(GLFW_KEY_LEFT)) {
+      dx -= 0.01f;
+      initProjections();
+    }
+
+    if (windowInputHandler.isKeyDown(GLFW_KEY_RIGHT)) {
+      dx += 0.01f;
+      initProjections();
+    }
+
+    if (windowInputHandler.isKeyDown(GLFW_KEY_UP)) {
+      dy += 0.01f;
+      initProjections();
+    }
+
+    if (windowInputHandler.isKeyDown(GLFW_KEY_DOWN)) {
+      dy -= 0.01f;
       initProjections();
     }
 
@@ -219,22 +279,25 @@ public class Game implements Runnable {
   }
 
   float[] getVertices(float dx, float dy) {
-    float[] vertices = new float[] {
-        -0.5f + dx, 0.5f + dy, 0, // 0
-        0.5f + dx, 0.5f + dy, 0, // 1
-        0.5f + dx, -0.5f + dy, 0, // 2
-        -0.5f + dx, -0.5f + dy, 0, // 3
+    float[] vertices = new float[]{
+            -0.5f + dx, 0.5f + dy, 0, // 0
+            0.5f + dx, 0.5f + dy, 0, // 1
+            0.5f + dx, -0.5f + dy, 0, // 2
+            -0.5f + dx, -0.5f + dy, 0, // 3
     };
 
     return vertices;
   }
 
   private Shape shape;
+
   private void render() {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // clear the framebuffer
     shader.bind();
     shader.setUniform("sampler", 0);
-    shader.setUniform("projection", target);
+    shader.setUniform("modelview", camera.getTransformation());
+    shader.setUniform("projection", frustum.getTransformation());
+
     shape.render();
     glfwSwapBuffers(window); // swap the color buffers
   }
