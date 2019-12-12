@@ -68,7 +68,7 @@ public class Shape {
     glEnableVertexAttribArray(VertexAttributes.TEXTURES.getIndex());
     glEnableVertexAttribArray(VertexAttributes.COLORS.getIndex());
 
-    texture.bind(0);
+//    texture.bind(0);
 
     glBindBuffer(GL_ARRAY_BUFFER, vId);
     glVertexAttribPointer(
@@ -108,7 +108,7 @@ public class Shape {
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
     glBindBuffer(GL_ARRAY_BUFFER, 0);
 
-    texture.unbind();
+//    texture.unbind();
 
     glDisableVertexAttribArray(VertexAttributes.VERTICES.getIndex());
     glDisableVertexAttribArray(VertexAttributes.TEXTURES.getIndex());
