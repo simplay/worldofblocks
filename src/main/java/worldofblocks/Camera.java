@@ -28,7 +28,6 @@ public class Camera {
   }
 
   Matrix4f getTransformation() {
-    System.out.println(cameraMatrix);
     return cameraMatrix;
   }
 

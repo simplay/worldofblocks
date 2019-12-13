@@ -7,6 +7,7 @@ import org.lwjgl.glfw.GLFWVidMode;
 import org.lwjgl.opengl.GL;
 import org.lwjgl.system.MemoryStack;
 
+import java.io.ObjectInputFilter;
 import java.nio.IntBuffer;
 
 import static org.lwjgl.glfw.Callbacks.glfwFreeCallbacks;
@@ -17,7 +18,7 @@ import static org.lwjgl.system.MemoryStack.stackPush;
 import static org.lwjgl.system.MemoryUtil.NULL;
 
 // TODO: try to implement a more MVC like style or at least separate view-controller code from models
-public class Game implements Runnable {
+public class Game implements Runnable, Subscriber{
   // address to window object
   private long window;
   private final float EPS = 0.1f;
@@ -33,6 +34,8 @@ public class Game implements Runnable {
   private Block block;
   private Plane plane;
 
+  private WorldTimer worldTimer;
+
   public void start() {
     this.running = true;
     thread = new Thread(this, "Game");
@@ -46,12 +49,17 @@ public class Game implements Runnable {
   Game(int windowWidth, int windowHeight) {
     this.windowWidth = windowWidth;
     this.windowHeight = windowHeight;
+
+    this.worldTimer = new WorldTimer();
   }
 
   private void init() {
     initProjections();
     initRenderer();
     initShapes();
+
+    worldTimer.addSubscriber(this);
+    worldTimer.start();
   }
 
   private Camera camera;
@@ -145,6 +153,7 @@ public class Game implements Runnable {
   }
 
   public void run() {
+    time = System.nanoTime();
     init();
     while (running) {
       update();
@@ -245,6 +254,16 @@ public class Game implements Runnable {
     block.updateVertices(dx, dy);
   }
 
+  double time;
+  double fps = 0;
+  private void updateFps() {
+    double now = System.nanoTime();
+    double delta = now - time;
+
+    fps = 1000000000L / delta;
+    time = now;
+  }
+
   private void render() {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // clear the framebuffer
 
@@ -256,6 +275,8 @@ public class Game implements Runnable {
     plane.render();
     block.render();
     glfwSwapBuffers(window); // swap the color buffers
+
+    updateFps();
   }
 
   private void cleanup() {
@@ -266,5 +287,10 @@ public class Game implements Runnable {
     // Terminate GLFW and free the error callback
     glfwTerminate();
     glfwSetErrorCallback(null).free();
+  }
+
+  @Override
+  public void handleUpdate() {
+    glfwSetWindowTitle(window, "Wolrd of Blocks - FPS: " + fps);
   }
 }
