@@ -1,10 +1,12 @@
-package worldofblocks;
+package worldofblocks.drawables;
+
+import worldofblocks.Texture;
 
 public class Block {
   private Shape shape;
 
   // TODO: refactor this class, define a common shape interface with update methods etc.
-  Block() {
+  public Block() {
     float[] textureCoordinates = {
             0, 0, 1, 0, 1, 1, 0, 1,
             0, 0, 1, 0, 1, 1, 0, 1,
@@ -87,7 +89,7 @@ public class Block {
     );
   }
 
-  void render() {
+  public void render() {
     shape.render();
   }
 

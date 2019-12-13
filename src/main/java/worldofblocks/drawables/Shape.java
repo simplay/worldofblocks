@@ -1,6 +1,8 @@
-package worldofblocks;
+package worldofblocks.drawables;
 
 import org.lwjgl.BufferUtils;
+import worldofblocks.Texture;
+import worldofblocks.VertexAttributes;
 
 import java.nio.FloatBuffer;
 import java.nio.IntBuffer;

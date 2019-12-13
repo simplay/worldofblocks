@@ -1,9 +1,11 @@
-package worldofblocks;
+package worldofblocks.drawables;
+
+import worldofblocks.drawables.Shape;
 
 public class Plane {
   private Shape shape;
 
-  Plane() {
+  public Plane() {
     float[] colors = new float[]{
             // front colors
             0.0f, 1.0f, 0.0f, 0.0f,
@@ -31,7 +33,7 @@ public class Plane {
     );
   }
 
-  void render() {
+  public void render() {
     shape.render();
   }
 }
