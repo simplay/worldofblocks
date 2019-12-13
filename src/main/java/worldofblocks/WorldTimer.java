@@ -11,21 +11,6 @@ public class WorldTimer {
   private final Timer timer;
   private boolean terminate = false;
 
-  public void addSubscriber(Subscriber subscriber) {
-    if (!subscribers.contains(subscriber)) {
-      subscribers.add(subscriber);
-    }
-  }
-
-  void start() {
-    timer.scheduleAtFixedRate(repeatedTask, 0L, 1000);
-  }
-
-  void stop() {
-    this.terminate = true;
-    timer.cancel();
-  }
-
   WorldTimer() {
     repeatedTask = new TimerTask() {
       @Override
@@ -40,6 +25,21 @@ public class WorldTimer {
       }
     };
 
-    timer = new Timer();
+    this.timer = new Timer();
+  }
+
+  public void addSubscriber(Subscriber subscriber) {
+    if (!subscribers.contains(subscriber)) {
+      subscribers.add(subscriber);
+    }
+  }
+
+  public void start() {
+    timer.scheduleAtFixedRate(repeatedTask, 0L, 1000);
+  }
+
+  public void stop() {
+    this.terminate = true;
+    timer.cancel();
   }
 }
