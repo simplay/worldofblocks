@@ -12,12 +12,12 @@ import static org.lwjgl.opengl.GL15.*;
 import static org.lwjgl.opengl.GL20.*;
 
 public abstract class Shape {
-  private float[] vertices;
-  private int[] indices;
-  private float[] colors;
-  private float[] normals;
-  private float[] textureCoordinates;
-  private Texture texture;
+  protected float[] vertices;
+  protected int[] indices;
+  protected float[] colors;
+  protected float[] normals;
+  protected float[] textureCoordinates;
+  protected Texture texture;
 
   private int faces;
   private int vId;

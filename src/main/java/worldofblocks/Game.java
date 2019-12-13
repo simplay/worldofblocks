@@ -248,7 +248,7 @@ public class Game implements Runnable, Subscriber{
       initProjections();
     }
 
-    block.updateVertices(dx, dy);
+    block.updatePosition(new Vector3f(dx, dy, 0));
   }
 
   double time;

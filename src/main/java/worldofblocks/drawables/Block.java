@@ -1,8 +1,9 @@
 package worldofblocks.drawables;
 
+import org.joml.Vector3f;
 import worldofblocks.Texture;
 
-public class Block extends Shape {
+public class Block extends Shape implements Moveable {
 
   @Override
   protected float[] getTextureCoordinates() {
@@ -135,50 +136,18 @@ public class Block extends Shape {
   }
 
   public Block() {
-    super(
-            new Texture("./textures/trollface.png")
-    );
+    super(new Texture("./textures/trollface.png"));
   }
 
-  float[] getVertices(float dx, float dy) {
-    float[] vertices = {
-            -1.0f + dx, -1.0f + dy, 1.0f,
-            1.0f + dx, -1.0f + dy, 1.0f,
-            1.0f + dx, 1.0f + dy, 1.0f,
-            -1.0f + dx, 1.0f + dy, 1.0f,      // front face
-
-            -1.0f + dx, -1.0f + dy, -1.0f,
-            -1.0f + dx, -1.0f + dy, 1.0f,
-            -1.0f + dx, 1.0f + dy, 1.0f,
-            -1.0f + dx, 1.0f + dy, -1.0f,    // left face
-
-            1.0f + dx, -1.0f + dy, -1.0f,
-            -1.0f + dx, -1.0f + dy, -1.0f,
-            -1.0f + dx, 1.0f + dy, -1.0f,
-            1.0f + dx, 1.0f + dy, -1.0f,    // back face
-
-            1.0f + dx, -1.0f + dy, 1.0f,
-            1.0f + dx, -1.0f + dy, -1.0f,
-            1.0f + dx, 1.0f + dy, -1.0f,
-            1.0f + dx, 1.0f + dy, 1.0f,      // right face
-
-            1.0f + dx, 1.0f + dy, 1.0f,
-            1.0f + dx, 1.0f + dy, -1.0f,
-            -1.0f + dx, 1.0f + dy, -1.0f,
-            -1.0f + dx, 1.0f + dy, 1.0f,      // top face
-
-            -1.0f + dx, -1.0f + dy, 1.0f,
-            -1.0f + dx, -1.0f + dy, -1.0f,
-            1.0f + dx, -1.0f + dy, -1.0f,
-            1.0f + dx, -1.0f + dy, 1.0f      // bottom face
-    };
-    for (int k = 0; k < vertices.length; k++) {
-      vertices[k] -= 0.5f;
+  @Override
+  public void updatePosition(Vector3f shift) {
+    float[] tmp = new float[vertices.length];
+    float[] originalVertices = getVertices();
+    for (int k = 0; k < this.vertices.length / 3; k++) {
+      tmp[3 * k] = originalVertices[3 * k] + shift.x;
+      tmp[3 * k + 1] = originalVertices[3 * k + 1] + shift.y;
+      tmp[3 * k + 2] = originalVertices[3 * k + 2] + shift.z;
     }
-    return vertices;
-  }
-
-  public void updateVertices(float dx, float dy) {
-    updateVertices(getVertices(dx, dy));
+    updateVertices(tmp);
   }
 }
