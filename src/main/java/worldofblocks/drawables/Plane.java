@@ -1,11 +1,29 @@
 package worldofblocks.drawables;
 
-import worldofblocks.drawables.Shape;
+public class Plane extends Shape {
 
-public class Plane {
-  private Shape shape;
+  @Override
+  protected float[] getVertices() {
+    float[] vertices = {
+            0.0f, -0.2f, 0.0f,
+            0.0f, -0.2f, 1.0f,
+            1.0f, -0.2f, 0.0f,
+            1.0f, -0.2f, 1.0f
+    };
+    return vertices;
+  }
 
-  public Plane() {
+  @Override
+  protected int[] getIndices() {
+    int[] indices = {
+            0, 1, 3,
+            3, 1, 2
+    };
+    return indices;
+  }
+
+  @Override
+  protected float[] getColors() {
     float[] colors = {
             // front colors
             0.0f, 1.0f, 0.0f, 0.0f,
@@ -13,19 +31,11 @@ public class Plane {
             0.0f, 1.0f, 0.0f, 0.0f,
             0.0f, 1.0f, 0.0f, 0.0f
     };
+    return colors;
+  }
 
-    int[] indices = {
-            0, 1, 3,
-            3, 1, 2
-    };
-
-    float[] vertices = {
-            0.0f, -0.2f, 0.0f,
-            0.0f, -0.2f, 1.0f,
-            1.0f, -0.2f, 0.0f,
-            1.0f, -0.2f, 1.0f
-    };
-
+  @Override
+  protected float[] getNormals() {
     float[] normals = {
             0.0f, 0.0f, 1.0f,
             0.0f, 0.0f, 1.0f,
@@ -33,14 +43,21 @@ public class Plane {
             0.0f, 0.0f, 1.0f
     };
 
-    shape = new Shape(
-            vertices,
-            colors,
-            indices
-    );
+    return normals;
   }
 
-  public void render() {
-    shape.render();
+  @Override
+  protected float[] getTextureCoordinates() {
+    float[] textureCoordinates = {
+            0.0f, 0.0f,
+            0.0f, 1.0f,
+            1.0f, 0.0f,
+            1.0f, 1.0f,
+    };
+    return textureCoordinates;
+  }
+
+  public Plane() {
+    super();
   }
 }

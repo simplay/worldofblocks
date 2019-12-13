@@ -11,38 +11,47 @@ import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.opengl.GL15.*;
 import static org.lwjgl.opengl.GL20.*;
 
-public class Shape {
+public abstract class Shape {
   private float[] vertices;
-  private float[] colors;
-  private float[] textureCoordinates;
   private int[] indices;
-
+  private float[] colors;
+  private float[] normals;
+  private float[] textureCoordinates;
   private Texture texture;
 
-  private int drawCount;
+  private int faces;
   private int vId;
   private int tId;
   private int fId;
   private int cId;
+  // TODO implement nId
 
   private boolean hasTextures = false;
 
-  public Shape(float[] vertices, float[] colors, float[] textureCoordinates, int[] indices, Texture texture) {
-    drawCount = indices.length; // we are drawing 3d points
-    this.vertices = vertices;
-    this.colors = colors;
-    this.textureCoordinates = textureCoordinates;
-    this.indices = indices;
+  protected abstract float[] getVertices();
+  protected abstract int[] getIndices();
+  protected abstract float[] getColors();
+  protected abstract float[] getNormals();
+  protected abstract float[] getTextureCoordinates();
+
+  public Shape(Texture texture) {
+    this.vertices = getVertices();
+    this.indices = getIndices();
+    this.faces = indices.length;
+    this.colors = getColors();
+    this.normals = getNormals();
+    this.textureCoordinates = getTextureCoordinates();
     this.texture = texture;
     this.hasTextures = true;
     initialize();
   }
 
-  public Shape(float[] vertices, float[] colors, int[] indices) {
-    drawCount = indices.length; // we are drawing 3d points
-    this.vertices = vertices;
-    this.colors = colors;
-    this.indices = indices;
+  public Shape() {
+    this.vertices = getVertices();
+    this.indices = getIndices();
+    faces = indices.length;
+    this.colors = getColors();
+    this.normals = getNormals();
     initialize();
   }
 
@@ -122,9 +131,9 @@ public class Shape {
     );
 
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, fId);
-    glDrawElements(GL_TRIANGLES, drawCount, GL_UNSIGNED_INT, 0);
+    glDrawElements(GL_TRIANGLES, faces, GL_UNSIGNED_INT, 0);
 
-    glDrawArrays(GL_TRIANGLES, 0, drawCount);
+    glDrawArrays(GL_TRIANGLES, 0, faces);
 
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
     glBindBuffer(GL_ARRAY_BUFFER, 0);
