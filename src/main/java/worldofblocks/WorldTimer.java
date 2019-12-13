@@ -9,6 +9,7 @@ public class WorldTimer {
   private final LinkedList<Subscriber> subscribers = new LinkedList<>();
   private final TimerTask repeatedTask;
   private final Timer timer;
+  private boolean terminate = false;
 
   public void addSubscriber(Subscriber subscriber) {
     if (!subscribers.contains(subscriber)) {
@@ -20,12 +21,21 @@ public class WorldTimer {
     timer.scheduleAtFixedRate(repeatedTask, 0L, 1000);
   }
 
+  void stop() {
+    this.terminate = true;
+    timer.cancel();
+  }
+
   WorldTimer() {
     repeatedTask = new TimerTask() {
       @Override
       public void run() {
         for (Subscriber subscriber : subscribers) {
           subscriber.handleUpdate();
+        }
+
+        if (terminate) {
+          cancel();
         }
       }
     };
