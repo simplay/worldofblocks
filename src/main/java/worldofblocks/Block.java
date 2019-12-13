@@ -5,45 +5,77 @@ public class Block {
 
   // TODO: refactor this class, define a common shape interface with update methods etc.
   Block() {
-    float[] textureCoordinates = new float[]{
-            1, 0,
-            0, 0,
-            1, 1,
-            0, 1,
-            0, 0,
-            1, 0,
-            1, 1,
-            0, 1,
-            1, 1,
-            0, 1,
+    float[] textureCoordinates = {
+            0, 0, 1, 0, 1, 1, 0, 1,
+            0, 0, 1, 0, 1, 1, 0, 1,
+            0, 0, 1, 0, 1, 1, 0, 1,
+            0, 0, 1, 0, 1, 1, 0, 1,
+            0, 0, 1, 0, 1, 1, 0, 1,
+            0, 0, 1, 0, 1, 1, 0, 1
     };
 
-    int[] indices = new int[]{
-            0, 6, 4,
-            0, 2, 6,
-            0, 3, 2,
-            0, 1, 3,
-            2, 7, 6,
-            2, 3, 7,
-            4, 6, 7,
-            4, 7, 5,
-            0, 4, 5,
-            0, 5, 1,
-            1, 5, 7,
-            1, 7, 3
+    int[] indices = {
+            0, 2, 3, 0, 1, 2,      // front face
+            4, 6, 7, 4, 5, 6,      // left face
+            8, 10, 11, 8, 9, 10,    // back face
+            12, 14, 15, 12, 13, 14,    // right face
+            16, 18, 19, 16, 17, 18,    // top face
+            20, 22, 23, 20, 21, 22 // bottom face
     };
 
-    float[] colors = new float[]{
-            // front colors
+    float normals[] = {
+            0.0f, 0.0f, 1.0f,
+            0.0f, 0.0f, 1.0f,
+            0.0f, 0.0f, 1.0f,
+            0.0f, 0.0f, 1.0f,
+            -1.0f, 0.0f, 0.0f,
+            -1.0f, 0.0f, 0.0f,
+            -1.0f, 0.0f, 0.0f,
+            -1.0f, 0.0f, 0.0f,
+            0.0f, 0.0f, -1.0f,
+            0.0f, 0.0f, -1.0f,
+            0.0f, 0.0f, -1.0f,
+            0.0f, 0.0f, -1.0f,
+            1.0f, 0.0f, 0.0f,
+            1.0f, 0.0f, 0.0f,
+            1.0f, 0.0f, 0.0f,
+            1.0f, 0.0f, 0.0f,
+            0.0f, 1.0f, 0.0f,
+            0.0f, 1.0f, 0.0f,
+            0.0f, 1.0f, 0.0f,
+            0.0f, 1.0f, 0.0f,
+            0.0f, -1.0f, 0.0f,
+            0.0f, -1.0f, 0.0f,
+            0.0f, -1.0f, 0.0f,
+            0.0f, -1.0f, 0.0f
+    };
+
+    float[] colors = {
+            1.0f, 0.0f, 0.0f, 0.0f,
+            1.0f, 0.0f, 0.0f, 0.0f,
+            1.0f, 0.0f, 0.0f, 0.0f,
             1.0f, 0.0f, 0.0f, 0.0f,
             0.0f, 1.0f, 0.0f, 0.0f,
-            0.0f, 0.0f, 1.0f, 0.0f,
-            1.0f, 1.0f, 1.0f, 0.0f,
-            // back colors
-            1.0f, 0.0f, 0.0f, 0.0f,
             0.0f, 1.0f, 0.0f, 0.0f,
+            0.0f, 1.0f, 0.0f, 0.0f,
+            0.0f, 1.0f, 0.0f, 0.0f,
+            1.0f, 1.0f, 0.0f, 0.0f,
+            1.0f, 1.0f, 0.0f, 0.0f,
+            1.0f, 1.0f, 0.0f, 0.0f,
+            1.0f, 1.0f, 0.0f, 0.0f,  //back
+
+            0.0f, 1.0f, 1.0f, 0.0f,
+            0.0f, 1.0f, 1.0f, 0.0f,
+            0.0f, 1.0f, 1.0f, 0.0f,
+            0.0f, 1.0f, 1.0f, 0.0f,
             0.0f, 0.0f, 1.0f, 0.0f,
-            1.0f, 1.0f, 1.0f, 0.0f
+            0.0f, 0.0f, 1.0f, 0.0f,
+            0.0f, 0.0f, 1.0f, 0.0f,
+            0.0f, 0.0f, 1.0f, 0.0f,
+            1.0f, 0.0f, 1.0f, 0.0f,
+            1.0f, 0.0f, 1.0f, 0.0f,
+            1.0f, 0.0f, 1.0f, 0.0f,
+            1.0f, 0.0f, 1.0f, 0.0f,
     };
 
     shape = new Shape(
@@ -60,16 +92,36 @@ public class Block {
   }
 
   float[] getVertices(float dx, float dy) {
-    float[] vertices = new float[]{
-            // front
-            0.0f + dx, 0.0f + dy, 0.0f,
-            0.0f + dx, 0.0f + dy, 1.0f,
-            0.0f + dx, 1.0f + dy, 0.0f,
-            0.0f + dx, 1.0f + dy, 1.0f,
-            1.0f + dx, 0.0f + dy, 0.0f,
-            1.0f + dx, 0.0f + dy, 1.0f,
-            1.0f + dx, 1.0f + dy, 0.0f,
-            1.0f + dx, 1.0f + dy, 1.0f
+    float[] vertices = {
+            -1.0f + dx, -1.0f + dy, 1.0f,
+            1.0f + dx, -1.0f + dy, 1.0f,
+            1.0f + dx, 1.0f + dy, 1.0f,
+            -1.0f + dx, 1.0f + dy, 1.0f,      // front face
+
+            -1.0f + dx, -1.0f + dy, -1.0f,
+            -1.0f + dx, -1.0f + dy, 1.0f,
+            -1.0f + dx, 1.0f + dy, 1.0f,
+            -1.0f + dx, 1.0f + dy, -1.0f,    // left face
+
+            1.0f + dx, -1.0f + dy, -1.0f,
+            -1.0f + dx, -1.0f + dy, -1.0f,
+            -1.0f + dx, 1.0f + dy, -1.0f,
+            1.0f + dx, 1.0f + dy, -1.0f,    // back face
+
+            1.0f + dx, -1.0f + dy, 1.0f,
+            1.0f + dx, -1.0f + dy, -1.0f,
+            1.0f + dx, 1.0f + dy, -1.0f,
+            1.0f + dx, 1.0f + dy, 1.0f,      // right face
+
+            1.0f + dx, 1.0f + dy, 1.0f,
+            1.0f + dx, 1.0f + dy, -1.0f,
+            -1.0f + dx, 1.0f + dy, -1.0f,
+            -1.0f + dx, 1.0f + dy, 1.0f,      // top face
+
+            -1.0f + dx, -1.0f + dy, 1.0f,
+            -1.0f + dx, -1.0f + dy, -1.0f,
+            1.0f + dx, -1.0f + dy, -1.0f,
+            1.0f + dx, -1.0f + dy, 1.0f      // bottom face
     };
     for (int k = 0; k < vertices.length; k++) {
       vertices[k] -= 0.5f;
