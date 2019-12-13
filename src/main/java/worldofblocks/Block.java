@@ -4,7 +4,7 @@ public class Block {
   private Shape shape;
 
   // TODO: refactor this class, define a common shape interface with update methods etc.
-  public Block() {
+  Block() {
     float[] textureCoordinates = new float[]{
             1, 0,
             0, 0,
@@ -35,15 +35,15 @@ public class Block {
 
     float[] colors = new float[]{
             // front colors
-            1.0f, 0.0f, 0.0f,
-            0.0f, 1.0f, 0.0f,
-            0.0f, 0.0f, 1.0f,
-            1.0f, 1.0f, 1.0f,
+            1.0f, 0.0f, 0.0f, 0.0f,
+            0.0f, 1.0f, 0.0f, 0.0f,
+            0.0f, 0.0f, 1.0f, 0.0f,
+            1.0f, 1.0f, 1.0f, 0.0f,
             // back colors
-            1.0f, 0.0f, 0.0f,
-            0.0f, 1.0f, 0.0f,
-            0.0f, 0.0f, 1.0f,
-            1.0f, 1.0f, 1.0f
+            1.0f, 0.0f, 0.0f, 0.0f,
+            0.0f, 1.0f, 0.0f, 0.0f,
+            0.0f, 0.0f, 1.0f, 0.0f,
+            1.0f, 1.0f, 1.0f, 0.0f
     };
 
     shape = new Shape(

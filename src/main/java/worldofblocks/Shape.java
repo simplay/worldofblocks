@@ -23,6 +23,8 @@ public class Shape {
   private int fId;
   private int cId;
 
+  private boolean hasTextures = false;
+
   public Shape(float[] vertices, float[] colors, float[] textureCoordinates, int[] indices, Texture texture) {
     drawCount = indices.length; // we are drawing 3d points
     this.vertices = vertices;
@@ -30,6 +32,15 @@ public class Shape {
     this.textureCoordinates = textureCoordinates;
     this.indices = indices;
     this.texture = texture;
+    this.hasTextures = true;
+    initialize();
+  }
+
+  public Shape(float[] vertices, float[] colors, int[] indices) {
+    drawCount = indices.length; // we are drawing 3d points
+    this.vertices = vertices;
+    this.colors = colors;
+    this.indices = indices;
     initialize();
   }
 
@@ -47,9 +58,11 @@ public class Shape {
     glBindBuffer(GL_ARRAY_BUFFER, cId);
     glBufferData(GL_ARRAY_BUFFER, createBuffer(colors), GL_STATIC_DRAW);
 
-    tId = glGenBuffers();
-    glBindBuffer(GL_ARRAY_BUFFER, tId);
-    glBufferData(GL_ARRAY_BUFFER, createBuffer(textureCoordinates), GL_STATIC_DRAW);
+    if (hasTextures) {
+      tId = glGenBuffers();
+      glBindBuffer(GL_ARRAY_BUFFER, tId);
+      glBufferData(GL_ARRAY_BUFFER, createBuffer(textureCoordinates), GL_STATIC_DRAW);
+    }
 
     fId = glGenBuffers();
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, fId);
@@ -65,10 +78,14 @@ public class Shape {
 
   public void render() {
     glEnableVertexAttribArray(VertexAttributes.VERTICES.getIndex());
-    glEnableVertexAttribArray(VertexAttributes.TEXTURES.getIndex());
+    if (hasTextures) {
+      glEnableVertexAttribArray(VertexAttributes.TEXTURES.getIndex());
+    }
     glEnableVertexAttribArray(VertexAttributes.COLORS.getIndex());
 
-    texture.bind(0);
+    if (hasTextures) {
+      texture.bind(0);
+    }
 
     glBindBuffer(GL_ARRAY_BUFFER, vId);
     glVertexAttribPointer(
@@ -80,15 +97,17 @@ public class Shape {
             0
     );
 
-    glBindBuffer(GL_ARRAY_BUFFER, tId);
-    glVertexAttribPointer(
-            VertexAttributes.TEXTURES.getIndex(),
-            2,
-            GL_FLOAT,
-            false,
-            0,
-            0
-    );
+    if (hasTextures) {
+      glBindBuffer(GL_ARRAY_BUFFER, tId);
+      glVertexAttribPointer(
+              VertexAttributes.TEXTURES.getIndex(),
+              2,
+              GL_FLOAT,
+              false,
+              0,
+              0
+      );
+    }
 
     glBindBuffer(GL_ARRAY_BUFFER, cId);
     glVertexAttribPointer(
@@ -108,10 +127,14 @@ public class Shape {
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
     glBindBuffer(GL_ARRAY_BUFFER, 0);
 
-    texture.unbind();
+    if (hasTextures) {
+      texture.unbind();
+    }
 
     glDisableVertexAttribArray(VertexAttributes.VERTICES.getIndex());
-    glDisableVertexAttribArray(VertexAttributes.TEXTURES.getIndex());
+    if (hasTextures) {
+      glDisableVertexAttribArray(VertexAttributes.TEXTURES.getIndex());
+    }
     glDisableVertexAttribArray(VertexAttributes.COLORS.getIndex());
   }
 

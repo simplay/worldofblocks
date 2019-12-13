@@ -31,6 +31,7 @@ public class Game implements Runnable {
   private InputHandler windowInputHandler;
 
   private Block block;
+  private Plane plane;
 
   public void start() {
     this.running = true;
@@ -55,7 +56,7 @@ public class Game implements Runnable {
 
   private Camera camera;
   private Frustum frustum;
-  private Vector3f eye = new Vector3f(0, 0, 2f);
+  private Vector3f eye = new Vector3f(0, 0, 4f);
   private Vector3f lookAtPoint = new Vector3f(0.0f, 0.2f, 0.0f);
   private Vector3f up = new Vector3f(0, 0, 1);
 
@@ -78,6 +79,7 @@ public class Game implements Runnable {
     glEnable(GL_DEPTH_TEST);
     glDepthFunc(GL_LESS);
 
+    plane = new Plane();
     block = new Block();
     shader = new Shader("shader");
   }
@@ -251,6 +253,7 @@ public class Game implements Runnable {
     shader.setUniform("modelview", camera.getTransformation());
     shader.setUniform("projection", frustum.getTransformation());
 
+    plane.render();
     block.render();
     glfwSwapBuffers(window); // swap the color buffers
   }
