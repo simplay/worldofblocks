@@ -30,6 +30,8 @@ public class Game implements Runnable {
 
   private InputHandler windowInputHandler;
 
+  private Block block;
+
   public void start() {
     this.running = true;
     thread = new Thread(this, "Game");
@@ -51,11 +53,11 @@ public class Game implements Runnable {
     initShapes();
   }
 
-  Camera camera;
-  Frustum frustum;
-  Vector3f eye = new Vector3f(0, 0, 2f);
-  Vector3f lookAtPoint = new Vector3f(0.0f, 0.2f, 0.0f);
-  Vector3f up = new Vector3f(0, 0, 1);
+  private Camera camera;
+  private Frustum frustum;
+  private Vector3f eye = new Vector3f(0, 0, 2f);
+  private Vector3f lookAtPoint = new Vector3f(0.0f, 0.2f, 0.0f);
+  private Vector3f up = new Vector3f(0, 0, 1);
 
   private void initProjections() {
     camera = new Camera(eye, lookAtPoint, up);
@@ -76,55 +78,7 @@ public class Game implements Runnable {
     glEnable(GL_DEPTH_TEST);
     glDepthFunc(GL_LESS);
 
-    float[] textureCoordinates = new float[]{
-            1, 0,
-            0, 0,
-            1, 1,
-            0, 1,
-            0, 0,
-            1, 0,
-            1, 1,
-            0, 1,
-            1, 1,
-            0, 1,
-    };
-
-    int[] indices = new int[]{
-            0, 6, 4,
-            0, 2, 6,
-            0, 3, 2,
-            0, 1, 3,
-            2, 7, 6,
-            2, 3, 7,
-            4, 6, 7,
-            4, 7, 5,
-            0, 4, 5,
-            0, 5, 1,
-            1, 5, 7,
-            1, 7, 3
-    };
-
-    float[] colors = new float[]{
-            // front colors
-            1.0f, 0.0f, 0.0f,
-            0.0f, 1.0f, 0.0f,
-            0.0f, 0.0f, 1.0f,
-            1.0f, 1.0f, 1.0f,
-            // back colors
-            1.0f, 0.0f, 0.0f,
-            0.0f, 1.0f, 0.0f,
-            0.0f, 0.0f, 1.0f,
-            1.0f, 1.0f, 1.0f
-    };
-
-    shape = new Shape(
-            getVertices(0, 0),
-            colors,
-            textureCoordinates,
-            indices,
-            new Texture("./textures/trollface.png")
-    );
-
+    block = new Block();
     shader = new Shader("shader");
   }
 
@@ -286,40 +240,8 @@ public class Game implements Runnable {
       initProjections();
     }
 
-    shape.updateVertices(getVertices(dx, dy));
+    block.updateVertices(dx, dy);
   }
-
-  float[] getVertices2(float dx, float dy) {
-    float[] vertices = new float[]{
-            -0.5f + dx, 0.5f + dy, 0, // 0
-            0.5f + dx, 0.5f + dy, 0, // 1
-            0.5f + dx, -0.5f + dy, 0, // 2
-            0.5f + dx, -0.5f + dy, 0, // 3
-    };
-
-    return vertices;
-  }
-
-  float[] getVertices(float dx, float dy) {
-    float[] vertices = new float[]{
-            // front
-            0.0f + dx, 0.0f + dy, 0.0f,
-            0.0f + dx, 0.0f + dy, 1.0f,
-            0.0f + dx, 1.0f + dy, 0.0f,
-            0.0f + dx, 1.0f + dy, 1.0f,
-            1.0f + dx, 0.0f + dy, 0.0f,
-            1.0f + dx, 0.0f + dy, 1.0f,
-            1.0f + dx, 1.0f + dy, 0.0f,
-            1.0f + dx, 1.0f + dy, 1.0f
-    };
-
-    for (int k = 0; k < vertices.length; k++) {
-      vertices[k] -= 0.5f;
-    }
-    return vertices;
-  }
-
-  private Shape shape;
 
   private void render() {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // clear the framebuffer
@@ -329,7 +251,7 @@ public class Game implements Runnable {
     shader.setUniform("modelview", camera.getTransformation());
     shader.setUniform("projection", frustum.getTransformation());
 
-    shape.render();
+    block.render();
     glfwSwapBuffers(window); // swap the color buffers
   }
 
