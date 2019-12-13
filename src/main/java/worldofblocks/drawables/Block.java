@@ -3,7 +3,7 @@ package worldofblocks.drawables;
 import org.joml.Vector3f;
 import worldofblocks.Texture;
 
-public class Block extends Shape implements Moveable {
+public class Block extends RenderItem implements Moveable {
 
   @Override
   protected float[] getTextureCoordinates() {

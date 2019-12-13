@@ -11,7 +11,7 @@ import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.opengl.GL15.*;
 import static org.lwjgl.opengl.GL20.*;
 
-public abstract class Shape {
+public abstract class RenderItem {
   protected float[] vertices;
   protected int[] indices;
   protected float[] colors;
@@ -34,7 +34,7 @@ public abstract class Shape {
   protected abstract float[] getNormals();
   protected abstract float[] getTextureCoordinates();
 
-  public Shape(Texture texture) {
+  public RenderItem(Texture texture) {
     this.vertices = getVertices();
     this.indices = getIndices();
     this.faces = indices.length;
@@ -46,7 +46,7 @@ public abstract class Shape {
     initialize();
   }
 
-  public Shape() {
+  public RenderItem() {
     this.vertices = getVertices();
     this.indices = getIndices();
     faces = indices.length;

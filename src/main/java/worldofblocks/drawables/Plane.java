@@ -1,6 +1,6 @@
 package worldofblocks.drawables;
 
-public class Plane extends Shape {
+public class Plane extends RenderItem {
 
   @Override
   protected float[] getVertices() {
