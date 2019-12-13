@@ -6,7 +6,7 @@ public class Plane {
   private Shape shape;
 
   public Plane() {
-    float[] colors = new float[]{
+    float[] colors = {
             // front colors
             0.0f, 1.0f, 0.0f, 0.0f,
             0.0f, 1.0f, 0.0f, 0.0f,
@@ -14,16 +14,23 @@ public class Plane {
             0.0f, 1.0f, 0.0f, 0.0f
     };
 
-    int[] indices = new int[]{
+    int[] indices = {
             0, 1, 3,
             3, 1, 2
     };
 
-    float[] vertices = new float[]{
+    float[] vertices = {
             0.0f, -0.2f, 0.0f,
             0.0f, -0.2f, 1.0f,
             1.0f, -0.2f, 0.0f,
             1.0f, -0.2f, 1.0f
+    };
+
+    float[] normals = {
+            0.0f, 0.0f, 1.0f,
+            0.0f, 0.0f, 1.0f,
+            0.0f, 0.0f, 1.0f,
+            0.0f, 0.0f, 1.0f
     };
 
     shape = new Shape(
