@@ -7,7 +7,7 @@ public enum VertexAttributes {
 
   private final int index;
 
-  private VertexAttributes(int index) {
+  VertexAttributes(int index) {
     this.index = index;
   }
 

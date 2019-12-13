@@ -17,7 +17,7 @@ public class Shader {
   private int vertexShaderId;
   private int fragmentShaderId;
 
-  Shader(String filename) {
+  public Shader(String filename) {
     this.programId = glCreateProgram();
 
     this.vertexShaderId = glCreateShader(GL_VERTEX_SHADER);

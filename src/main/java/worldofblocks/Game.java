@@ -43,11 +43,7 @@ public class Game implements Runnable, Subscriber{
     thread.start();
   }
 
-  Game() {
-    this(300, 300);
-  }
-
-  Game(int windowWidth, int windowHeight) {
+  public Game(int windowWidth, int windowHeight) {
     this.windowWidth = windowWidth;
     this.windowHeight = windowHeight;
 
