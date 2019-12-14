@@ -1,7 +1,7 @@
 package worldofblocks;
 
-import org.joml.Matrix4f;
 import org.joml.Vector3f;
+import org.lwjgl.glfw.GLFWCursorPosCallback;
 import org.lwjgl.glfw.GLFWErrorCallback;
 import org.lwjgl.glfw.GLFWVidMode;
 import org.lwjgl.opengl.GL;
@@ -19,7 +19,7 @@ import static org.lwjgl.system.MemoryStack.stackPush;
 import static org.lwjgl.system.MemoryUtil.NULL;
 
 // TODO: try to implement a more MVC like style or at least separate view-controller code from models
-public class Game implements Runnable, Subscriber{
+public class Game implements Runnable, Subscriber {
   // address to window object
   private long window;
   private final float EPS = 0.1f;
@@ -31,11 +31,15 @@ public class Game implements Runnable, Subscriber{
   private boolean running = false;
 
   private InputHandler windowInputHandler;
+  private GLFWCursorPosCallback cpCallback;
 
   private Block block;
   private Plane plane;
 
   private WorldTimer worldTimer;
+
+  float mouseX;
+  float mouseY;
 
   public void start() {
     this.running = true;
@@ -121,6 +125,13 @@ public class Game implements Runnable, Subscriber{
       }
     });
 
+    glfwSetCursorPosCallback(window, cpCallback = new GLFWCursorPosCallback() {
+      public void invoke(long window, double xpos, double ypos) {
+        mouseX = (float) (xpos / windowWidth) - 0.5f;
+        mouseY = (float) (ypos / windowHeight) - 0.5f;
+      }
+    });
+
     // Get the thread stack and push a new frame
     try (MemoryStack stack = stackPush()) {
       IntBuffer pWidth = stack.mallocInt(1); // int*
@@ -176,9 +187,31 @@ public class Game implements Runnable, Subscriber{
   private float dx = 0;
   private float dy = 0;
 
+  double prevX = 0;
+  double prevY = 0;
+
   // w/s, a/d, q/e move camera
   // arrows: move plane
+  // TODO move to camera
+  private float yaw = 0;
+  private float pitch = 0;
+
   private void handleUserInput() {
+
+    double deltaX = mouseX - prevX;
+    double deltaY = mouseY - prevY;
+
+    yaw += deltaX * 1.0f;
+    pitch += deltaY * 1.0f;
+
+    System.out.println("Pitch: " + pitch + ", Yaw: " + yaw);
+
+    glRotatef(pitch, 1.0f, 0.0f, 0.0f);
+    glRotatef(yaw, 0.0f, 1.0f, 0.0f);
+
+    prevX = mouseX;
+    prevY = mouseY;
+
     if (windowInputHandler.isKeyDown(GLFW_KEY_A)) {
       player.updatePosition(new Vector3f(0.01f, 0, 0));
       camera.updateTransformation(player.getTransform());
@@ -230,7 +263,10 @@ public class Game implements Runnable, Subscriber{
 
   double time;
   double fps = 0;
+  float counter = 0;
+
   private void updateFps() {
+    counter -= 0.001;
     double now = System.nanoTime();
     double delta = now - time;
 
@@ -243,7 +279,7 @@ public class Game implements Runnable, Subscriber{
 
     shader.bind();
     shader.setUniform("sampler", 0);
-    shader.setUniform("modelview", camera.getTransformation());
+    shader.setUniform("modelview", camera.getTransformation(pitch, yaw));
     shader.setUniform("projection", frustum.getTransformation());
 
     player.render();

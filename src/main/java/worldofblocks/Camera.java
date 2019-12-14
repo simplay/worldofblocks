@@ -7,6 +7,8 @@ import org.joml.Vector4f;
 /**
  * the world-to-camera transform .
  */
+
+// TODO: implement camera rotation
 public class Camera {
   private Matrix4f cameraMatrix;
   private Matrix4f transformation = new Matrix4f().identity();
@@ -29,9 +31,17 @@ public class Camera {
   }
 
   // notice that the camera is attached to a player (i.e. its transformation)
-  public Matrix4f getTransformation() {
+  public Matrix4f getTransformation(float pitch, float yaw) {
+    float angle  = (pitch % 360);
+    float angle2 = (yaw % 360);
+    Matrix4f vertRot = new Matrix4f().rotate(angle, new Vector3f(1, 0, 0));
+    Matrix4f horiRot = new Matrix4f().rotate(angle2, new Vector3f(0, 1, 0));
+
     Matrix4f tmp = new Matrix4f();
-    transformation.mul(cameraMatrix, tmp);
+
+    vertRot.mul(horiRot, tmp);
+    tmp.mul(cameraMatrix, tmp);
+    tmp.mul(transformation, tmp);
 
     return tmp;
   }
