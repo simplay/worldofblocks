@@ -34,7 +34,18 @@ public class Game implements Runnable, Subscriber {
   private Block block;
   private Plane plane;
 
+  private FpsCounter fpsCoutner;
+
   private WorldTimer worldTimer;
+
+  private Camera camera;
+  private Frustum frustum;
+  private Vector3f eye = new Vector3f(0, 0, 4f);
+  private Vector3f lookAtPoint = new Vector3f(0.0f, 0.2f, 0.0f);
+  private Vector3f up = new Vector3f(0, 0, 1);
+
+  private Shader shader;
+  private Player player;
 
   public void start() {
     this.running = true;
@@ -51,8 +62,10 @@ public class Game implements Runnable, Subscriber {
 
   private void init() {
     initRenderer();
-    camera = new Camera(cursorHandler, eye, lookAtPoint, up);
-    initProjections();
+
+    this.fpsCoutner = new FpsCounter();
+    this.camera = new Camera(cursorHandler, eye, lookAtPoint, up);
+    this.frustum = new Frustum(windowWidth / windowHeight, EPS, 5000, 60.0f);
 
     initShapes();
 
@@ -60,18 +73,6 @@ public class Game implements Runnable, Subscriber {
     worldTimer.start();
   }
 
-  private Camera camera;
-  private Frustum frustum;
-  private Vector3f eye = new Vector3f(0, 0, 4f);
-  private Vector3f lookAtPoint = new Vector3f(0.0f, 0.2f, 0.0f);
-  private Vector3f up = new Vector3f(0, 0, 1);
-
-  private void initProjections() {
-    frustum = new Frustum(windowWidth / windowHeight, EPS, 5000, 60.0f);
-  }
-
-  private Shader shader;
-  private Player player;
 
   private void initShapes() {
     // This line is critical for LWJGL's interoperation with GLFW's
@@ -156,7 +157,6 @@ public class Game implements Runnable, Subscriber {
   }
 
   public void run() {
-    time = System.nanoTime();
     init();
     while (running) {
       update();
@@ -180,17 +180,6 @@ public class Game implements Runnable, Subscriber {
     camera.update();
   }
 
-  double time;
-  double fps = 0;
-
-  private void updateFps() {
-    double now = System.nanoTime();
-    double delta = now - time;
-
-    fps = 1000000000L / delta;
-    time = now;
-  }
-
   private void render() {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // clear the framebuffer
 
@@ -205,7 +194,7 @@ public class Game implements Runnable, Subscriber {
 
     glfwSwapBuffers(window); // swap the color buffers
 
-    updateFps();
+    fpsCoutner.update();
   }
 
   private void cleanup() {
@@ -222,6 +211,6 @@ public class Game implements Runnable, Subscriber {
 
   @Override
   public void handleUpdate() {
-    glfwSetWindowTitle(window, "Wolrd of Blocks - FPS: " + fps);
+    glfwSetWindowTitle(window, "Wolrd of Blocks - FPS: " + fpsCoutner.getFps());
   }
 }
