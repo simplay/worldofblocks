@@ -1,40 +1,28 @@
 package worldofblocks;
 
 import org.joml.Vector3f;
-import org.lwjgl.glfw.GLFWErrorCallback;
-import org.lwjgl.glfw.GLFWVidMode;
 import org.lwjgl.opengl.GL;
-import org.lwjgl.system.MemoryStack;
 import worldofblocks.drawables.Block;
 import worldofblocks.drawables.Plane;
 
-import java.nio.IntBuffer;
-
-import static org.lwjgl.glfw.Callbacks.glfwFreeCallbacks;
 import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.opengl.GL11.GL_DEPTH_BUFFER_BIT;
-import static org.lwjgl.system.MemoryStack.stackPush;
-import static org.lwjgl.system.MemoryUtil.NULL;
 
 public class Game implements Runnable, Subscriber {
-  // address to window object
-  private long window;
   private final float EPS = 0.1f;
 
   private int windowWidth;
   private int windowHeight;
+  private Window window;
 
   private Thread thread;
   private boolean running = false;
 
-  private InputHandler windowInputHandler;
-  private CursorHandler cursorHandler;
-
   private Block block;
   private Plane plane;
 
-  private FpsCounter fpsCoutner;
+  private FpsCounter fpsCounter;
 
   private WorldTimer worldTimer;
 
@@ -49,7 +37,8 @@ public class Game implements Runnable, Subscriber {
 
   public void start() {
     this.running = true;
-    thread = new Thread(this, "Game");
+    this.thread = new Thread(this, "Game");
+
     thread.start();
   }
 
@@ -61,10 +50,9 @@ public class Game implements Runnable, Subscriber {
   }
 
   private void init() {
-    initRenderer();
-
-    this.fpsCoutner = new FpsCounter();
-    this.camera = new Camera(cursorHandler, eye, lookAtPoint, up);
+    this.window = new Window(windowWidth, windowHeight);
+    this.fpsCounter = new FpsCounter();
+    this.camera = new Camera(window.getCursorHandler(), eye, lookAtPoint, up);
     this.frustum = new Frustum(windowWidth / windowHeight, EPS, 5000, 60.0f);
 
     initShapes();
@@ -72,7 +60,6 @@ public class Game implements Runnable, Subscriber {
     worldTimer.addSubscriber(this);
     worldTimer.start();
   }
-
 
   private void initShapes() {
     // This line is critical for LWJGL's interoperation with GLFW's
@@ -86,74 +73,12 @@ public class Game implements Runnable, Subscriber {
     glEnable(GL_DEPTH_TEST);
     glDepthFunc(GL_LESS);
 
-    this.player = new Player(windowInputHandler);
+    this.player = new Player(window.getInputHandler());
     camera.attachPlayer(player);
 
     this.plane = new Plane();
     this.block = new Block();
     this.shader = new Shader("shader");
-  }
-
-  private void initRenderer() {
-    // Setup an error callback. The default implementation
-    // will print the error message in System.err.
-    GLFWErrorCallback.createPrint(System.err).set();
-
-    // Initialize GLFW. Most GLFW functions will not work before doing this.
-    if (!glfwInit()) {
-      throw new IllegalStateException("Unable to initialize GLFW");
-    }
-
-    // Configure GLFW
-    glfwDefaultWindowHints(); // optional, the current window hints are already the default
-    glfwWindowHint(GLFW_VISIBLE, GLFW_FALSE); // the window will stay hidden after creation
-    glfwWindowHint(GLFW_RESIZABLE, GLFW_TRUE); // the window will be resizable
-
-    // Create the window
-    this.window = glfwCreateWindow(windowWidth, windowHeight, "World of Blocks", NULL, NULL);
-    if (window == NULL) {
-      throw new RuntimeException("Failed to create the GLFW window");
-    }
-
-    this.windowInputHandler = new InputHandler(window);
-    this.cursorHandler = new CursorHandler(windowWidth, windowHeight);
-
-    // Setup a key callback. It will be called every time a key is pressed, repeated or released.
-    glfwSetKeyCallback(window, (window, key, scancode, action, mods) -> {
-      if (key == GLFW_KEY_ESCAPE && action == GLFW_RELEASE) {
-        glfwSetWindowShouldClose(window, true); // We will detect this in the rendering loop
-      }
-    });
-
-    glfwSetCursorPosCallback(window, cursorHandler);
-
-    // Get the thread stack and push a new frame
-    try (MemoryStack stack = stackPush()) {
-      IntBuffer pWidth = stack.mallocInt(1); // int*
-      IntBuffer pHeight = stack.mallocInt(1); // int*
-
-      // Get the window size passed to glfwCreateWindow
-      glfwGetWindowSize(window, pWidth, pHeight);
-
-      // Get the resolution of the primary monitor
-      GLFWVidMode videoMode = glfwGetVideoMode(glfwGetPrimaryMonitor());
-
-      // Center the window
-      glfwSetWindowPos(
-              window,
-              (videoMode.width() - pWidth.get(0)) / 2,
-              (videoMode.height() - pHeight.get(0)) / 2
-      );
-    } // the stack frame is popped automatically
-
-    // Make the OpenGL context current
-    glfwMakeContextCurrent(window);
-
-    // Enable v-sync
-    glfwSwapInterval(1);
-
-    // Make the window visible
-    glfwShowWindow(window);
   }
 
   public void run() {
@@ -164,7 +89,7 @@ public class Game implements Runnable, Subscriber {
 
       // Run the rendering loop until the user has attempted to close
       // the window or has pressed the ESCAPE key.
-      if (glfwWindowShouldClose(window)) {
+      if (glfwWindowShouldClose(window.getId())) {
         this.running = false;
       }
     }
@@ -192,15 +117,13 @@ public class Game implements Runnable, Subscriber {
     plane.render();
     block.render();
 
-    glfwSwapBuffers(window); // swap the color buffers
+    glfwSwapBuffers(window.getId()); // swap the color buffers
 
-    fpsCoutner.update();
+    fpsCounter.update();
   }
 
   private void cleanup() {
-    // Free the window callbacks and destroy the window
-    glfwFreeCallbacks(window);
-    glfwDestroyWindow(window);
+    window.destroy();
 
     // Terminate GLFW and free the error callback
     glfwTerminate();
@@ -211,6 +134,6 @@ public class Game implements Runnable, Subscriber {
 
   @Override
   public void handleUpdate() {
-    glfwSetWindowTitle(window, "Wolrd of Blocks - FPS: " + fpsCoutner.getFps());
+    glfwSetWindowTitle(window.getId(), "Wolrd of Blocks - FPS: " + fpsCounter.getFps());
   }
 }
