@@ -1,9 +1,12 @@
 package worldofblocks.drawables;
 
+import org.joml.Matrix4f;
 import org.joml.Vector3f;
+import org.joml.Vector4f;
 import worldofblocks.Texture;
 
 public class Block extends RenderItem implements Moveable {
+  private Matrix4f transformation = new Matrix4f();
 
   @Override
   protected float[] getTextureCoordinates() {
@@ -95,44 +98,47 @@ public class Block extends RenderItem implements Moveable {
     return colors;
   }
 
-
   @Override
-  protected float[] getVertices() {
-    float[] vertices = {
-            -1.0f, -1.0f, 1.0f,
-            1.0f, -1.0f, 1.0f,
-            1.0f, 1.0f, 1.0f,
-            -1.0f, 1.0f, 1.0f,      // front face
+  protected Vector4f[] getVertices() {
+    Vector4f[] origVertices = new Vector4f[]{
+            // front face
+            new Vector4f(-1.0f, -1.0f, 1.0f, 1.0f),
+            new Vector4f(1.0f, -1.0f, 1.0f, 1.0f),
+            new Vector4f(1.0f, 1.0f, 1.0f, 1.0f),
+            new Vector4f(-1.0f, 1.0f, 1.0f, 1.0f),
 
-            -1.0f, -1.0f, -1.0f,
-            -1.0f, -1.0f, 1.0f,
-            -1.0f, 1.0f, 1.0f,
-            -1.0f, 1.0f, -1.0f,    // left face
+            // left face
+            new Vector4f(-1.0f, -1.0f, -1.0f, 1.0f),
+            new Vector4f(-1.0f, -1.0f, 1.0f, 1.0f),
+            new Vector4f(-1.0f, 1.0f, 1.0f, 1.0f),
+            new Vector4f(-1.0f, 1.0f, -1.0f, 1.0f),
 
-            1.0f, -1.0f, -1.0f,
-            -1.0f, -1.0f, -1.0f,
-            -1.0f, 1.0f, -1.0f,
-            1.0f, 1.0f, -1.0f,    // back face
+            // back face
+            new Vector4f(1.0f, -1.0f, -1.0f, 1.0f),
+            new Vector4f(-1.0f, -1.0f, -1.0f, 1.0f),
+            new Vector4f(-1.0f, 1.0f, -1.0f, 1.0f),
+            new Vector4f(1.0f, 1.0f, -1.0f, 1.0f),
 
-            1.0f, -1.0f, 1.0f,
-            1.0f, -1.0f, -1.0f,
-            1.0f, 1.0f, -1.0f,
-            1.0f, 1.0f, 1.0f,      // right face
+            // right face
+            new Vector4f(1.0f, -1.0f, 1.0f, 1.0f),
+            new Vector4f(1.0f, -1.0f, -1.0f, 1.0f),
+            new Vector4f(1.0f, 1.0f, -1.0f, 1.0f),
+            new Vector4f(1.0f, 1.0f, 1.0f, 1.0f),
 
-            1.0f, 1.0f, 1.0f,
-            1.0f, 1.0f, -1.0f,
-            -1.0f, 1.0f, -1.0f,
-            -1.0f, 1.0f, 1.0f,      // top face
+            // top face
+            new Vector4f(1.0f, 1.0f, 1.0f, 1.0f),
+            new Vector4f(1.0f, 1.0f, -1.0f, 1.0f),
+            new Vector4f(-1.0f, 1.0f, -1.0f, 1.0f),
+            new Vector4f(-1.0f, 1.0f, 1.0f, 1.0f),
 
-            -1.0f, -1.0f, 1.0f,
-            -1.0f, -1.0f, -1.0f,
-            1.0f, -1.0f, -1.0f,
-            1.0f, -1.0f, 1.0f      // bottom face
+            // bottom face
+            new Vector4f(-1.0f, -1.0f, 1.0f, 1.0f),
+            new Vector4f(-1.0f, -1.0f, -1.0f, 1.0f),
+            new Vector4f(1.0f, -1.0f, -1.0f, 1.0f),
+            new Vector4f(1.0f, -1.0f, 1.0f, 1.0f)
     };
-    for (int k = 0; k < vertices.length; k++) {
-      vertices[k] -= 0.5f;
-    }
-    return vertices;
+
+    return origVertices;
   }
 
   public Block() {
@@ -141,13 +147,11 @@ public class Block extends RenderItem implements Moveable {
 
   @Override
   public void updatePosition(Vector3f shift) {
-    float[] tmp = new float[vertices.length];
-    float[] originalVertices = getVertices();
-    for (int k = 0; k < this.vertices.length / 3; k++) {
-      tmp[3 * k] = originalVertices[3 * k] + shift.x;
-      tmp[3 * k + 1] = originalVertices[3 * k + 1] + shift.y;
-      tmp[3 * k + 2] = originalVertices[3 * k + 2] + shift.z;
+    Matrix4f t = new Matrix4f(transformation).translation(shift);
+    for (Vector4f v : vertices) {
+      v.mul(t);
     }
-    updateVertices(tmp);
+
+    reloadVertices();
   }
 }

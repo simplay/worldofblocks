@@ -1,7 +1,6 @@
 package worldofblocks.drawables;
 
-import org.joml.Matrix4f;
-import org.joml.Vector3f;
+import org.joml.Vector4f;
 import org.lwjgl.BufferUtils;
 import worldofblocks.Texture;
 import worldofblocks.VertexAttributes;
@@ -14,7 +13,7 @@ import static org.lwjgl.opengl.GL15.*;
 import static org.lwjgl.opengl.GL20.*;
 
 public abstract class RenderItem {
-  protected float[] vertices;
+  protected Vector4f[] vertices;
   protected int[] indices;
   protected float[] colors;
   protected float[] normals;
@@ -30,7 +29,7 @@ public abstract class RenderItem {
 
   private boolean hasTextures = false;
 
-  protected abstract float[] getVertices();
+  protected abstract Vector4f[] getVertices();
   protected abstract int[] getIndices();
   protected abstract float[] getColors();
   protected abstract float[] getNormals();
@@ -57,15 +56,28 @@ public abstract class RenderItem {
     initialize();
   }
 
-  void updateVertices(float[] vertices) {
-    this.vertices = vertices;
+  protected void reloadVertices() {
     initialize();
+  }
+
+  protected float[] verticesAsFloatArray() {
+    float[] vertices = new float[this.vertices.length * 4];
+
+    int k = 0;
+    for (Vector4f v : this.vertices) {
+      vertices[3 * k] = v.x;
+      vertices[3 * k + 1] = v.y;
+      vertices[3 * k + 2] = v.z;
+      k++;
+    }
+
+    return vertices;
   }
 
   private void initialize() {
     vId = glGenBuffers();
     glBindBuffer(GL_ARRAY_BUFFER, vId);
-    glBufferData(GL_ARRAY_BUFFER, createBuffer(vertices), GL_STATIC_DRAW);
+    glBufferData(GL_ARRAY_BUFFER, createBuffer(verticesAsFloatArray()), GL_STATIC_DRAW);
 
     cId = glGenBuffers();
     glBindBuffer(GL_ARRAY_BUFFER, cId);

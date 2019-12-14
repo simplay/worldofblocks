@@ -1,15 +1,17 @@
 package worldofblocks.drawables;
 
-public class Plane extends RenderItem {
+import org.joml.Vector4f;
 
+public class Plane extends RenderItem {
   @Override
-  protected float[] getVertices() {
-    float[] vertices = {
-            0.0f, -0.2f, 0.0f,
-            0.0f, -0.2f, 1.0f,
-            1.0f, -0.2f, 0.0f,
-            1.0f, -0.2f, 1.0f
+  protected Vector4f[] getVertices() {
+    Vector4f[] vertices = {
+            new Vector4f(0.0f, -0.2f, 0.0f, 1.0f),
+            new Vector4f(0.0f, -0.2f, 1.0f, 1.0f),
+            new Vector4f(1.0f, -0.2f, 0.0f, 1.0f),
+            new Vector4f(1.0f, -0.2f, 1.0f, 1.0f)
     };
+
     return vertices;
   }
 

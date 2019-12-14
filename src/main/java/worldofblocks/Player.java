@@ -22,7 +22,7 @@ public class Player implements Moveable {
 
   @Override
   public void updatePosition(Vector3f shift) {
-    shape.updatePosition(shift);
+    shape.updatePosition(new Vector3f(-shift.x, -shift.y, -shift.z));
     position.add(shift);
   }
 
@@ -31,8 +31,7 @@ public class Player implements Moveable {
   }
 
   public void render() {
-    // TODO: fix translation of player shape
-    // shape.render();
+     shape.render();
   }
 
   public void update() {
