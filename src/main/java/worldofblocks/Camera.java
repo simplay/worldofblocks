@@ -3,9 +3,7 @@ package worldofblocks;
 import org.joml.Matrix4f;
 import org.joml.Vector3f;
 import org.joml.Vector4f;
-
-import static org.lwjgl.glfw.GLFW.*;
-import static org.lwjgl.glfw.GLFW.GLFW_KEY_LEFT_SHIFT;
+import worldofblocks.handlers.CursorHandler;
 
 /**
  * the world-to-camera transform .

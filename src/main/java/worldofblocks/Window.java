@@ -3,6 +3,8 @@ package worldofblocks;
 import org.lwjgl.glfw.GLFWErrorCallback;
 import org.lwjgl.glfw.GLFWVidMode;
 import org.lwjgl.system.MemoryStack;
+import worldofblocks.handlers.CursorHandler;
+import worldofblocks.handlers.InputHandler;
 
 import java.nio.IntBuffer;
 
