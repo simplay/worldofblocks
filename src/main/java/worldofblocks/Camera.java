@@ -36,7 +36,7 @@ public class Camera {
     return tmp;
   }
 
-  public void updateTranformation(Matrix4f t) {
+  public void updateTransformation(Matrix4f t) {
     this.transformation = t;
 
   }

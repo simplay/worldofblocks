@@ -181,32 +181,32 @@ public class Game implements Runnable, Subscriber{
   private void handleUserInput() {
     if (windowInputHandler.isKeyDown(GLFW_KEY_A)) {
       player.updatePosition(new Vector3f(0.01f, 0, 0));
-      camera.updateTranformation(player.getTransform());
+      camera.updateTransformation(player.getTransform());
     }
 
     if (windowInputHandler.isKeyDown(GLFW_KEY_D)) {
       player.updatePosition(new Vector3f(-0.01f, 0, 0));
-      camera.updateTranformation(player.getTransform());
+      camera.updateTransformation(player.getTransform());
     }
 
     if (windowInputHandler.isKeyDown(GLFW_KEY_W)) {
       player.updatePosition(new Vector3f(0, 0, 0.01f));
-      camera.updateTranformation(player.getTransform());
+      camera.updateTransformation(player.getTransform());
     }
 
     if (windowInputHandler.isKeyDown(GLFW_KEY_S)) {
       player.updatePosition(new Vector3f(0, 0.0f, -0.01f));
-      camera.updateTranformation(player.getTransform());
+      camera.updateTransformation(player.getTransform());
     }
 
     if (windowInputHandler.isKeyDown(GLFW_KEY_SPACE)) {
       player.updatePosition(new Vector3f(0, -0.01f, 0));
-      camera.updateTranformation(player.getTransform());
+      camera.updateTransformation(player.getTransform());
     }
 
     if (windowInputHandler.isKeyDown(GLFW_KEY_LEFT_SHIFT)) {
       player.updatePosition(new Vector3f(0, 0.01f, 0));
-      camera.updateTranformation(player.getTransform());
+      camera.updateTransformation(player.getTransform());
     }
 
     if (windowInputHandler.isKeyDown(GLFW_KEY_LEFT)) {
@@ -246,6 +246,7 @@ public class Game implements Runnable, Subscriber{
     shader.setUniform("modelview", camera.getTransformation());
     shader.setUniform("projection", frustum.getTransformation());
 
+    player.render();
     plane.render();
     block.render();
     glfwSwapBuffers(window); // swap the color buffers

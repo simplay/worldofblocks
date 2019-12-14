@@ -17,14 +17,7 @@ public class Player implements Moveable {
   @Override
   public void updatePosition(Vector3f shift) {
     shape.updatePosition(shift);
-
-
-
-
-
-
     position.add(shift);
-    System.out.println(position);
   }
 
   public Matrix4f getTransform() {
@@ -32,6 +25,7 @@ public class Player implements Moveable {
   }
 
   public void render() {
-    shape.render();
+    // TODO: fix translation of player shape
+    // shape.render();
   }
 }
