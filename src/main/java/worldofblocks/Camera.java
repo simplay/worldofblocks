@@ -4,51 +4,58 @@ import org.joml.Matrix4f;
 import org.joml.Vector3f;
 import org.joml.Vector4f;
 
+import static org.lwjgl.glfw.GLFW.*;
+import static org.lwjgl.glfw.GLFW.GLFW_KEY_LEFT_SHIFT;
+
 /**
  * the world-to-camera transform .
  */
 
 // TODO: implement camera rotation
 public class Camera {
+  private final CursorHandler cursorHandler;
+
   private Matrix4f cameraMatrix;
   private Matrix4f transformation = new Matrix4f().identity();
   private Matrix4f invCameraMatrix;
   private Vector3f projectionCenterPoint;
   private Vector3f lookAtPoint;
   private Vector3f upVector;
+  private Player player;
+  private float sensivity = 1.2f;
+
+  private float yaw = 0;
+  private float pitch = 0;
 
   /**
    * @param projectionCenterPoint
    * @param lookAtPoint
    * @param upVector
    */
-  public Camera(Vector3f projectionCenterPoint, Vector3f lookAtPoint, Vector3f upVector) {
+  public Camera(CursorHandler cursorHandler, Vector3f projectionCenterPoint, Vector3f lookAtPoint, Vector3f upVector) {
+    this.cursorHandler = cursorHandler;
     this.projectionCenterPoint = projectionCenterPoint;
     this.lookAtPoint = lookAtPoint;
     this.upVector = upVector;
 
-    updateCameraMatrix();
+    computeCameraMatrix();
+  }
+
+  public void attachPlayer(Player player) {
+    this.player = player;
   }
 
   // notice that the camera is attached to a player (i.e. its transformation)
-  public Matrix4f getTransformation(float pitch, float yaw) {
-    float angle  = (pitch % 360);
-    float angle2 = (yaw % 360);
-    Matrix4f vertRot = new Matrix4f().rotate(angle, new Vector3f(1, 0, 0));
-    Matrix4f horiRot = new Matrix4f().rotate(angle2, new Vector3f(0, 1, 0));
-
+  public Matrix4f getTransformation() {
     Matrix4f tmp = new Matrix4f();
+    Matrix4f verticalRot = new Matrix4f().rotate(pitch, new Vector3f(1, 0, 0));
+    Matrix4f horizontalRot = new Matrix4f().rotate(yaw, new Vector3f(0, 1, 0));
 
-    vertRot.mul(horiRot, tmp);
+    verticalRot.mul(horizontalRot, tmp);
     tmp.mul(cameraMatrix, tmp);
     tmp.mul(transformation, tmp);
 
     return tmp;
-  }
-
-  public void updateTransformation(Matrix4f t) {
-    this.transformation = t;
-
   }
 
   /**
@@ -65,7 +72,7 @@ public class Camera {
    * [xc yc	zc e]
    * [0	 0	0  1]
    */
-  protected void updateCameraMatrix() {
+  protected void computeCameraMatrix() {
     Vector3f e = new Vector3f(projectionCenterPoint);
     Vector3f d = new Vector3f(lookAtPoint);
     Vector3f up = new Vector3f(upVector);
@@ -100,5 +107,12 @@ public class Camera {
     invC.invert();
 
     this.cameraMatrix = invC;
+  }
+
+  public void update() {
+    yaw = yaw + (cursorHandler.getDx() * sensivity) % 360;
+    pitch = pitch + (cursorHandler.getDy() * sensivity) % 360;
+
+    this.transformation = player.getTransform();
   }
 }

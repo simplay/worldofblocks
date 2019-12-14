@@ -5,11 +5,16 @@ import org.joml.Vector3f;
 import worldofblocks.drawables.Block;
 import worldofblocks.drawables.Moveable;
 
+import static org.lwjgl.glfw.GLFW.*;
+import static org.lwjgl.glfw.GLFW.GLFW_KEY_LEFT_SHIFT;
+
 public class Player implements Moveable {
+  private final InputHandler inputHandler;
   private final Block shape;
   private final Vector3f position;
 
-  public Player() {
+  public Player(InputHandler inputHandler) {
+    this.inputHandler = inputHandler;
     this.shape = new Block();
     this.position = new Vector3f();
   }
@@ -27,5 +32,31 @@ public class Player implements Moveable {
   public void render() {
     // TODO: fix translation of player shape
     // shape.render();
+  }
+
+  public void update() {
+    if (inputHandler.isKeyDown(GLFW_KEY_A)) {
+      updatePosition(new Vector3f(0.01f, 0, 0));
+    }
+
+    if (inputHandler.isKeyDown(GLFW_KEY_D)) {
+      updatePosition(new Vector3f(-0.01f, 0, 0));
+    }
+
+    if (inputHandler.isKeyDown(GLFW_KEY_W)) {
+      updatePosition(new Vector3f(0, 0, 0.01f));
+    }
+
+    if (inputHandler.isKeyDown(GLFW_KEY_S)) {
+      updatePosition(new Vector3f(0, 0.0f, -0.01f));
+    }
+
+    if (inputHandler.isKeyDown(GLFW_KEY_SPACE)) {
+      updatePosition(new Vector3f(0, -0.01f, 0));
+    }
+
+    if (inputHandler.isKeyDown(GLFW_KEY_LEFT_SHIFT)) {
+      updatePosition(new Vector3f(0, 0.01f, 0));
+    }
   }
 }

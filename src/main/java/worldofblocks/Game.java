@@ -1,7 +1,6 @@
 package worldofblocks;
 
 import org.joml.Vector3f;
-import org.lwjgl.glfw.GLFWCursorPosCallback;
 import org.lwjgl.glfw.GLFWErrorCallback;
 import org.lwjgl.glfw.GLFWVidMode;
 import org.lwjgl.opengl.GL;
@@ -18,7 +17,6 @@ import static org.lwjgl.opengl.GL11.GL_DEPTH_BUFFER_BIT;
 import static org.lwjgl.system.MemoryStack.stackPush;
 import static org.lwjgl.system.MemoryUtil.NULL;
 
-// TODO: try to implement a more MVC like style or at least separate view-controller code from models
 public class Game implements Runnable, Subscriber {
   // address to window object
   private long window;
@@ -31,15 +29,12 @@ public class Game implements Runnable, Subscriber {
   private boolean running = false;
 
   private InputHandler windowInputHandler;
-  private GLFWCursorPosCallback cpCallback;
+  private CursorHandler cursorHandler;
 
   private Block block;
   private Plane plane;
 
   private WorldTimer worldTimer;
-
-  float mouseX;
-  float mouseY;
 
   public void start() {
     this.running = true;
@@ -55,9 +50,10 @@ public class Game implements Runnable, Subscriber {
   }
 
   private void init() {
-    camera = new Camera(eye, lookAtPoint, up);
-    initProjections();
     initRenderer();
+    camera = new Camera(cursorHandler, eye, lookAtPoint, up);
+    initProjections();
+
     initShapes();
 
     worldTimer.addSubscriber(this);
@@ -89,7 +85,9 @@ public class Game implements Runnable, Subscriber {
     glEnable(GL_DEPTH_TEST);
     glDepthFunc(GL_LESS);
 
-    this.player = new Player();
+    this.player = new Player(windowInputHandler);
+    camera.attachPlayer(player);
+
     this.plane = new Plane();
     this.block = new Block();
     this.shader = new Shader("shader");
@@ -111,12 +109,13 @@ public class Game implements Runnable, Subscriber {
     glfwWindowHint(GLFW_RESIZABLE, GLFW_TRUE); // the window will be resizable
 
     // Create the window
-    window = glfwCreateWindow(windowWidth, windowHeight, "World of Blocks", NULL, NULL);
+    this.window = glfwCreateWindow(windowWidth, windowHeight, "World of Blocks", NULL, NULL);
     if (window == NULL) {
       throw new RuntimeException("Failed to create the GLFW window");
     }
 
-    windowInputHandler = new InputHandler(window);
+    this.windowInputHandler = new InputHandler(window);
+    this.cursorHandler = new CursorHandler(windowWidth, windowHeight);
 
     // Setup a key callback. It will be called every time a key is pressed, repeated or released.
     glfwSetKeyCallback(window, (window, key, scancode, action, mods) -> {
@@ -125,12 +124,7 @@ public class Game implements Runnable, Subscriber {
       }
     });
 
-    glfwSetCursorPosCallback(window, cpCallback = new GLFWCursorPosCallback() {
-      public void invoke(long window, double xpos, double ypos) {
-        mouseX = (float) (xpos / windowWidth) - 0.5f;
-        mouseY = (float) (ypos / windowHeight) - 0.5f;
-      }
-    });
+    glfwSetCursorPosCallback(window, cursorHandler);
 
     // Get the thread stack and push a new frame
     try (MemoryStack stack = stackPush()) {
@@ -181,92 +175,15 @@ public class Game implements Runnable, Subscriber {
     // Poll for window events. The key callback above will only be
     // invoked during this call.
     glfwPollEvents();
-    handleUserInput();
-  }
 
-  private float dx = 0;
-  private float dy = 0;
-
-  double prevX = 0;
-  double prevY = 0;
-
-  // w/s, a/d, q/e move camera
-  // arrows: move plane
-  // TODO move to camera
-  private float yaw = 0;
-  private float pitch = 0;
-
-  private void handleUserInput() {
-
-    double deltaX = mouseX - prevX;
-    double deltaY = mouseY - prevY;
-
-    yaw += deltaX * 1.0f;
-    pitch += deltaY * 1.0f;
-
-    System.out.println("Pitch: " + pitch + ", Yaw: " + yaw);
-
-    glRotatef(pitch, 1.0f, 0.0f, 0.0f);
-    glRotatef(yaw, 0.0f, 1.0f, 0.0f);
-
-    prevX = mouseX;
-    prevY = mouseY;
-
-    if (windowInputHandler.isKeyDown(GLFW_KEY_A)) {
-      player.updatePosition(new Vector3f(0.01f, 0, 0));
-      camera.updateTransformation(player.getTransform());
-    }
-
-    if (windowInputHandler.isKeyDown(GLFW_KEY_D)) {
-      player.updatePosition(new Vector3f(-0.01f, 0, 0));
-      camera.updateTransformation(player.getTransform());
-    }
-
-    if (windowInputHandler.isKeyDown(GLFW_KEY_W)) {
-      player.updatePosition(new Vector3f(0, 0, 0.01f));
-      camera.updateTransformation(player.getTransform());
-    }
-
-    if (windowInputHandler.isKeyDown(GLFW_KEY_S)) {
-      player.updatePosition(new Vector3f(0, 0.0f, -0.01f));
-      camera.updateTransformation(player.getTransform());
-    }
-
-    if (windowInputHandler.isKeyDown(GLFW_KEY_SPACE)) {
-      player.updatePosition(new Vector3f(0, -0.01f, 0));
-      camera.updateTransformation(player.getTransform());
-    }
-
-    if (windowInputHandler.isKeyDown(GLFW_KEY_LEFT_SHIFT)) {
-      player.updatePosition(new Vector3f(0, 0.01f, 0));
-      camera.updateTransformation(player.getTransform());
-    }
-
-    if (windowInputHandler.isKeyDown(GLFW_KEY_LEFT)) {
-      dx -= 0.01f;
-    }
-
-    if (windowInputHandler.isKeyDown(GLFW_KEY_RIGHT)) {
-      dx += 0.01f;
-    }
-
-    if (windowInputHandler.isKeyDown(GLFW_KEY_UP)) {
-      dy += 0.01f;
-    }
-
-    if (windowInputHandler.isKeyDown(GLFW_KEY_DOWN)) {
-      dy -= 0.01f;
-    }
-
-    block.updatePosition(new Vector3f(dx, dy, 0));
+    player.update();
+    camera.update();
   }
 
   double time;
   double fps = 0;
-  float counter = 0;
 
   private void updateFps() {
-    counter -= 0.001;
     double now = System.nanoTime();
     double delta = now - time;
 
@@ -279,12 +196,13 @@ public class Game implements Runnable, Subscriber {
 
     shader.bind();
     shader.setUniform("sampler", 0);
-    shader.setUniform("modelview", camera.getTransformation(pitch, yaw));
+    shader.setUniform("modelview", camera.getTransformation());
     shader.setUniform("projection", frustum.getTransformation());
 
     player.render();
     plane.render();
     block.render();
+
     glfwSwapBuffers(window); // swap the color buffers
 
     updateFps();
