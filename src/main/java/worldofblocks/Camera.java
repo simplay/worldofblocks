@@ -9,6 +9,7 @@ import org.joml.Vector4f;
  */
 public class Camera {
   private Matrix4f cameraMatrix;
+  private Matrix4f transformation = new Matrix4f().identity();
   private Matrix4f invCameraMatrix;
   private Vector3f projectionCenterPoint;
   private Vector3f lookAtPoint;
@@ -28,26 +29,15 @@ public class Camera {
   }
 
   Matrix4f getTransformation() {
-    return cameraMatrix;
-  }
-
-  void updateEye(Vector3f eye) {
-    this.projectionCenterPoint = eye;
-    updateCameraMatrix();
-  }
-
-  void updateLookAt(Vector3f lookAtPoint) {
-    this.lookAtPoint = lookAtPoint;
-    updateCameraMatrix();
-  }
-
-  void updateCamera(Matrix4f transform) {
     Matrix4f tmp = new Matrix4f();
-    transform.mul(invCameraMatrix, tmp);
+    transformation.mul(cameraMatrix, tmp);
 
-    this.invCameraMatrix = new Matrix4f(tmp);
-    tmp.invert();
-    this.cameraMatrix = tmp;
+    return tmp;
+  }
+
+  public void updateTranformation(Matrix4f t) {
+    this.transformation = t;
+
   }
 
   /**

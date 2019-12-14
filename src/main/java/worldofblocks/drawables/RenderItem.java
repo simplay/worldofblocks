@@ -1,5 +1,7 @@
 package worldofblocks.drawables;
 
+import org.joml.Matrix4f;
+import org.joml.Vector3f;
 import org.lwjgl.BufferUtils;
 import worldofblocks.Texture;
 import worldofblocks.VertexAttributes;

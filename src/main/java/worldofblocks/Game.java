@@ -51,6 +51,7 @@ public class Game implements Runnable, Subscriber{
   }
 
   private void init() {
+    camera = new Camera(eye, lookAtPoint, up);
     initProjections();
     initRenderer();
     initShapes();
@@ -66,11 +67,11 @@ public class Game implements Runnable, Subscriber{
   private Vector3f up = new Vector3f(0, 0, 1);
 
   private void initProjections() {
-    camera = new Camera(eye, lookAtPoint, up);
     frustum = new Frustum(windowWidth / windowHeight, EPS, 5000, 60.0f);
   }
 
   private Shader shader;
+  private Player player;
 
   private void initShapes() {
     // This line is critical for LWJGL's interoperation with GLFW's
@@ -84,9 +85,10 @@ public class Game implements Runnable, Subscriber{
     glEnable(GL_DEPTH_TEST);
     glDepthFunc(GL_LESS);
 
-    plane = new Plane();
-    block = new Block();
-    shader = new Shader("shader");
+    this.player = new Player();
+    this.plane = new Plane();
+    this.block = new Block();
+    this.shader = new Shader("shader");
   }
 
   private void initRenderer() {
@@ -146,7 +148,6 @@ public class Game implements Runnable, Subscriber{
 
     // Make the window visible
     glfwShowWindow(window);
-
   }
 
   public void run() {
@@ -179,73 +180,49 @@ public class Game implements Runnable, Subscriber{
   // arrows: move plane
   private void handleUserInput() {
     if (windowInputHandler.isKeyDown(GLFW_KEY_A)) {
-      Matrix4f m = new Matrix4f(
-              1, 0, 0, -0.01f,
-              0, 1, 0, 0,
-              0, 0, 1, 0,
-              0, 0, 0, 1
-      );
-      camera.updateCamera(m);
+      player.updatePosition(new Vector3f(0.01f, 0, 0));
+      camera.updateTranformation(player.getTransform());
     }
 
     if (windowInputHandler.isKeyDown(GLFW_KEY_D)) {
-      Matrix4f m = new Matrix4f(
-              1, 0, 0, 0.01f,
-              0, 1, 0, 0,
-              0, 0, 1, 0,
-              0, 0, 0, 1
-      );
-      camera.updateCamera(m);
+      player.updatePosition(new Vector3f(-0.01f, 0, 0));
+      camera.updateTranformation(player.getTransform());
     }
 
     if (windowInputHandler.isKeyDown(GLFW_KEY_W)) {
-      eye.add(0, 0, -0.1f);
-      camera.updateEye(eye);
+      player.updatePosition(new Vector3f(0, 0, 0.01f));
+      camera.updateTranformation(player.getTransform());
     }
 
     if (windowInputHandler.isKeyDown(GLFW_KEY_S)) {
-      eye.add(0, 0, 0.1f);
-      camera.updateEye(eye);
+      player.updatePosition(new Vector3f(0, 0.0f, -0.01f));
+      camera.updateTranformation(player.getTransform());
     }
 
-    if (windowInputHandler.isKeyDown(GLFW_KEY_Q)) {
-      Matrix4f m = new Matrix4f(
-              1, 0, 0, 0,
-              0, 1, 0, -0.01f,
-              0, 0, 1, 0,
-              0, 0, 0, 1
-      );
-      camera.updateCamera(m);
+    if (windowInputHandler.isKeyDown(GLFW_KEY_SPACE)) {
+      player.updatePosition(new Vector3f(0, -0.01f, 0));
+      camera.updateTranformation(player.getTransform());
     }
 
-    if (windowInputHandler.isKeyDown(GLFW_KEY_E)) {
-      Matrix4f m = new Matrix4f(
-              1, 0, 0, 0,
-              0, 1, 0, 0.01f,
-              0, 0, 1, 0,
-              0, 0, 0, 1
-      );
-      camera.updateCamera(m);
+    if (windowInputHandler.isKeyDown(GLFW_KEY_LEFT_SHIFT)) {
+      player.updatePosition(new Vector3f(0, 0.01f, 0));
+      camera.updateTranformation(player.getTransform());
     }
 
     if (windowInputHandler.isKeyDown(GLFW_KEY_LEFT)) {
       dx -= 0.01f;
-      initProjections();
     }
 
     if (windowInputHandler.isKeyDown(GLFW_KEY_RIGHT)) {
       dx += 0.01f;
-      initProjections();
     }
 
     if (windowInputHandler.isKeyDown(GLFW_KEY_UP)) {
       dy += 0.01f;
-      initProjections();
     }
 
     if (windowInputHandler.isKeyDown(GLFW_KEY_DOWN)) {
       dy -= 0.01f;
-      initProjections();
     }
 
     block.updatePosition(new Vector3f(dx, dy, 0));
