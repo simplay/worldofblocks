@@ -28,7 +28,8 @@ public class Camera {
     updateCameraMatrix();
   }
 
-  Matrix4f getTransformation() {
+  // notice that the camera is attached to a player (i.e. its transformation)
+  public Matrix4f getTransformation() {
     Matrix4f tmp = new Matrix4f();
     transformation.mul(cameraMatrix, tmp);
 
