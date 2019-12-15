@@ -5,7 +5,7 @@ import org.joml.Vector3f;
 import org.joml.Vector4f;
 import worldofblocks.rendering.Texture;
 
-public class Block extends RenderItem implements Moveable {
+public class Block extends Shape {
   @Override
   protected float[] getTextureCoordinates() {
     float[] textureCoordinates = {
@@ -144,16 +144,6 @@ public class Block extends RenderItem implements Moveable {
   }
 
   public Block() {
-    super(new Texture("./textures/trollface.png"));
-  }
-
-  @Override
-  public void updatePosition(Vector3f shift) {
-    Matrix4f t = new Matrix4f(transformation).translation(shift);
-    for (Vector4f v : vertices) {
-      v.mul(t);
-    }
-
-    reloadVertices();
+    super();
   }
 }

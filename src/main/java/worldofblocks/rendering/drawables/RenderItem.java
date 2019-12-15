@@ -1,6 +1,7 @@
 package worldofblocks.rendering.drawables;
 
 import org.joml.Matrix4f;
+import org.joml.Vector3f;
 import org.joml.Vector4f;
 import org.lwjgl.BufferUtils;
 import worldofblocks.rendering.Texture;
@@ -13,17 +14,11 @@ import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.opengl.GL15.*;
 import static org.lwjgl.opengl.GL20.*;
 
-public abstract class RenderItem {
-  protected Matrix4f transformation = new Matrix4f().identity();
-
-  protected Vector4f[] vertices;
-  protected int[] indices;
-  protected float[] colors;
-  protected float[] normals;
-  protected float[] textureCoordinates;
+public class RenderItem {
+  protected final Shape shape;
   protected Texture texture;
+  private int faceCount;
 
-  private int faces;
   private int vId;
   private int tId;
   private int fId;
@@ -32,78 +27,45 @@ public abstract class RenderItem {
 
   private boolean hasTextures = false;
 
-  protected abstract Vector4f[] getVertices();
-  protected abstract int[] getIndices();
-  protected abstract float[] getColors();
-  protected abstract float[] getNormals();
-  protected abstract float[] getTextureCoordinates();
-
-  public RenderItem(Texture texture) {
-    this.vertices = getVertices();
-    this.indices = getIndices();
-    this.faces = indices.length;
-    this.colors = getColors();
-    this.normals = getNormals();
-    this.textureCoordinates = getTextureCoordinates();
+  public RenderItem(Shape shape, Texture texture) {
+    this.shape = shape;
+    this.faceCount = shape.indices.length;
     this.texture = texture;
     this.hasTextures = true;
+
     initialize();
   }
 
-  public RenderItem() {
-    this.vertices = getVertices();
-    this.indices = getIndices();
-    faces = indices.length;
-    this.colors = getColors();
-    this.normals = getNormals();
+  public RenderItem(Shape shape) {
+    this(shape, null);
+    this.hasTextures = false;
+  }
+
+  public void moveShape(Vector3f shift) {
+    shape.translate(new Vector3f(-shift.x, -shift.y, -shift.z));
     initialize();
-  }
-
-  public void transform(Matrix4f t) {
-    transformation.mul(t);
-    this.vertices = getVertices();
-
-    reloadVertices();
-  }
-
-  protected void reloadVertices() {
-    initialize();
-  }
-
-  protected float[] verticesAsFloatArray() {
-    float[] vertices = new float[this.vertices.length * 4];
-
-    int k = 0;
-    for (Vector4f v : this.vertices) {
-      vertices[3 * k] = v.x;
-      vertices[3 * k + 1] = v.y;
-      vertices[3 * k + 2] = v.z;
-      k++;
-    }
-
-    return vertices;
   }
 
   private void initialize() {
     vId = glGenBuffers();
     glBindBuffer(GL_ARRAY_BUFFER, vId);
-    glBufferData(GL_ARRAY_BUFFER, createBuffer(verticesAsFloatArray()), GL_STATIC_DRAW);
+    glBufferData(GL_ARRAY_BUFFER, createBuffer(shape.verticesAsFloatArray()), GL_STATIC_DRAW);
 
     cId = glGenBuffers();
     glBindBuffer(GL_ARRAY_BUFFER, cId);
-    glBufferData(GL_ARRAY_BUFFER, createBuffer(colors), GL_STATIC_DRAW);
+    glBufferData(GL_ARRAY_BUFFER, createBuffer(shape.colors), GL_STATIC_DRAW);
 
     if (hasTextures) {
       tId = glGenBuffers();
       glBindBuffer(GL_ARRAY_BUFFER, tId);
-      glBufferData(GL_ARRAY_BUFFER, createBuffer(textureCoordinates), GL_STATIC_DRAW);
+      glBufferData(GL_ARRAY_BUFFER, createBuffer(shape.textureCoordinates), GL_STATIC_DRAW);
     }
 
     fId = glGenBuffers();
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, fId);
 
-    IntBuffer buffer = BufferUtils.createIntBuffer(indices.length);
-    buffer.put(indices);
+    IntBuffer buffer = BufferUtils.createIntBuffer(shape.indices.length);
+    buffer.put(shape.indices);
     buffer.flip();
     glBufferData(GL_ELEMENT_ARRAY_BUFFER, buffer, GL_STATIC_DRAW);
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
@@ -155,9 +117,9 @@ public abstract class RenderItem {
     );
 
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, fId);
-    glDrawElements(GL_TRIANGLES, faces, GL_UNSIGNED_INT, 0);
+    glDrawElements(GL_TRIANGLES, shape.indices.length, GL_UNSIGNED_INT, 0);
 
-    glDrawArrays(GL_TRIANGLES, 0, faces);
+    glDrawArrays(GL_TRIANGLES, 0, shape.indices.length);
 
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
     glBindBuffer(GL_ARRAY_BUFFER, 0);

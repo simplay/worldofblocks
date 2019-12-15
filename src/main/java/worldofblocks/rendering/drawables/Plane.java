@@ -2,7 +2,7 @@ package worldofblocks.rendering.drawables;
 
 import org.joml.Vector4f;
 
-public class Plane extends RenderItem {
+public class Plane extends Shape {
   private float shift = 0f;
 
   @Override
@@ -64,8 +64,6 @@ public class Plane extends RenderItem {
   public Plane(float shift) {
     super();
     this.shift = shift;
-
     this.vertices = getVertices();
-    this.reloadVertices();
   }
 }

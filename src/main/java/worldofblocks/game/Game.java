@@ -4,12 +4,16 @@ import org.joml.Vector2i;
 import org.joml.Vector3f;
 import org.lwjgl.opengl.GL;
 import worldofblocks.rendering.Shader;
+import worldofblocks.rendering.Texture;
 import worldofblocks.rendering.drawables.Block;
 import worldofblocks.rendering.drawables.Plane;
 import worldofblocks.entities.cameras.Camera;
 import worldofblocks.entities.cameras.Frustum;
 import worldofblocks.entities.gameobjects.Player;
 import worldofblocks.gui.Window;
+import worldofblocks.rendering.drawables.RenderItem;
+
+import java.util.LinkedList;
 
 import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.opengl.GL11.*;
@@ -39,6 +43,7 @@ public class Game implements Runnable, Subscriber {
   private Vector3f lookAtPoint = new Vector3f(0.0f, 0.2f, 0.0f);
   private Vector3f up = new Vector3f(0, 0, 1);
 
+  private final LinkedList<RenderItem> renderItems = new LinkedList<>();
   private Shader shader;
   private Player player;
 
@@ -99,6 +104,9 @@ public class Game implements Runnable, Subscriber {
     this.plane = new Plane(10);
     this.block = new Block();
     this.shader = new Shader("shader");
+
+    renderItems.add(new RenderItem(plane));
+    renderItems.add(new RenderItem(block, new Texture("./textures/trollface.png")));
   }
 
   public void run() {
@@ -138,8 +146,9 @@ public class Game implements Runnable, Subscriber {
     shader.setUniform("projection", frustum.getTransformation());
 
     player.render();
-    plane.render();
-    block.render();
+    for (RenderItem renderItem : renderItems) {
+      renderItem.render();
+    }
 
     glfwSwapBuffers(window.getId()); // swap the color buffers
 

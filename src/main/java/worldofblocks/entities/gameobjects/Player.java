@@ -3,29 +3,29 @@ package worldofblocks.entities.gameobjects;
 import org.joml.Matrix4f;
 import org.joml.Vector3f;
 import worldofblocks.rendering.drawables.Block;
-import worldofblocks.rendering.drawables.Moveable;
 import worldofblocks.gui.handlers.InputHandler;
+import worldofblocks.rendering.drawables.RenderItem;
 
 import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.glfw.GLFW.GLFW_KEY_LEFT_SHIFT;
 
-public class Player implements Moveable {
+public class Player {
   private final InputHandler inputHandler;
-  private final Block shape;
+  private final RenderItem renderItem;
   private final Vector3f position;
 
   public Player(InputHandler inputHandler) {
     this.inputHandler = inputHandler;
-    this.shape = new Block();
     this.position = new Vector3f();
 
+    Block shape = new Block();
     Matrix4f scale = new Matrix4f().identity().translation(0, 0, 4).scale(0.01f);
     shape.transform(scale);
+    this.renderItem = new RenderItem(shape);
   }
 
-  @Override
   public void updatePosition(Vector3f shift) {
-    shape.updatePosition(new Vector3f(-shift.x, -shift.y, -shift.z));
+    renderItem.moveShape(new Vector3f(-shift.x, -shift.y, -shift.z));
     position.add(shift);
   }
 
@@ -34,7 +34,7 @@ public class Player implements Moveable {
   }
 
   public void render() {
-     shape.render();
+    renderItem.render();
   }
 
   public void update() {
