@@ -1,5 +1,6 @@
 package worldofblocks;
 
+import org.joml.Matrix4f;
 import org.joml.Vector3f;
 import org.lwjgl.opengl.GL;
 import worldofblocks.drawables.Block;
@@ -76,7 +77,7 @@ public class Game implements Runnable, Subscriber {
     this.player = new Player(window.getInputHandler());
     camera.attachPlayer(player);
 
-    this.plane = new Plane();
+    this.plane = new Plane(10);
     this.block = new Block();
     this.shader = new Shader("shader");
   }

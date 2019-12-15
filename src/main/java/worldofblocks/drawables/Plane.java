@@ -3,13 +3,15 @@ package worldofblocks.drawables;
 import org.joml.Vector4f;
 
 public class Plane extends RenderItem {
+  private float shift = 0f;
+
   @Override
   protected Vector4f[] getVertices() {
     Vector4f[] vertices = {
-            new Vector4f(0.0f, -0.2f, 0.0f, 1.0f),
-            new Vector4f(0.0f, -0.2f, 1.0f, 1.0f),
-            new Vector4f(1.0f, -0.2f, 0.0f, 1.0f),
-            new Vector4f(1.0f, -0.2f, 1.0f, 1.0f)
+            new Vector4f(0.0f - shift, -0.1f, 0.0f - shift, 1.0f),
+            new Vector4f(0.0f - shift, -0.1f, 1.0f + shift, 1.0f),
+            new Vector4f(1.0f + shift, -0.1f, 0.0f - shift, 1.0f),
+            new Vector4f(1.0f + shift, -0.1f, 1.0f + shift, 1.0f)
     };
 
     return vertices;
@@ -59,7 +61,11 @@ public class Plane extends RenderItem {
     return textureCoordinates;
   }
 
-  public Plane() {
+  public Plane(float shift) {
     super();
+    this.shift = shift;
+
+    this.vertices = getVertices();
+    this.reloadVertices();
   }
 }
