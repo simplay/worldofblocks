@@ -1,10 +1,15 @@
-package worldofblocks;
+package worldofblocks.game;
 
 import org.joml.Vector2i;
 import org.joml.Vector3f;
 import org.lwjgl.opengl.GL;
-import worldofblocks.drawables.Block;
-import worldofblocks.drawables.Plane;
+import worldofblocks.rendering.Shader;
+import worldofblocks.rendering.drawables.Block;
+import worldofblocks.rendering.drawables.Plane;
+import worldofblocks.entities.cameras.Camera;
+import worldofblocks.entities.cameras.Frustum;
+import worldofblocks.entities.gameobjects.Player;
+import worldofblocks.gui.Window;
 
 import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.opengl.GL11.*;

@@ -1,4 +1,4 @@
-package worldofblocks.handlers;
+package worldofblocks.gui.handlers;
 
 import org.lwjgl.glfw.GLFWCursorPosCallback;
 

@@ -1,4 +1,4 @@
-package worldofblocks;
+package worldofblocks.game;
 
 import java.util.LinkedList;
 import java.util.Timer;

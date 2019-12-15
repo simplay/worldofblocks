@@ -1,9 +1,10 @@
-package worldofblocks;
+package worldofblocks.entities.cameras;
 
 import org.joml.Matrix4f;
 import org.joml.Vector3f;
 import org.joml.Vector4f;
-import worldofblocks.handlers.CursorHandler;
+import worldofblocks.entities.gameobjects.Player;
+import worldofblocks.gui.handlers.CursorHandler;
 
 /**
  * the world-to-camera transform .

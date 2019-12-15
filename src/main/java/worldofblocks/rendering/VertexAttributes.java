@@ -1,4 +1,4 @@
-package worldofblocks;
+package worldofblocks.rendering;
 
 public enum VertexAttributes {
   VERTICES(0),

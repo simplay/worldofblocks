@@ -1,10 +1,10 @@
-package worldofblocks;
+package worldofblocks.entities.gameobjects;
 
 import org.joml.Matrix4f;
 import org.joml.Vector3f;
-import worldofblocks.drawables.Block;
-import worldofblocks.drawables.Moveable;
-import worldofblocks.handlers.InputHandler;
+import worldofblocks.rendering.drawables.Block;
+import worldofblocks.rendering.drawables.Moveable;
+import worldofblocks.gui.handlers.InputHandler;
 
 import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.glfw.GLFW.GLFW_KEY_LEFT_SHIFT;

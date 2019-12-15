@@ -1,4 +1,4 @@
-package worldofblocks;
+package worldofblocks.game;
 
 public class FpsCounter {
   private double time;

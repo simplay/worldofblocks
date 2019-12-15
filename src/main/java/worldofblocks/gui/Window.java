@@ -1,12 +1,12 @@
-package worldofblocks;
+package worldofblocks.gui;
 
 import org.joml.Vector2i;
 import org.lwjgl.BufferUtils;
 import org.lwjgl.glfw.GLFWErrorCallback;
 import org.lwjgl.glfw.GLFWVidMode;
 import org.lwjgl.system.MemoryStack;
-import worldofblocks.handlers.CursorHandler;
-import worldofblocks.handlers.InputHandler;
+import worldofblocks.gui.handlers.CursorHandler;
+import worldofblocks.gui.handlers.InputHandler;
 
 import java.nio.IntBuffer;
 

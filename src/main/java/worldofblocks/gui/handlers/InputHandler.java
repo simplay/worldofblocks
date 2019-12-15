@@ -1,4 +1,4 @@
-package worldofblocks.handlers;
+package worldofblocks.gui.handlers;
 
 import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.glfw.GLFW.*;

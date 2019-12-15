@@ -1,6 +1,7 @@
 package worldofblocks;
 
 import org.lwjgl.Version;
+import worldofblocks.game.Game;
 
 class Main {
   public static void main(String[] args) {

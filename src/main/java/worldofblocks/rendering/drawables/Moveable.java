@@ -1,4 +1,4 @@
-package worldofblocks.drawables;
+package worldofblocks.rendering.drawables;
 
 import org.joml.Vector3f;
 

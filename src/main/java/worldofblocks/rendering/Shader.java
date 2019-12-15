@@ -1,7 +1,8 @@
-package worldofblocks;
+package worldofblocks.rendering;
 
 import org.joml.Matrix4f;
 import org.lwjgl.BufferUtils;
+import org.lwjgl.opengl.GL20;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -41,7 +42,7 @@ public class Shader {
     glAttachShader(programId, vertexShaderId);
     glAttachShader(programId, fragmentShaderId);
 
-    glBindAttribLocation(programId, VertexAttributes.VERTICES.getIndex(), "vertices");
+    GL20.glBindAttribLocation(programId, VertexAttributes.VERTICES.getIndex(), "vertices");
     glBindAttribLocation(programId, VertexAttributes.TEXTURES.getIndex(), "textures");
     glBindAttribLocation(programId, VertexAttributes.COLORS.getIndex(), "colors");
 

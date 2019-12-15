@@ -1,10 +1,10 @@
-package worldofblocks.drawables;
+package worldofblocks.rendering.drawables;
 
 import org.joml.Matrix4f;
 import org.joml.Vector4f;
 import org.lwjgl.BufferUtils;
-import worldofblocks.Texture;
-import worldofblocks.VertexAttributes;
+import worldofblocks.rendering.Texture;
+import worldofblocks.rendering.VertexAttributes;
 
 import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
