@@ -45,15 +45,20 @@ public class Camera {
 
   // notice that the camera is attached to a player (i.e. its transformation)
   public Matrix4f getTransformation() {
-    Matrix4f tmp = new Matrix4f();
+    Matrix4f t = new Matrix4f();
+    getRotation().mul(cameraMatrix, t);
+    t.mul(transformation, t);
+
+    return t;
+  }
+
+  public Matrix4f getRotation() {
+    Matrix4f rot = new Matrix4f();
     Matrix4f verticalRot = new Matrix4f().rotate(pitch, new Vector3f(1, 0, 0));
     Matrix4f horizontalRot = new Matrix4f().rotate(yaw, new Vector3f(0, 1, 0));
+    verticalRot.mul(horizontalRot, rot);
 
-    verticalRot.mul(horizontalRot, tmp);
-    tmp.mul(cameraMatrix, tmp);
-    tmp.mul(transformation, tmp);
-
-    return tmp;
+    return rot;
   }
 
   /**
