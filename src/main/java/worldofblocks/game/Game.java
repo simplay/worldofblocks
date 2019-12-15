@@ -152,6 +152,7 @@ public class Game implements Runnable, Subscriber {
       renderItem.getShader().setUniform("modelview", camera.getTransformation());
       renderItem.getShader().setUniform("projection", frustum.getTransformation());
       renderItem.render();
+      renderItem.getShader().unbind();
     }
 
     glfwSwapBuffers(window.getId()); // swap the color buffers

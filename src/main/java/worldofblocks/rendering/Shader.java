@@ -64,6 +64,10 @@ public class Shader {
     glUseProgram(programId);
   }
 
+  public void unbind() {
+    glUseProgram(0);
+  }
+
   public void setUniform(String name, int value) {
     int location = glGetUniformLocation(programId, name);
 
