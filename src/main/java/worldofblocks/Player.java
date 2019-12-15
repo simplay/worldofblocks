@@ -18,6 +18,9 @@ public class Player implements Moveable {
     this.inputHandler = inputHandler;
     this.shape = new Block();
     this.position = new Vector3f();
+
+    Matrix4f scale = new Matrix4f().identity().translation(0, 0, 4).scale(0.01f);
+    shape.transform(scale);
   }
 
   @Override

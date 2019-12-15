@@ -6,8 +6,6 @@ import org.joml.Vector4f;
 import worldofblocks.Texture;
 
 public class Block extends RenderItem implements Moveable {
-  private Matrix4f transformation = new Matrix4f();
-
   @Override
   protected float[] getTextureCoordinates() {
     float[] textureCoordinates = {
@@ -137,6 +135,10 @@ public class Block extends RenderItem implements Moveable {
             new Vector4f(1.0f, -1.0f, -1.0f, 1.0f),
             new Vector4f(1.0f, -1.0f, 1.0f, 1.0f)
     };
+
+    for (Vector4f v : origVertices) {
+      v.mul(transformation);
+    }
 
     return origVertices;
   }

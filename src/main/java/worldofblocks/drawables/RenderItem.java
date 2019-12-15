@@ -1,5 +1,6 @@
 package worldofblocks.drawables;
 
+import org.joml.Matrix4f;
 import org.joml.Vector4f;
 import org.lwjgl.BufferUtils;
 import worldofblocks.Texture;
@@ -13,6 +14,8 @@ import static org.lwjgl.opengl.GL15.*;
 import static org.lwjgl.opengl.GL20.*;
 
 public abstract class RenderItem {
+  protected Matrix4f transformation = new Matrix4f().identity();
+
   protected Vector4f[] vertices;
   protected int[] indices;
   protected float[] colors;
@@ -54,6 +57,13 @@ public abstract class RenderItem {
     this.colors = getColors();
     this.normals = getNormals();
     initialize();
+  }
+
+  public void transform(Matrix4f t) {
+    transformation.mul(t);
+    this.vertices = getVertices();
+
+    reloadVertices();
   }
 
   protected void reloadVertices() {
