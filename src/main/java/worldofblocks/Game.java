@@ -1,6 +1,6 @@
 package worldofblocks;
 
-import org.joml.Matrix4f;
+import org.joml.Vector2i;
 import org.joml.Vector3f;
 import org.lwjgl.opengl.GL;
 import worldofblocks.drawables.Block;
@@ -15,6 +15,8 @@ public class Game implements Runnable, Subscriber {
 
   private int windowWidth;
   private int windowHeight;
+  private boolean fullscreen;
+
   private Window window;
 
   private Thread thread;
@@ -24,7 +26,6 @@ public class Game implements Runnable, Subscriber {
   private Plane plane;
 
   private FpsCounter fpsCounter;
-
   private WorldTimer worldTimer;
 
   private Camera camera;
@@ -43,23 +44,36 @@ public class Game implements Runnable, Subscriber {
     thread.start();
   }
 
-  public Game(int windowWidth, int windowHeight) {
+  public Game(int windowWidth, int windowHeight, boolean fullscreen) {
     this.windowWidth = windowWidth;
     this.windowHeight = windowHeight;
+    this.fullscreen = fullscreen;
 
     this.worldTimer = new WorldTimer();
   }
 
   private void init() {
-    this.window = new Window(windowWidth, windowHeight);
+    this.window = new Window(windowWidth, windowHeight, fullscreen);
     this.fpsCounter = new FpsCounter();
     this.camera = new Camera(window.getCursorHandler(), eye, lookAtPoint, up);
-    this.frustum = new Frustum(windowWidth / windowHeight, EPS, 5000, 60.0f);
 
+    initFrustum();
     initShapes();
 
     worldTimer.addSubscriber(this);
     worldTimer.start();
+  }
+
+  private void initFrustum() {
+    Vector2i res = window.getResolution();
+    float aspectRatio = res.x / res.y;
+    this.frustum = new Frustum(aspectRatio, EPS, 5000, 60.0f);
+  }
+
+  // TODO: fixme - crashes the app
+  private void toggleFullscreen() {
+//    window.toggleFullscreen();
+//    initFrustum();
   }
 
   private void initShapes() {
@@ -101,6 +115,10 @@ public class Game implements Runnable, Subscriber {
     // Poll for window events. The key callback above will only be
     // invoked during this call.
     glfwPollEvents();
+
+    if (window.getInputHandler().isKeyDown(GLFW_KEY_F1)) {
+      toggleFullscreen();
+    }
 
     player.update();
     camera.update();
