@@ -4,6 +4,7 @@ import org.joml.Matrix4f;
 import org.joml.Vector3f;
 import org.joml.Vector4f;
 import org.lwjgl.BufferUtils;
+import worldofblocks.rendering.Shader;
 import worldofblocks.rendering.Texture;
 import worldofblocks.rendering.VertexAttributes;
 
@@ -17,6 +18,7 @@ import static org.lwjgl.opengl.GL20.*;
 public class RenderItem {
   protected final Shape shape;
   protected Texture texture;
+  protected Shader shader;
   private int faceCount;
 
   private int vId;
@@ -27,8 +29,9 @@ public class RenderItem {
 
   private boolean hasTextures = false;
 
-  public RenderItem(Shape shape, Texture texture) {
+  public RenderItem(Shape shape, Shader shader, Texture texture) {
     this.shape = shape;
+    this.shader = shader;
     this.faceCount = shape.indices.length;
     this.texture = texture;
     this.hasTextures = true;
@@ -36,8 +39,12 @@ public class RenderItem {
     initialize();
   }
 
-  public RenderItem(Shape shape) {
-    this(shape, null);
+  public Shader getShader() {
+    return shader;
+  }
+
+  public RenderItem(Shape shape, Shader shader) {
+    this(shape, shader, null);
     this.hasTextures = false;
   }
 

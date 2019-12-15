@@ -1,5 +1,6 @@
 package worldofblocks.game;
 
+import org.joml.Matrix4f;
 import org.joml.Vector2i;
 import org.joml.Vector3f;
 import org.lwjgl.opengl.GL;
@@ -98,15 +99,19 @@ public class Game implements Runnable, Subscriber {
     glEnable(GL_DEPTH_TEST);
     glDepthFunc(GL_LESS);
 
-    this.player = new Player(window.getInputHandler());
-    camera.attachPlayer(player);
-
     this.plane = new Plane(10);
     this.block = new Block();
     this.shader = new Shader("shader");
 
-    renderItems.add(new RenderItem(plane));
-    renderItems.add(new RenderItem(block, new Texture("./textures/trollface.png")));
+    renderItems.add(new RenderItem(plane, shader));
+    renderItems.add(new RenderItem(block, shader, new Texture("./textures/trollface.png")));
+
+    Block playerShape = new Block();
+    Matrix4f scale = new Matrix4f().identity().translation(0, 0, 4).scale(0.01f);
+    playerShape.transform(scale);
+
+    this.player = new Player(window.getInputHandler(), new RenderItem(playerShape, shader));
+    camera.attachPlayer(player);
   }
 
   public void run() {
@@ -140,13 +145,12 @@ public class Game implements Runnable, Subscriber {
   private void render() {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // clear the framebuffer
 
-    shader.bind();
-    shader.setUniform("sampler", 0);
-    shader.setUniform("modelview", camera.getTransformation());
-    shader.setUniform("projection", frustum.getTransformation());
-
     player.render();
     for (RenderItem renderItem : renderItems) {
+      renderItem.getShader().bind();
+      renderItem.getShader().setUniform("sampler", 0);
+      renderItem.getShader().setUniform("modelview", camera.getTransformation());
+      renderItem.getShader().setUniform("projection", frustum.getTransformation());
       renderItem.render();
     }
 

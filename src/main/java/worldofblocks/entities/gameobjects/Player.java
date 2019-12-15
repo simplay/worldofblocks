@@ -2,7 +2,6 @@ package worldofblocks.entities.gameobjects;
 
 import org.joml.Matrix4f;
 import org.joml.Vector3f;
-import worldofblocks.rendering.drawables.Block;
 import worldofblocks.gui.handlers.InputHandler;
 import worldofblocks.rendering.drawables.RenderItem;
 
@@ -14,14 +13,10 @@ public class Player {
   private final RenderItem renderItem;
   private final Vector3f position;
 
-  public Player(InputHandler inputHandler) {
+  public Player(InputHandler inputHandler, RenderItem renderItem) {
     this.inputHandler = inputHandler;
     this.position = new Vector3f();
-
-    Block shape = new Block();
-    Matrix4f scale = new Matrix4f().identity().translation(0, 0, 4).scale(0.01f);
-    shape.transform(scale);
-    this.renderItem = new RenderItem(shape);
+    this.renderItem = renderItem;
   }
 
   public void updatePosition(Vector3f shift) {
