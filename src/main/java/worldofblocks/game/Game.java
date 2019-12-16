@@ -93,6 +93,7 @@ public class Game implements Runnable, Subscriber {
     // LWJGL detects the context that is current in the current thread,
     // creates the GLCapabilities instance and makes the OpenGL
     // bindings available for use.
+    glfwMakeContextCurrent(window.getId());
     GL.createCapabilities();
 
     glEnable(GL_TEXTURE_2D);
