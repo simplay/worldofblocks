@@ -26,6 +26,7 @@ public class Window {
 
   private boolean fullscreen = false;
   private final String title = "World of Blocks";
+  GLFWErrorCallback errorCallback;
 
   public Window(int width, int height, boolean fullscreen) {
     this.width = width;
@@ -37,7 +38,8 @@ public class Window {
   private void createWindow() {
     // Setup an error callback. The default implementation
     // will print the error message in System.err.
-    GLFWErrorCallback.createPrint(System.err).set();
+//    GLFWErrorCallback.createPrint(System.err).set();
+    glfwSetErrorCallback(errorCallback = GLFWErrorCallback.createPrint(System.err));
 
     // Initialize GLFW. Most GLFW functions will not work before doing this.
     if (!glfwInit()) {
@@ -54,7 +56,7 @@ public class Window {
             width,
             height,
             title,
-            fullscreen ? glfwGetPrimaryMonitor() : NULL,
+            fullscreen ? glfwGetPrimaryMonitor() : 0L,
             NULL
     );
     if (id == NULL) {
