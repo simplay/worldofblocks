@@ -20,7 +20,7 @@ import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.opengl.GL11.GL_DEPTH_BUFFER_BIT;
 
-public class Game implements Runnable, Subscriber {
+public class Game implements Subscriber {
   private final float EPS = 0.1f;
 
   private int windowWidth;
@@ -48,14 +48,15 @@ public class Game implements Runnable, Subscriber {
   private Shader shader;
   private Player player;
 
-  public void start() {
-    this.running = true;
-    this.thread = new Thread(this, "Game");
+//  public void start() {
+//    this.running = true;
+//    this.thread = new Thread(this, "Game");
 
-    thread.start();
-  }
+//    thread.start();
+//  }
 
   public Game(int windowWidth, int windowHeight, boolean fullscreen) {
+    this.running = true;
     this.windowWidth = windowWidth;
     this.windowHeight = windowHeight;
     this.fullscreen = fullscreen;
@@ -99,6 +100,7 @@ public class Game implements Runnable, Subscriber {
     glEnable(GL_TEXTURE_2D);
     glEnable(GL_DEPTH_TEST);
     glDepthFunc(GL_LESS);
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE);
 
     this.plane = new Plane(10);
     this.block = new Block();
@@ -115,7 +117,7 @@ public class Game implements Runnable, Subscriber {
     camera.attachPlayer(player);
   }
 
-  public void run() {
+  public void start() {
     init();
     while (running) {
       update();
