@@ -1,10 +1,8 @@
 #version 150
 
-uniform sampler2D sampler;
+varying vec4 passColor;
 
-in vec2 tex_coords;
-in vec4 passColor;
-
+out vec4 fragColor;
 void main() {
-     gl_FragColor = 0.5 * texture2D(sampler, tex_coords) + 0.5 * passColor;
+     fragColor = passColor;
 }
