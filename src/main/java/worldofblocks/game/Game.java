@@ -97,7 +97,7 @@ public class Game implements Subscriber {
     glfwMakeContextCurrent(window.getId());
     GL.createCapabilities();
 
-    glEnable(GL_TEXTURE_2D);
+//    glEnable(GL_TEXTURE_2D);
     glEnable(GL_DEPTH_TEST);
     glDepthFunc(GL_LESS);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE);

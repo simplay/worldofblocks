@@ -15,7 +15,7 @@ java {
 }
 description = "LWJGL-3-Tutorial"
 
-project.ext.lwjglVersion = "3.2.3"
+project.ext.lwjglVersion = "3.2.4-SNAPSHOT"
 
 switch (OperatingSystem.current()) {
     case OperatingSystem.LINUX:
