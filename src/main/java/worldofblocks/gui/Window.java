@@ -4,6 +4,7 @@ import org.joml.Vector2i;
 import org.lwjgl.BufferUtils;
 import org.lwjgl.glfw.GLFWErrorCallback;
 import org.lwjgl.glfw.GLFWVidMode;
+import org.lwjgl.opengl.GL;
 import org.lwjgl.opengl.GLCapabilities;
 import org.lwjgl.system.MemoryStack;
 import worldofblocks.gui.handlers.CursorHandler;
@@ -100,6 +101,14 @@ public class Window {
 
     // Make the OpenGL context current
     glfwMakeContextCurrent(id);
+
+    // This line is critical for LWJGL's interoperation with GLFW's
+    // OpenGL context, or any context that is managed externally.
+    // LWJGL detects the context that is current in the current thread,
+    // creates the GLCapabilities instance and makes the OpenGL
+    // bindings available for use.
+    // Make the OpenGL context current
+    GL.createCapabilities();
 
     // Enable v-sync
     glfwSwapInterval(1);

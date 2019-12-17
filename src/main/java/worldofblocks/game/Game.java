@@ -3,10 +3,6 @@ package worldofblocks.game;
 import org.joml.Matrix4f;
 import org.joml.Vector2i;
 import org.joml.Vector3f;
-import org.lwjgl.BufferUtils;
-import org.lwjgl.opengl.GL;
-import org.lwjgl.opengl.GL11;
-import org.lwjgl.opengl.GL30;
 import worldofblocks.GraphicDetails;
 import worldofblocks.rendering.Shader;
 import worldofblocks.rendering.Texture;
@@ -17,8 +13,6 @@ import worldofblocks.entities.cameras.Frustum;
 import worldofblocks.entities.gameobjects.Player;
 import worldofblocks.gui.Window;
 import worldofblocks.rendering.drawables.RenderItem;
-
-import java.nio.IntBuffer;
 import java.util.LinkedList;
 
 import static org.lwjgl.glfw.GLFW.*;
@@ -34,8 +28,7 @@ public class Game implements Subscriber {
 
   private Window window;
 
-  private Thread thread;
-  private boolean running = false;
+  private boolean running;
 
   private Block block;
   private Plane plane;
@@ -53,33 +46,16 @@ public class Game implements Subscriber {
   private Shader shader;
   private Player player;
 
-//  public void start() {
-//    this.running = true;
-//    this.thread = new Thread(this, "Game");
-
-//    thread.start();
-//  }
-
   public Game(int windowWidth, int windowHeight, boolean fullscreen) {
     this.running = true;
     this.windowWidth = windowWidth;
     this.windowHeight = windowHeight;
     this.fullscreen = fullscreen;
-
     this.worldTimer = new WorldTimer();
   }
 
   private void init() {
     this.window = new Window(windowWidth, windowHeight, fullscreen);
-
-    // This line is critical for LWJGL's interoperation with GLFW's
-    // OpenGL context, or any context that is managed externally.
-    // LWJGL detects the context that is current in the current thread,
-    // creates the GLCapabilities instance and makes the OpenGL
-    // bindings available for use.
-    // Make the OpenGL context current
-    glfwMakeContextCurrent(window.getId());
-    GL.createCapabilities(); // TODO move inside window?
 
     glEnable(GL_TEXTURE_2D);
     glEnable(GL_DEPTH_TEST);
@@ -155,7 +131,8 @@ public class Game implements Subscriber {
   }
 
   private void render() {
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // clear the framebuffer
+    // clear the framebuffer
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
     player.render();
     for (RenderItem renderItem : renderItems) {
@@ -184,6 +161,6 @@ public class Game implements Subscriber {
 
   @Override
   public void handleUpdate() {
-    glfwSetWindowTitle(window.getId(), "Wolrd of Blocks - FPS: " + fpsCounter.getFps());
+    glfwSetWindowTitle(window.getId(), "World of Blocks - FPS: " + fpsCounter.getFps());
   }
 }
