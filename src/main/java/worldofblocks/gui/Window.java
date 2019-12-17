@@ -41,7 +41,6 @@ public class Window {
   private void createWindow() {
     // Setup an error callback. The default implementation
     // will print the error message in System.err.
-//    GLFWErrorCallback.createPrint(System.err).set();
     glfwSetErrorCallback(errorCallback = GLFWErrorCallback.createPrint(System.err));
 
     // Initialize GLFW. Most GLFW functions will not work before doing this.
@@ -59,7 +58,7 @@ public class Window {
             width,
             height,
             title,
-            fullscreen ? glfwGetPrimaryMonitor() : 0L,
+            fullscreen ? glfwGetPrimaryMonitor() : NULL,
             NULL
     );
     if (id == NULL) {
