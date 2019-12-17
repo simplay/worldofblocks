@@ -22,7 +22,17 @@ public class Shader {
     this.programId = glCreateProgram();
 
     this.vertexShaderId = glCreateShader(GL_VERTEX_SHADER);
-    glShaderSource(vertexShaderId, readFile(filename + ".vs"));
+
+    String vertexShader = "#version 320 es\n" +
+      "layout (location = 0) in vec3 vertices;\n" +
+      "uniform mediump mat4 modelview;\n" +
+      "uniform mediump mat4 projection;\n" +
+      "out mediump vec4 vertexColor;\n" +
+      "void main() {\n" +
+      "    gl_Position = projection * modelview * vec4(vertices, 1);\n" +
+      "    vertexColor = vec4(0.5, 0.0, 0.0, 1.0);\n" +
+      "}\n";
+    glShaderSource(vertexShaderId, vertexShader);
     glCompileShader(vertexShaderId);
 
     if (glGetShaderi(vertexShaderId, GL_COMPILE_STATUS) != GL_TRUE)  {
@@ -30,9 +40,21 @@ public class Shader {
       System.exit(1);
     }
 
+    System.out.println("vs done");
     this.fragmentShaderId = glCreateShader(GL_FRAGMENT_SHADER);
-    glShaderSource(fragmentShaderId, readFile(filename + ".fs"));
+
+    String fragmentShader =
+      "#version 320 es\n"+
+      "out mediump vec4 FragColor;\n"+
+      "in mediump vec4 vertexColor;\n"+
+      "void main()\n"+
+      "{\n"+
+      "    FragColor = vertexColor;\n"+
+      "}";
+    glShaderSource(fragmentShaderId, fragmentShader);
     glCompileShader(fragmentShaderId);
+
+    System.out.println("fs done");
 
     if (glGetShaderi(fragmentShaderId, GL_COMPILE_STATUS) != GL_TRUE)  {
       System.err.println(glGetShaderInfoLog(fragmentShaderId));
@@ -53,11 +75,13 @@ public class Shader {
     }
 
     glValidateProgram(programId);
-    glLinkProgram(programId);
-    if (glGetProgrami(programId, GL_VALIDATE_STATUS) != GL_TRUE) {
-      System.err.println(glGetProgramInfoLog(programId));
-      System.exit(1);
-    }
+    System.out.println("yay");
+    // glLinkProgram(programId);
+    // if (glGetProgrami(programId, GL_VALIDATE_STATUS) != GL_TRUE) {
+    //   System.err.println(glGetProgramInfoLog(programId));
+    //   System.exit(1);
+    // }
+
   }
 
   public void bind() {
