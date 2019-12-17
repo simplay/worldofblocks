@@ -3,7 +3,7 @@ package worldofblocks.game;
 import org.joml.Matrix4f;
 import org.joml.Vector2i;
 import org.joml.Vector3f;
-import org.lwjgl.opengl.GL;
+import worldofblocks.GraphicDetails;
 import worldofblocks.rendering.Shader;
 import worldofblocks.rendering.Texture;
 import worldofblocks.rendering.drawables.Block;
@@ -13,14 +13,13 @@ import worldofblocks.entities.cameras.Frustum;
 import worldofblocks.entities.gameobjects.Player;
 import worldofblocks.gui.Window;
 import worldofblocks.rendering.drawables.RenderItem;
-
 import java.util.LinkedList;
 
 import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.opengl.GL11.GL_DEPTH_BUFFER_BIT;
 
-public class Game implements Runnable, Subscriber {
+public class Game implements Subscriber {
   private final float EPS = 0.1f;
 
   private int windowWidth;
@@ -29,8 +28,7 @@ public class Game implements Runnable, Subscriber {
 
   private Window window;
 
-  private Thread thread;
-  private boolean running = false;
+  private boolean running;
 
   private Block block;
   private Plane plane;
@@ -48,23 +46,22 @@ public class Game implements Runnable, Subscriber {
   private Shader shader;
   private Player player;
 
-  public void start() {
-    this.running = true;
-    this.thread = new Thread(this, "Game");
-
-    thread.start();
-  }
-
   public Game(int windowWidth, int windowHeight, boolean fullscreen) {
+    this.running = true;
     this.windowWidth = windowWidth;
     this.windowHeight = windowHeight;
     this.fullscreen = fullscreen;
-
     this.worldTimer = new WorldTimer();
   }
 
   private void init() {
     this.window = new Window(windowWidth, windowHeight, fullscreen);
+
+    glEnable(GL_TEXTURE_2D);
+    glEnable(GL_DEPTH_TEST);
+    glDepthFunc(GL_LESS);
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE);
+
     this.fpsCounter = new FpsCounter();
     this.camera = new Camera(window.getCursorHandler(), eye, lookAtPoint, up);
 
@@ -88,23 +85,14 @@ public class Game implements Runnable, Subscriber {
   }
 
   private void initShapes() {
-    // This line is critical for LWJGL's interoperation with GLFW's
-    // OpenGL context, or any context that is managed externally.
-    // LWJGL detects the context that is current in the current thread,
-    // creates the GLCapabilities instance and makes the OpenGL
-    // bindings available for use.
-    GL.createCapabilities();
-
-    glEnable(GL_TEXTURE_2D);
-    glEnable(GL_DEPTH_TEST);
-    glDepthFunc(GL_LESS);
+    String shaderFilePath = GraphicDetails.usedShader() + "/shader";
+    this.shader = new Shader(shaderFilePath);
 
     this.plane = new Plane(10);
     this.block = new Block();
-    this.shader = new Shader("shader");
 
     renderItems.add(new RenderItem(plane, shader));
-    renderItems.add(new RenderItem(block, shader, new Texture("./textures/trollface.png")));
+    renderItems.add(new RenderItem(block, shader, new Texture("./assets/textures/trollface.png")));
 
     Block playerShape = new Block();
     Matrix4f scale = new Matrix4f().identity().translation(0, 0, 4).scale(0.01f);
@@ -114,7 +102,7 @@ public class Game implements Runnable, Subscriber {
     camera.attachPlayer(player);
   }
 
-  public void run() {
+  public void start() {
     init();
     while (running) {
       update();
@@ -143,7 +131,8 @@ public class Game implements Runnable, Subscriber {
   }
 
   private void render() {
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // clear the framebuffer
+    // clear the framebuffer
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
     player.render();
     for (RenderItem renderItem : renderItems) {
@@ -172,6 +161,6 @@ public class Game implements Runnable, Subscriber {
 
   @Override
   public void handleUpdate() {
-    glfwSetWindowTitle(window.getId(), "Wolrd of Blocks - FPS: " + fpsCounter.getFps());
+    glfwSetWindowTitle(window.getId(), "World of Blocks - FPS: " + fpsCounter.getFps());
   }
 }

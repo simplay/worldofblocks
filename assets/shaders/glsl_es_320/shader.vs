@@ -1,14 +1,15 @@
-#version 150
+#version 320 es
 
 in vec3 vertices;
 in vec2 textures;
 in vec4 colors;
 
-out vec2 tex_coords;
-out vec4 passColor;
 
-uniform mat4 modelview;
-uniform mat4 projection;
+out mediump vec2 tex_coords;
+out mediump vec4 passColor;
+
+uniform mediump mat4 modelview;
+uniform mediump mat4 projection;
 
 void main() {
     tex_coords = textures;

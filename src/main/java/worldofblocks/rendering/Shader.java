@@ -3,6 +3,7 @@ package worldofblocks.rendering;
 import org.joml.Matrix4f;
 import org.lwjgl.BufferUtils;
 import org.lwjgl.opengl.GL20;
+import worldofblocks.GraphicDetails;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -22,6 +23,7 @@ public class Shader {
     this.programId = glCreateProgram();
 
     this.vertexShaderId = glCreateShader(GL_VERTEX_SHADER);
+
     glShaderSource(vertexShaderId, readFile(filename + ".vs"));
     glCompileShader(vertexShaderId);
 
@@ -31,6 +33,7 @@ public class Shader {
     }
 
     this.fragmentShaderId = glCreateShader(GL_FRAGMENT_SHADER);
+
     glShaderSource(fragmentShaderId, readFile(filename + ".fs"));
     glCompileShader(fragmentShaderId);
 
@@ -52,11 +55,13 @@ public class Shader {
       System.exit(1);
     }
 
-    glValidateProgram(programId);
-    glLinkProgram(programId);
-    if (glGetProgrami(programId, GL_VALIDATE_STATUS) != GL_TRUE) {
-      System.err.println(glGetProgramInfoLog(programId));
-      System.exit(1);
+    // when the graphics card does only support GLSL < v150
+    if (!GraphicDetails.runsReducedMode()) {
+       glValidateProgram(programId);
+       if (glGetProgrami(programId, GL_VALIDATE_STATUS) != GL_TRUE) {
+         System.err.println(glGetProgramInfoLog(programId));
+         System.exit(1);
+       }
     }
   }
 
@@ -92,7 +97,7 @@ public class Shader {
     BufferedReader buffer;
 
     try {
-      buffer = new BufferedReader(new FileReader(new File("./shaders/" + filename)));
+      buffer = new BufferedReader(new FileReader(new File("./assets/shaders/" + filename)));
       String line;
       while((line = buffer.readLine())!= null) {
         program.append(line);

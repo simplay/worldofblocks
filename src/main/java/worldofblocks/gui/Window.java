@@ -4,6 +4,8 @@ import org.joml.Vector2i;
 import org.lwjgl.BufferUtils;
 import org.lwjgl.glfw.GLFWErrorCallback;
 import org.lwjgl.glfw.GLFWVidMode;
+import org.lwjgl.opengl.GL;
+import org.lwjgl.opengl.GLCapabilities;
 import org.lwjgl.system.MemoryStack;
 import worldofblocks.gui.handlers.CursorHandler;
 import worldofblocks.gui.handlers.InputHandler;
@@ -12,6 +14,7 @@ import java.nio.IntBuffer;
 
 import static org.lwjgl.glfw.Callbacks.glfwFreeCallbacks;
 import static org.lwjgl.glfw.GLFW.*;
+import static org.lwjgl.opengl.GL11C.GL_TRUE;
 import static org.lwjgl.system.MemoryStack.stackPush;
 import static org.lwjgl.system.MemoryUtil.NULL;
 
@@ -26,6 +29,7 @@ public class Window {
 
   private boolean fullscreen = false;
   private final String title = "World of Blocks";
+  GLFWErrorCallback errorCallback;
 
   public Window(int width, int height, boolean fullscreen) {
     this.width = width;
@@ -37,7 +41,7 @@ public class Window {
   private void createWindow() {
     // Setup an error callback. The default implementation
     // will print the error message in System.err.
-    GLFWErrorCallback.createPrint(System.err).set();
+    glfwSetErrorCallback(errorCallback = GLFWErrorCallback.createPrint(System.err));
 
     // Initialize GLFW. Most GLFW functions will not work before doing this.
     if (!glfwInit()) {
@@ -96,6 +100,14 @@ public class Window {
 
     // Make the OpenGL context current
     glfwMakeContextCurrent(id);
+
+    // This line is critical for LWJGL's interoperation with GLFW's
+    // OpenGL context, or any context that is managed externally.
+    // LWJGL detects the context that is current in the current thread,
+    // creates the GLCapabilities instance and makes the OpenGL
+    // bindings available for use.
+    // Make the OpenGL context current
+    GL.createCapabilities();
 
     // Enable v-sync
     glfwSwapInterval(1);
