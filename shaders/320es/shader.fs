@@ -1,8 +1,12 @@
 #version 320 es
 
 out mediump vec4 FragColor;
-in mediump vec4 vertexColor;
+
+uniform sampler2D sampler;
+
+in mediump vec2 tex_coords;
+in mediump vec4 passColor;
 
 void main() {
-    FragColor = vertexColor;
+    FragColor = 0.5 * texture2D(sampler, tex_coords) + 0.5 * passColor;
 }

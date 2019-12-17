@@ -1,9 +1,10 @@
-#version 320 es
-out mediump vec4 FragColor;
+#version 150
 
-in mediump vec4 vertexColor; // the input variable from the vertex shader (same name and same type)
+uniform sampler2D sampler;
 
-void main()
-{
-    FragColor = vertexColor;
+in vec2 tex_coords;
+in vec4 passColor;
+
+void main() {
+     gl_FragColor = 0.5 * texture2D(sampler, tex_coords) + 0.5 * passColor;
 }
