@@ -113,7 +113,9 @@ public class Game implements Subscriber {
   private void initShapes() {
     this.plane = new Plane(10);
     this.block = new Block();
-    this.shader = new Shader("320es/shader");
+
+    String shaderFilePath = GraphicDetails.esEnabled() ? "320/shader" : "shader";
+    this.shader = new Shader(shaderFilePath);
 
     renderItems.add(new RenderItem(plane, shader));
     renderItems.add(new RenderItem(block, shader, new Texture("./textures/trollface.png")));

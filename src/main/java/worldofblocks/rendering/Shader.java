@@ -3,6 +3,7 @@ package worldofblocks.rendering;
 import org.joml.Matrix4f;
 import org.lwjgl.BufferUtils;
 import org.lwjgl.opengl.GL20;
+import worldofblocks.GraphicDetails;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -55,12 +56,13 @@ public class Shader {
     }
 
     // if 320es mode then skip this
-    // glValidateProgram(programId);
-    // glLinkProgram(programId);
-    // if (glGetProgrami(programId, GL_VALIDATE_STATUS) != GL_TRUE) {
-    //   System.err.println(glGetProgramInfoLog(programId));
-    //   System.exit(1);
-    // }
+    if (!GraphicDetails.esEnabled()) {
+       glValidateProgram(programId);
+       if (glGetProgrami(programId, GL_VALIDATE_STATUS) != GL_TRUE) {
+         System.err.println(glGetProgramInfoLog(programId));
+         System.exit(1);
+       }
+    }
   }
 
   public void bind() {
