@@ -15,13 +15,17 @@ public class GraphicDetails {
     String glVersion = GL30.glGetString(GL30.GL_VERSION);
     String glShadingLanguageVersion = GL30.glGetString(GL30.GL_SHADING_LANGUAGE_VERSION);
 
-    this.esEnabled = glVersion.contains("ES");
+    System.out.println(glVersion);
+    System.out.println(glShadingLanguageVersion);
+
 
     String normalizedOpenglVersion = glVersion.split(" ")[0].replace(".", "");
     this.openglVersion = Integer.parseInt(normalizedOpenglVersion);
 
     String normalizedShaderVersion = glShadingLanguageVersion.split(" ")[0].split(" ")[0].replace(".", "");
     this.shaderVersion = Integer.parseInt(normalizedShaderVersion);
+
+    this.esEnabled = shaderVersion < 200;
   }
 
   public static GraphicDetails getInstance() {

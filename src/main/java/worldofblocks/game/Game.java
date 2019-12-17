@@ -86,8 +86,6 @@ public class Game implements Subscriber {
     glDepthFunc(GL_LESS);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE);
 
-    System.out.println("es: " + GraphicDetails.esEnabled() + " openGL version: " + GraphicDetails.getOpenGLVersion() + " shader version: " + GraphicDetails.getShaderVersion());
-
     this.fpsCounter = new FpsCounter();
     this.camera = new Camera(window.getCursorHandler(), eye, lookAtPoint, up);
 
@@ -114,7 +112,7 @@ public class Game implements Subscriber {
     this.plane = new Plane(10);
     this.block = new Block();
 
-    String shaderFilePath = GraphicDetails.esEnabled() ? "320/shader" : "shader";
+    String shaderFilePath = GraphicDetails.esEnabled() ? "320es/shader" : "shader";
     this.shader = new Shader(shaderFilePath);
 
     renderItems.add(new RenderItem(plane, shader));
