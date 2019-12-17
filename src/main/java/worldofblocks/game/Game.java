@@ -3,7 +3,11 @@ package worldofblocks.game;
 import org.joml.Matrix4f;
 import org.joml.Vector2i;
 import org.joml.Vector3f;
+import org.lwjgl.BufferUtils;
 import org.lwjgl.opengl.GL;
+import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL30;
+import worldofblocks.GraphicDetails;
 import worldofblocks.rendering.Shader;
 import worldofblocks.rendering.Texture;
 import worldofblocks.rendering.drawables.Block;
@@ -14,6 +18,7 @@ import worldofblocks.entities.gameobjects.Player;
 import worldofblocks.gui.Window;
 import worldofblocks.rendering.drawables.RenderItem;
 
+import java.nio.IntBuffer;
 import java.util.LinkedList;
 
 import static org.lwjgl.glfw.GLFW.*;
@@ -66,6 +71,23 @@ public class Game implements Subscriber {
 
   private void init() {
     this.window = new Window(windowWidth, windowHeight, fullscreen);
+
+    // This line is critical for LWJGL's interoperation with GLFW's
+    // OpenGL context, or any context that is managed externally.
+    // LWJGL detects the context that is current in the current thread,
+    // creates the GLCapabilities instance and makes the OpenGL
+    // bindings available for use.
+    // Make the OpenGL context current
+    glfwMakeContextCurrent(window.getId());
+    GL.createCapabilities(); // TODO move inside window?
+
+    glEnable(GL_TEXTURE_2D);
+    glEnable(GL_DEPTH_TEST);
+    glDepthFunc(GL_LESS);
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE);
+
+    System.out.println("es: " + GraphicDetails.esEnabled() + " openGL version: " + GraphicDetails.getOpenGLVersion() + " shader version: " + GraphicDetails.getShaderVersion());
+
     this.fpsCounter = new FpsCounter();
     this.camera = new Camera(window.getCursorHandler(), eye, lookAtPoint, up);
 
@@ -89,19 +111,6 @@ public class Game implements Subscriber {
   }
 
   private void initShapes() {
-    // This line is critical for LWJGL's interoperation with GLFW's
-    // OpenGL context, or any context that is managed externally.
-    // LWJGL detects the context that is current in the current thread,
-    // creates the GLCapabilities instance and makes the OpenGL
-    // bindings available for use.
-    glfwMakeContextCurrent(window.getId());
-    GL.createCapabilities();
-
-//    glEnable(GL_TEXTURE_2D);
-    glEnable(GL_DEPTH_TEST);
-    glDepthFunc(GL_LESS);
-    glBlendFunc(GL_SRC_ALPHA, GL_ONE);
-
     this.plane = new Plane(10);
     this.block = new Block();
     this.shader = new Shader("320es/shader");
