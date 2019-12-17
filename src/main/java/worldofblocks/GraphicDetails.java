@@ -7,7 +7,7 @@ public class GraphicDetails {
 
   private final int glslVersion;
   private final int openglVersion;
-  private final boolean esEnabled;
+  private final boolean runsReducedMode;
 
   private GraphicDetails() {
     // In the following we are relying on glGetString to extract graphic card details:
@@ -29,7 +29,7 @@ public class GraphicDetails {
     this.openglVersion = Integer.parseInt(extractAttribute(glVersion, 0));
     this.glslVersion = Integer.parseInt(extractAttribute(glShadingLanguageVersion, 0));
 
-    this.esEnabled = glslVersion < 200;
+    this.runsReducedMode = glslVersion < 150;
   }
 
   public static GraphicDetails getInstance() {
@@ -45,8 +45,8 @@ public class GraphicDetails {
     return attribute;
   }
 
-  public static boolean esEnabled() {
-    return getInstance().esEnabled;
+  public static boolean runsReducedMode() {
+    return getInstance().runsReducedMode;
   }
 
   public static int getGLSLVersion() {
@@ -62,6 +62,7 @@ public class GraphicDetails {
       return "glsl_150";
     }
 
+    // TODO: this is currently a workaround and could probably crash on mac os x.
     return "glsl_es_320";
   }
 }

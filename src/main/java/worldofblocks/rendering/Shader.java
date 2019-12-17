@@ -55,8 +55,8 @@ public class Shader {
       System.exit(1);
     }
 
-    // if 320es mode then skip this
-    if (!GraphicDetails.esEnabled()) {
+    // when the graphics card does only support GLSL < v150
+    if (!GraphicDetails.runsReducedMode()) {
        glValidateProgram(programId);
        if (glGetProgrami(programId, GL_VALIDATE_STATUS) != GL_TRUE) {
          System.err.println(glGetProgramInfoLog(programId));
