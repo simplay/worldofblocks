@@ -92,7 +92,7 @@ public class Game implements Subscriber {
     this.block = new Block();
 
     renderItems.add(new RenderItem(plane, shader));
-    renderItems.add(new RenderItem(block, shader, new Texture("./textures/trollface.png")));
+    renderItems.add(new RenderItem(block, shader, new Texture("./assets/textures/trollface.png")));
 
     Block playerShape = new Block();
     Matrix4f scale = new Matrix4f().identity().translation(0, 0, 4).scale(0.01f);

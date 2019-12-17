@@ -21,8 +21,8 @@ public class GraphicDetails {
     // OpenGL<space>ES<space>GLSL<space>ES<space><version number><space><vendor-specific information
     String glShadingLanguageVersion = GL30.glGetString(GL30.GL_SHADING_LANGUAGE_VERSION);
 
-    System.out.println(glVersion);
-    System.out.println(glShadingLanguageVersion);
+    System.out.println("OpenGL Version: " + glVersion);
+    System.out.println("GLSL Version: " + glShadingLanguageVersion);
 
     // Dependence between OpenGL Versions and GLSL Versions:
     // https://github.com/mattdesl/lwjgl-basics/wiki/GLSL-Versions
