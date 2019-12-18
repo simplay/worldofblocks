@@ -137,6 +137,7 @@ public class Game implements Subscriber {
     player.render();
     for (RenderItem renderItem : renderItems) {
       renderItem.getShader().bind();
+      // TODO: rename this to texture
       renderItem.getShader().setUniform("sampler", 0);
       renderItem.getShader().setUniform("modelview", camera.getTransformation());
       renderItem.getShader().setUniform("projection", frustum.getTransformation());
