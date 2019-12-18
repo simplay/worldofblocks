@@ -1,6 +1,6 @@
 package worldofblocks;
 
-import org.lwjgl.opengl.GL30;
+import org.lwjgl.opengl.GL20;
 
 public class GraphicDetails {
   private static GraphicDetails instance = null;
@@ -15,11 +15,11 @@ public class GraphicDetails {
 
     // release number of the form
     // OpenGL<space>ES<space><version number><space><vendor-specific information>.
-    String glVersion = GL30.glGetString(GL30.GL_VERSION);
+    String glVersion = GL20.glGetString(GL20.GL_VERSION);
 
     // release number for the shading language of the form
     // OpenGL<space>ES<space>GLSL<space>ES<space><version number><space><vendor-specific information
-    String glShadingLanguageVersion = GL30.glGetString(GL30.GL_SHADING_LANGUAGE_VERSION);
+    String glShadingLanguageVersion = GL20.glGetString(GL20.GL_SHADING_LANGUAGE_VERSION);
 
     System.out.println("OpenGL Version: " + glVersion);
     System.out.println("GLSL Version: " + glShadingLanguageVersion);
@@ -58,11 +58,14 @@ public class GraphicDetails {
   }
 
   public static String usedShader() {
+    if (System.getProperty("os.name").contains("Mac")) {
+      return "glsl_110";
+    }
+
     if (getGLSLVersion() >= 150)  {
       return "glsl_150";
     }
 
-    // TODO: this is currently a workaround and could probably crash on mac os x.
     return "glsl_es_320";
   }
 }
