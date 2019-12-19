@@ -48,10 +48,10 @@ public class Shader {
     glAttachShader(programId, vertexShaderId);
     glAttachShader(programId, fragmentShaderId);
 
-    GL20.glBindAttribLocation(programId, VertexAttributes.VERTICES.getIndex(), "vertices");
-    glBindAttribLocation(programId, VertexAttributes.TEXTURES.getIndex(), "textures");
-    glBindAttribLocation(programId, VertexAttributes.COLORS.getIndex(), "colors");
-    glBindAttribLocation(programId, VertexAttributes.NORMALS.getIndex(), "normals");
+    GL20.glBindAttribLocation(programId, VertexAttributes.POSITION.getIndex(), "position");
+    glBindAttribLocation(programId, VertexAttributes.TEXTURE.getIndex(), "texture");
+    glBindAttribLocation(programId, VertexAttributes.COLOR.getIndex(), "color");
+    glBindAttribLocation(programId, VertexAttributes.NORMAL.getIndex(), "normal");
 
     glLinkProgram(programId);
     if (glGetProgrami(programId, GL_LINK_STATUS) != GL_TRUE) {

@@ -80,12 +80,12 @@ public class RenderItem {
   }
 
   public void render() {
-    glEnableVertexAttribArray(VertexAttributes.VERTICES.getIndex());
+    glEnableVertexAttribArray(VertexAttributes.POSITION.getIndex());
     if (hasTextures) {
-      glEnableVertexAttribArray(VertexAttributes.TEXTURES.getIndex());
+      glEnableVertexAttribArray(VertexAttributes.TEXTURE.getIndex());
     }
-    glEnableVertexAttribArray(VertexAttributes.COLORS.getIndex());
-    glEnableVertexAttribArray(VertexAttributes.NORMALS.getIndex());
+    glEnableVertexAttribArray(VertexAttributes.COLOR.getIndex());
+    glEnableVertexAttribArray(VertexAttributes.NORMAL.getIndex());
 
     if (hasTextures) {
       texture.bind(0);
@@ -93,7 +93,7 @@ public class RenderItem {
 
     glBindBuffer(GL_ARRAY_BUFFER, vId);
     glVertexAttribPointer(
-            VertexAttributes.VERTICES.getIndex(),
+            VertexAttributes.POSITION.getIndex(),
             3,
             GL_FLOAT,
             false,
@@ -104,7 +104,7 @@ public class RenderItem {
     if (hasTextures) {
       glBindBuffer(GL_ARRAY_BUFFER, tId);
       glVertexAttribPointer(
-              VertexAttributes.TEXTURES.getIndex(),
+              VertexAttributes.TEXTURE.getIndex(),
               2,
               GL_FLOAT,
               false,
@@ -115,7 +115,7 @@ public class RenderItem {
 
     glBindBuffer(GL_ARRAY_BUFFER, cId);
     glVertexAttribPointer(
-            VertexAttributes.COLORS.getIndex(),
+            VertexAttributes.COLOR.getIndex(),
             4,
             GL_FLOAT,
             false,
@@ -125,7 +125,7 @@ public class RenderItem {
 
     glBindBuffer(GL_ARRAY_BUFFER, nId);
     glVertexAttribPointer(
-            VertexAttributes.NORMALS.getIndex(),
+            VertexAttributes.NORMAL.getIndex(),
             3,
             GL_FLOAT,
             false,
@@ -145,12 +145,12 @@ public class RenderItem {
       texture.unbind();
     }
 
-    glDisableVertexAttribArray(VertexAttributes.VERTICES.getIndex());
+    glDisableVertexAttribArray(VertexAttributes.POSITION.getIndex());
     if (hasTextures) {
-      glDisableVertexAttribArray(VertexAttributes.TEXTURES.getIndex());
+      glDisableVertexAttribArray(VertexAttributes.TEXTURE.getIndex());
     }
-    glDisableVertexAttribArray(VertexAttributes.COLORS.getIndex());
-    glDisableVertexAttribArray(VertexAttributes.NORMALS.getIndex());
+    glDisableVertexAttribArray(VertexAttributes.COLOR.getIndex());
+    glDisableVertexAttribArray(VertexAttributes.NORMAL.getIndex());
   }
 
   private FloatBuffer createBuffer(float[] data) {

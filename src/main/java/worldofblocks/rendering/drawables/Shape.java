@@ -3,12 +3,9 @@ package worldofblocks.rendering.drawables;
 import org.joml.Matrix4f;
 import org.joml.Vector3f;
 import org.joml.Vector4f;
-import worldofblocks.rendering.Texture;
 
 public abstract class Shape {
   protected Matrix4f transformation = new Matrix4f().identity();
-
-
   protected Vector4f[] vertices;
   protected int[] indices;
   protected float[] colors;
