@@ -20,13 +20,15 @@ void main() {
     vec4 vertexPosition = projection * modelview * vec4(vertices, 1);
     tex_coords = textures;
 
-    float contribution = 0;
+    vec3 contribution = vec3(0);
     for (int k = 0; k < pointLightCount; k++) {
-        vec4 lightPosition = projection * modelview * pointLightPositions[0];
+        vec4 lightPosition = projection * modelview * pointLightPositions[k];
+        vec3 lightColor = pointLightRadiances[k];
+
         vec4 lightDir = lightPosition - vec4(vertices, 1);
-        contribution += max(-dot(lightDir.xyz, vec3(1,0,0)), 0.0);
+        contribution += lightColor * max(-dot(lightDir.xyz, vec3(1,0,0)), 0.0);
     }
-    passColor = normalize(vec4(vec3(contribution), 1) + colors);
+    passColor = normalize(vec4(contribution, 1) + colors);
 
     gl_Position = vertexPosition;
 }
