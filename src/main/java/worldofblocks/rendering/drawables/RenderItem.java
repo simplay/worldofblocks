@@ -1,8 +1,6 @@
 package worldofblocks.rendering.drawables;
 
-import org.joml.Matrix4f;
 import org.joml.Vector3f;
-import org.joml.Vector4f;
 import org.lwjgl.BufferUtils;
 import worldofblocks.rendering.Shader;
 import worldofblocks.rendering.Texture;
@@ -19,20 +17,18 @@ public class RenderItem {
   protected final Shape shape;
   protected Texture texture;
   protected Shader shader;
-  private int faceCount;
 
   private int vId;
   private int tId;
   private int fId;
   private int cId;
-  // TODO implement nId
+  private int nId;
 
-  private boolean hasTextures = false;
+  private boolean hasTextures;
 
   public RenderItem(Shape shape, Shader shader, Texture texture) {
     this.shape = shape;
     this.shader = shader;
-    this.faceCount = shape.indices.length;
     this.texture = texture;
     this.hasTextures = true;
 
@@ -62,6 +58,10 @@ public class RenderItem {
     glBindBuffer(GL_ARRAY_BUFFER, cId);
     glBufferData(GL_ARRAY_BUFFER, createBuffer(shape.colors), GL_STATIC_DRAW);
 
+    nId = glGenBuffers();
+    glBindBuffer(GL_ARRAY_BUFFER, nId);
+    glBufferData(GL_ARRAY_BUFFER, createBuffer(shape.normals), GL_STATIC_DRAW);
+
     if (hasTextures) {
       tId = glGenBuffers();
       glBindBuffer(GL_ARRAY_BUFFER, tId);
@@ -76,16 +76,16 @@ public class RenderItem {
     buffer.flip();
     glBufferData(GL_ELEMENT_ARRAY_BUFFER, buffer, GL_STATIC_DRAW);
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
-
     glBindBuffer(GL_ARRAY_BUFFER, 0);
   }
 
   public void render() {
-    glEnableVertexAttribArray(VertexAttributes.VERTICES.getIndex());
+    glEnableVertexAttribArray(VertexAttributes.POSITION.getIndex());
     if (hasTextures) {
-      glEnableVertexAttribArray(VertexAttributes.TEXTURES.getIndex());
+      glEnableVertexAttribArray(VertexAttributes.TEXTURE.getIndex());
     }
-    glEnableVertexAttribArray(VertexAttributes.COLORS.getIndex());
+    glEnableVertexAttribArray(VertexAttributes.COLOR.getIndex());
+    glEnableVertexAttribArray(VertexAttributes.NORMAL.getIndex());
 
     if (hasTextures) {
       texture.bind(0);
@@ -93,7 +93,7 @@ public class RenderItem {
 
     glBindBuffer(GL_ARRAY_BUFFER, vId);
     glVertexAttribPointer(
-            VertexAttributes.VERTICES.getIndex(),
+            VertexAttributes.POSITION.getIndex(),
             3,
             GL_FLOAT,
             false,
@@ -104,7 +104,7 @@ public class RenderItem {
     if (hasTextures) {
       glBindBuffer(GL_ARRAY_BUFFER, tId);
       glVertexAttribPointer(
-              VertexAttributes.TEXTURES.getIndex(),
+              VertexAttributes.TEXTURE.getIndex(),
               2,
               GL_FLOAT,
               false,
@@ -115,8 +115,18 @@ public class RenderItem {
 
     glBindBuffer(GL_ARRAY_BUFFER, cId);
     glVertexAttribPointer(
-            VertexAttributes.COLORS.getIndex(),
+            VertexAttributes.COLOR.getIndex(),
             4,
+            GL_FLOAT,
+            false,
+            0,
+            0
+    );
+
+    glBindBuffer(GL_ARRAY_BUFFER, nId);
+    glVertexAttribPointer(
+            VertexAttributes.NORMAL.getIndex(),
+            3,
             GL_FLOAT,
             false,
             0,
@@ -135,11 +145,12 @@ public class RenderItem {
       texture.unbind();
     }
 
-    glDisableVertexAttribArray(VertexAttributes.VERTICES.getIndex());
+    glDisableVertexAttribArray(VertexAttributes.POSITION.getIndex());
     if (hasTextures) {
-      glDisableVertexAttribArray(VertexAttributes.TEXTURES.getIndex());
+      glDisableVertexAttribArray(VertexAttributes.TEXTURE.getIndex());
     }
-    glDisableVertexAttribArray(VertexAttributes.COLORS.getIndex());
+    glDisableVertexAttribArray(VertexAttributes.COLOR.getIndex());
+    glDisableVertexAttribArray(VertexAttributes.NORMAL.getIndex());
   }
 
   private FloatBuffer createBuffer(float[] data) {

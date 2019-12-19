@@ -3,7 +3,10 @@ package worldofblocks.game;
 import org.joml.Matrix4f;
 import org.joml.Vector2i;
 import org.joml.Vector3f;
-import worldofblocks.GraphicDetails;
+import org.joml.Vector4f;
+import worldofblocks.rendering.GraphicDetails;
+import worldofblocks.entities.lights.DirectionalLight;
+import worldofblocks.entities.lights.PointLight;
 import worldofblocks.rendering.Shader;
 import worldofblocks.rendering.Texture;
 import worldofblocks.rendering.drawables.Block;
@@ -13,6 +16,7 @@ import worldofblocks.entities.cameras.Frustum;
 import worldofblocks.entities.gameobjects.Player;
 import worldofblocks.gui.Window;
 import worldofblocks.rendering.drawables.RenderItem;
+
 import java.util.LinkedList;
 
 import static org.lwjgl.glfw.GLFW.*;
@@ -84,6 +88,9 @@ public class Game implements Subscriber {
 //    initFrustum();
   }
 
+  private final LinkedList<PointLight> pointLights = new LinkedList<>();
+  private DirectionalLight sun;
+
   private void initShapes() {
     String shaderFilePath = GraphicDetails.usedShader() + "/shader";
     this.shader = new Shader(shaderFilePath);
@@ -100,6 +107,10 @@ public class Game implements Subscriber {
 
     this.player = new Player(window.getInputHandler(), new RenderItem(playerShape, shader));
     camera.attachPlayer(player);
+
+    pointLights.add(new PointLight(new Vector3f(0f, 1.0f, 1.0f), new Vector4f(1, 0, 0, 0)));
+
+    this.sun = new DirectionalLight(new Vector3f(1, 1, 1), new Vector4f(0, -1, 0, 0));
   }
 
   public void start() {
@@ -140,6 +151,9 @@ public class Game implements Subscriber {
       renderItem.getShader().setUniform("sampler", 0);
       renderItem.getShader().setUniform("modelview", camera.getTransformation());
       renderItem.getShader().setUniform("projection", frustum.getTransformation());
+      renderItem.getShader().setUniform(pointLights);
+      renderItem.getShader().setUniform("sunDirection", sun.getDirection());
+      renderItem.getShader().setUniform("sunRadiance", sun.getRadiance());
       renderItem.render();
       renderItem.getShader().unbind();
     }

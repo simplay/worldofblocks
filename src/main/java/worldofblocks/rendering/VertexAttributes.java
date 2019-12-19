@@ -1,9 +1,10 @@
 package worldofblocks.rendering;
 
 public enum VertexAttributes {
-  VERTICES(0),
-  TEXTURES(1),
-  COLORS(2);
+  POSITION(0),
+  TEXTURE(1),
+  COLOR(2),
+  NORMAL(3);
 
   private final int index;
 

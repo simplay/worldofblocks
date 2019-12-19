@@ -1,4 +1,4 @@
-package worldofblocks;
+package worldofblocks.rendering;
 
 import org.lwjgl.opengl.GL30;
 
