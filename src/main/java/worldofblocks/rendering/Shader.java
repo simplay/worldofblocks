@@ -5,8 +5,6 @@ import org.joml.Vector3f;
 import org.joml.Vector4f;
 import org.lwjgl.BufferUtils;
 import org.lwjgl.opengl.GL20;
-import worldofblocks.GraphicDetails;
-import worldofblocks.entities.lights.DirectionalLight;
 import worldofblocks.entities.lights.PointLight;
 
 import java.io.BufferedReader;

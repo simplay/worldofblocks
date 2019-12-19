@@ -4,7 +4,7 @@ import org.joml.Matrix4f;
 import org.joml.Vector2i;
 import org.joml.Vector3f;
 import org.joml.Vector4f;
-import worldofblocks.GraphicDetails;
+import worldofblocks.rendering.GraphicDetails;
 import worldofblocks.entities.lights.DirectionalLight;
 import worldofblocks.entities.lights.PointLight;
 import worldofblocks.rendering.Shader;
