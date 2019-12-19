@@ -4,7 +4,7 @@ public enum VertexAttributes {
   POSITION(0),
   TEXTURE(1),
   COLOR(2),
-  NORMAL(4);
+  NORMAL(3);
 
   private final int index;
 
