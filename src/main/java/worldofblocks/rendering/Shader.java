@@ -51,6 +51,7 @@ public class Shader {
     GL20.glBindAttribLocation(programId, VertexAttributes.VERTICES.getIndex(), "vertices");
     glBindAttribLocation(programId, VertexAttributes.TEXTURES.getIndex(), "textures");
     glBindAttribLocation(programId, VertexAttributes.COLORS.getIndex(), "colors");
+    glBindAttribLocation(programId, VertexAttributes.NORMALS.getIndex(), "normals");
 
     glLinkProgram(programId);
     if (glGetProgrami(programId, GL_LINK_STATUS) != GL_TRUE) {
@@ -137,7 +138,6 @@ public class Shader {
       k++;
     }
 
-    // TODO: implement some form of exception handling
     int location = glGetUniformLocation(programId, "pointLightRadiances");
     if (location != -1) {
       glUniform3fv(location, radiances);

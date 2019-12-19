@@ -5,6 +5,7 @@
 in vec3 vertices;
 in vec2 textures;
 in vec4 colors;
+in vec3 normals;
 
 out vec2 tex_coords;
 out vec4 passColor;
@@ -29,10 +30,10 @@ void main() {
         vec3 lightColor = pointLightRadiances[k];
 
         vec4 lightDir = lightPosition - vec4(vertices, 1);
-        contribution += lightColor * max(-dot(lightDir.xyz, vec3(1,0,0)), 0.0);
+        contribution += lightColor * max(dot(lightDir.xyz, normals), 0.0);
     }
 
-    vec3 sunContribution = sunRadiance * max(-dot(sunDirection.xyz, vec3(1,0,0)), 0.0);
+    vec3 sunContribution = sunRadiance * max(dot(sunDirection.xyz, normals), 0.0);
     passColor = normalize(vec4(sunContribution, 0) + vec4(contribution, 0) + colors);
 
     gl_Position = vertexPosition;

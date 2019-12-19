@@ -1,8 +1,6 @@
 package worldofblocks.rendering.drawables;
 
-import org.joml.Matrix4f;
 import org.joml.Vector3f;
-import org.joml.Vector4f;
 import org.lwjgl.BufferUtils;
 import worldofblocks.rendering.Shader;
 import worldofblocks.rendering.Texture;
@@ -19,20 +17,18 @@ public class RenderItem {
   protected final Shape shape;
   protected Texture texture;
   protected Shader shader;
-  private int faceCount;
 
   private int vId;
   private int tId;
   private int fId;
   private int cId;
-  // TODO implement nId
+  private int nId;
 
-  private boolean hasTextures = false;
+  private boolean hasTextures;
 
   public RenderItem(Shape shape, Shader shader, Texture texture) {
     this.shape = shape;
     this.shader = shader;
-    this.faceCount = shape.indices.length;
     this.texture = texture;
     this.hasTextures = true;
 
@@ -62,6 +58,10 @@ public class RenderItem {
     glBindBuffer(GL_ARRAY_BUFFER, cId);
     glBufferData(GL_ARRAY_BUFFER, createBuffer(shape.colors), GL_STATIC_DRAW);
 
+    nId = glGenBuffers();
+    glBindBuffer(GL_ARRAY_BUFFER, nId);
+    glBufferData(GL_ARRAY_BUFFER, createBuffer(shape.normals), GL_STATIC_DRAW);
+
     if (hasTextures) {
       tId = glGenBuffers();
       glBindBuffer(GL_ARRAY_BUFFER, tId);
@@ -76,7 +76,6 @@ public class RenderItem {
     buffer.flip();
     glBufferData(GL_ELEMENT_ARRAY_BUFFER, buffer, GL_STATIC_DRAW);
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
-
     glBindBuffer(GL_ARRAY_BUFFER, 0);
   }
 
@@ -86,6 +85,7 @@ public class RenderItem {
       glEnableVertexAttribArray(VertexAttributes.TEXTURES.getIndex());
     }
     glEnableVertexAttribArray(VertexAttributes.COLORS.getIndex());
+    glEnableVertexAttribArray(VertexAttributes.NORMALS.getIndex());
 
     if (hasTextures) {
       texture.bind(0);
@@ -123,6 +123,16 @@ public class RenderItem {
             0
     );
 
+    glBindBuffer(GL_ARRAY_BUFFER, nId);
+    glVertexAttribPointer(
+            VertexAttributes.NORMALS.getIndex(),
+            3,
+            GL_FLOAT,
+            false,
+            0,
+            0
+    );
+
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, fId);
     glDrawElements(GL_TRIANGLES, shape.indices.length, GL_UNSIGNED_INT, 0);
 
@@ -140,6 +150,7 @@ public class RenderItem {
       glDisableVertexAttribArray(VertexAttributes.TEXTURES.getIndex());
     }
     glDisableVertexAttribArray(VertexAttributes.COLORS.getIndex());
+    glDisableVertexAttribArray(VertexAttributes.NORMALS.getIndex());
   }
 
   private FloatBuffer createBuffer(float[] data) {
