@@ -4,6 +4,7 @@ import org.joml.Matrix4f;
 import org.joml.Vector2i;
 import org.joml.Vector3f;
 import org.joml.Vector4f;
+import org.lwjgl.opengl.GL30;
 import worldofblocks.rendering.GraphicDetails;
 import worldofblocks.entities.lights.DirectionalLight;
 import worldofblocks.entities.lights.PointLight;
@@ -115,6 +116,7 @@ public class Game implements Subscriber {
 
   public void start() {
     init();
+
     while (running) {
       update();
       render();

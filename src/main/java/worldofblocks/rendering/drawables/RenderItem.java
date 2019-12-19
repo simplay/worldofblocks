@@ -79,7 +79,7 @@ public class RenderItem {
     glBindBuffer(GL_ARRAY_BUFFER, 0);
   }
 
-  public void render() {
+  public void bind() {
     glEnableVertexAttribArray(VertexAttributes.POSITION.getIndex());
     if (hasTextures) {
       glEnableVertexAttribArray(VertexAttributes.TEXTURE.getIndex());
@@ -90,6 +90,10 @@ public class RenderItem {
     if (hasTextures) {
       texture.bind(0);
     }
+  }
+
+  public void render() {
+    bind();
 
     glBindBuffer(GL_ARRAY_BUFFER, vId);
     glVertexAttribPointer(
@@ -136,11 +140,10 @@ public class RenderItem {
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, fId);
     glDrawElements(GL_TRIANGLES, shape.indices.length, GL_UNSIGNED_INT, 0);
 
-    glDrawArrays(GL_TRIANGLES, 0, shape.indices.length);
+    unbind();
+  }
 
-    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
-    glBindBuffer(GL_ARRAY_BUFFER, 0);
-
+  public void unbind() {
     if (hasTextures) {
       texture.unbind();
     }
@@ -151,6 +154,10 @@ public class RenderItem {
     }
     glDisableVertexAttribArray(VertexAttributes.COLOR.getIndex());
     glDisableVertexAttribArray(VertexAttributes.NORMAL.getIndex());
+
+
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+    glBindBuffer(GL_ARRAY_BUFFER, 0);
   }
 
   private FloatBuffer createBuffer(float[] data) {
