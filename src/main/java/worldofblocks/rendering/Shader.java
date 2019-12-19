@@ -7,6 +7,7 @@ import org.lwjgl.BufferUtils;
 import org.lwjgl.opengl.GL20;
 import worldofblocks.GraphicDetails;
 import worldofblocks.entities.lights.DirectionalLight;
+import worldofblocks.entities.lights.PointLight;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -81,6 +82,14 @@ public class Shader {
     int location = glGetUniformLocation(programId, name);
 
     if (location != -1) {
+      glUniform1i(location, value);
+    }
+  }
+
+  public void setUniform(String name, float value) {
+    int location = glGetUniformLocation(programId, name);
+
+    if (location != -1) {
       glUniform1f(location, value);
     }
   }
@@ -95,36 +104,40 @@ public class Shader {
     }
   }
 
-  public void setUniform(List<DirectionalLight> value) {
+  public void setUniform(List<PointLight> value) {
     float[] lightDirections = new float[4 * value.size()];
     float[] radiances = new float[3 * value.size()];
 
     int k = 0;
-    for (DirectionalLight light : value) {
+    for (PointLight light : value) {
       Vector3f radiance = light.getRadiance();
-      Vector4f lightDirection = light.getDirection();
+      Vector4f lightPosition = light.getPosition();
 
       radiances[k * 3] = radiance.x;
       radiances[k * 3 + 1] = radiance.y;
       radiances[k * 3 + 2] = radiance.z;
 
-      lightDirections[k * 4] = lightDirection.x;
-      lightDirections[k * 4 + 1] = lightDirection.y;
-      lightDirections[k * 4 + 2] = lightDirection.z;
-      lightDirections[k * 4 + 3] = lightDirection.w;
+      lightDirections[k * 4] = lightPosition.x;
+      lightDirections[k * 4 + 1] = lightPosition.y;
+      lightDirections[k * 4 + 2] = lightPosition.z;
+      lightDirections[k * 4 + 3] = lightPosition.w;
 
       k++;
     }
 
-    int location = glGetUniformLocation(programId, "lightDirections");
+    // TODO: implement some form of exception handling
+    int location = glGetUniformLocation(programId, "pointLightRadiances");
+    if (location != -1) {
+      glUniform3fv(location, radiances);
+    }
+
+    location = glGetUniformLocation(programId, "pointLightPositions");
     if (location != -1) {
       glUniform4fv(location, lightDirections);
     }
 
-    location = glGetUniformLocation(programId, "lightRadiances");
-    if (location != -1) {
-      glUniform3fv(location, radiances);
-    }
+    System.out.println(value.size());
+    setUniform("pointLightCount", value.size());
   }
 
   private String readFile(String filename) {

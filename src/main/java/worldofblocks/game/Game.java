@@ -6,6 +6,7 @@ import org.joml.Vector3f;
 import org.joml.Vector4f;
 import worldofblocks.GraphicDetails;
 import worldofblocks.entities.lights.DirectionalLight;
+import worldofblocks.entities.lights.PointLight;
 import worldofblocks.rendering.Shader;
 import worldofblocks.rendering.Texture;
 import worldofblocks.rendering.drawables.Block;
@@ -87,7 +88,7 @@ public class Game implements Subscriber {
 //    initFrustum();
   }
 
-  private final LinkedList<DirectionalLight> lights = new LinkedList<>();
+  private final LinkedList<PointLight> pointLights = new LinkedList<>();
 
   private void initShapes() {
     String shaderFilePath = GraphicDetails.usedShader() + "/shader";
@@ -106,7 +107,7 @@ public class Game implements Subscriber {
     this.player = new Player(window.getInputHandler(), new RenderItem(playerShape, shader));
     camera.attachPlayer(player);
 
-    lights.add(new DirectionalLight(new Vector3f(0f, 1.0f, 1.0f), new Vector4f(1, 0, 0, 0)));
+    pointLights.add(new PointLight(new Vector3f(0f, 1.0f, 1.0f), new Vector4f(1, 0, 0, 0)));
   }
 
   public void start() {
@@ -147,7 +148,7 @@ public class Game implements Subscriber {
       renderItem.getShader().setUniform("sampler", 0);
       renderItem.getShader().setUniform("modelview", camera.getTransformation());
       renderItem.getShader().setUniform("projection", frustum.getTransformation());
-      renderItem.getShader().setUniform(lights);
+      renderItem.getShader().setUniform(pointLights);
       renderItem.render();
       renderItem.getShader().unbind();
     }
