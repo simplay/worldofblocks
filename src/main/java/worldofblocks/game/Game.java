@@ -89,6 +89,7 @@ public class Game implements Subscriber {
   }
 
   private final LinkedList<PointLight> pointLights = new LinkedList<>();
+  private DirectionalLight sun;
 
   private void initShapes() {
     String shaderFilePath = GraphicDetails.usedShader() + "/shader";
@@ -108,6 +109,8 @@ public class Game implements Subscriber {
     camera.attachPlayer(player);
 
     pointLights.add(new PointLight(new Vector3f(0f, 1.0f, 1.0f), new Vector4f(1, 0, 0, 0)));
+
+    this.sun = new DirectionalLight(new Vector3f(1, 1, 1), new Vector4f(0, -1, 0, 0));
   }
 
   public void start() {
@@ -149,6 +152,8 @@ public class Game implements Subscriber {
       renderItem.getShader().setUniform("modelview", camera.getTransformation());
       renderItem.getShader().setUniform("projection", frustum.getTransformation());
       renderItem.getShader().setUniform(pointLights);
+      renderItem.getShader().setUniform("sunDirection", sun.getDirection());
+      renderItem.getShader().setUniform("sunRadiance", sun.getRadiance());
       renderItem.render();
       renderItem.getShader().unbind();
     }

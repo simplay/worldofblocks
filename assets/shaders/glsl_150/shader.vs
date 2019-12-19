@@ -16,6 +16,9 @@ uniform int pointLightCount;
 uniform vec3 pointLightRadiances[MAX_LIGHTS];
 uniform vec4 pointLightPositions[MAX_LIGHTS];
 
+uniform vec3 sunRadiance;
+uniform vec4 sunDirection;
+
 void main() {
     vec4 vertexPosition = projection * modelview * vec4(vertices, 1);
     tex_coords = textures;
@@ -28,7 +31,9 @@ void main() {
         vec4 lightDir = lightPosition - vec4(vertices, 1);
         contribution += lightColor * max(-dot(lightDir.xyz, vec3(1,0,0)), 0.0);
     }
-    passColor = normalize(vec4(contribution, 1) + colors);
+
+    vec3 sunContribution = sunRadiance * max(-dot(sunDirection.xyz, vec3(1,0,0)), 0.0);
+    passColor = normalize(vec4(sunContribution, 0) + vec4(contribution, 0) + colors);
 
     gl_Position = vertexPosition;
 }

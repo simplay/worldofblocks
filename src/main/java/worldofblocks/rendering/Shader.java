@@ -104,6 +104,20 @@ public class Shader {
     }
   }
 
+  public void setUniform(String name, Vector4f value) {
+    int location = glGetUniformLocation(programId, name);
+    if (location != -1) {
+      glUniform4f(location, value.x, value.y, value.z, value.w);
+    }
+  }
+
+  public void setUniform(String name, Vector3f value) {
+    int location = glGetUniformLocation(programId, name);
+    if (location != -1) {
+      glUniform3f(location, value.x, value.y, value.z);
+    }
+  }
+
   public void setUniform(List<PointLight> value) {
     float[] lightDirections = new float[4 * value.size()];
     float[] radiances = new float[3 * value.size()];
@@ -136,7 +150,6 @@ public class Shader {
       glUniform4fv(location, lightDirections);
     }
 
-    System.out.println(value.size());
     setUniform("pointLightCount", value.size());
   }
 
