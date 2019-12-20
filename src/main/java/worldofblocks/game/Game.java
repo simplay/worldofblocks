@@ -4,13 +4,12 @@ import org.joml.Matrix4f;
 import org.joml.Vector2i;
 import org.joml.Vector3f;
 import org.joml.Vector4f;
-import org.lwjgl.opengl.GL30;
 import worldofblocks.rendering.GraphicDetails;
 import worldofblocks.entities.lights.DirectionalLight;
 import worldofblocks.entities.lights.PointLight;
 import worldofblocks.rendering.Shader;
 import worldofblocks.rendering.Texture;
-import worldofblocks.rendering.drawables.Block;
+import worldofblocks.rendering.drawables.Cube;
 import worldofblocks.rendering.drawables.Plane;
 import worldofblocks.entities.cameras.Camera;
 import worldofblocks.entities.cameras.Frustum;
@@ -35,7 +34,7 @@ public class Game implements Subscriber {
 
   private boolean running;
 
-  private Block block;
+  private Cube cube;
   private Plane plane;
 
   private FpsCounter fpsCounter;
@@ -97,12 +96,12 @@ public class Game implements Subscriber {
     this.shader = new Shader(shaderFilePath);
 
     this.plane = new Plane(10);
-    this.block = new Block();
+    this.cube = new Cube();
 
     renderItems.add(new RenderItem(plane, shader));
-    renderItems.add(new RenderItem(block, shader, new Texture("./assets/textures/trollface.png")));
+    renderItems.add(new RenderItem(cube, shader, new Texture("./assets/textures/trollface.png")));
 
-    Block playerShape = new Block();
+    Cube playerShape = new Cube();
     Matrix4f scale = new Matrix4f().identity().translation(0, 0, 4).scale(0.01f);
     playerShape.transform(scale);
 

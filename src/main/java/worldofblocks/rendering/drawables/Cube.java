@@ -5,7 +5,7 @@ import org.joml.Vector3f;
 import org.joml.Vector4f;
 import worldofblocks.rendering.Texture;
 
-public class Block extends Shape {
+public class Cube extends Shape {
   @Override
   protected float[] getTextureCoordinates() {
     float[] textureCoordinates = {
@@ -143,7 +143,7 @@ public class Block extends Shape {
     return origVertices;
   }
 
-  public Block() {
+  public Cube() {
     super();
   }
 }

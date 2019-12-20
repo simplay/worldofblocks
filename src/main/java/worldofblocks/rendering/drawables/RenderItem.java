@@ -88,6 +88,7 @@ public class RenderItem {
     glEnableVertexAttribArray(VertexAttributes.NORMAL.getIndex());
 
     if (hasTextures) {
+      // TODO: Don't hardcode the sampler
       texture.bind(0);
     }
   }
