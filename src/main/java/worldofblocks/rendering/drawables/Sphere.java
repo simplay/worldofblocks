@@ -5,6 +5,7 @@ import org.joml.Vector3f;
 import org.joml.Vector3i;
 import org.joml.Vector4f;
 
+// See https://en.wikipedia.org/wiki/Spherical_coordinate_system
 public class Sphere extends Shape {
   public Sphere(int resolution) {
     int v_resolution = resolution;
@@ -55,31 +56,11 @@ public class Sphere extends Shape {
         indices[idx++] = new Vector3i(i0, i2, i3);
       }
     }
-  }
 
-  @Override
-  protected Vector4f[] getVertices() {
-
-    return new Vector4f[0];
-  }
-
-  @Override
-  protected int[] getIndices() {
-    return new int[0];
-  }
-
-  @Override
-  protected float[] getColors() {
-    return new float[0];
-  }
-
-  @Override
-  protected float[] getNormals() {
-    return new float[0];
-  }
-
-  @Override
-  protected float[] getTextureCoordinates() {
-    return new float[0];
+    this.vertices = vertices;
+    this.indices = indices;
+    this.normals = normals;
+    this.textureCoordinates = textureCoordinates;
+    this.colors = colors;
   }
 }

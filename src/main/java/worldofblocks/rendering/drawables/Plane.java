@@ -1,69 +1,44 @@
 package worldofblocks.rendering.drawables;
 
+import org.joml.Vector2f;
+import org.joml.Vector3f;
+import org.joml.Vector3i;
 import org.joml.Vector4f;
 
 public class Plane extends Shape {
-  private float shift = 0f;
-
-  @Override
-  protected Vector4f[] getVertices() {
-    Vector4f[] vertices = {
+  public Plane(float shift) {
+    this.vertices = new Vector4f[]{
             new Vector4f(0.0f - shift, -0.1f, 0.0f - shift, 1.0f),
             new Vector4f(0.0f - shift, -0.1f, 1.0f + shift, 1.0f),
             new Vector4f(1.0f + shift, -0.1f, 0.0f - shift, 1.0f),
             new Vector4f(1.0f + shift, -0.1f, 1.0f + shift, 1.0f)
     };
 
-    return vertices;
-  }
-
-  @Override
-  protected int[] getIndices() {
-    int[] indices = {
-            0, 1, 3,
-            3, 1, 2
+    this.indices = new Vector3i[]{
+            new Vector3i(0, 1, 3),
+            new Vector3i(3, 1, 2)
     };
-    return indices;
-  }
 
-  @Override
-  protected float[] getColors() {
-    float[] colors = {
+    this.colors = new Vector4f[]{
             // front colors
-            0.0f, 1.0f, 0.0f, 0.0f,
-            0.0f, 1.0f, 0.0f, 0.0f,
-            0.0f, 1.0f, 0.0f, 0.0f,
-            0.0f, 1.0f, 0.0f, 0.0f
-    };
-    return colors;
-  }
-
-  @Override
-  protected float[] getNormals() {
-    float[] normals = {
-            0.0f, 0.0f, 1.0f,
-            0.0f, 0.0f, 1.0f,
-            0.0f, 0.0f, 1.0f,
-            0.0f, 0.0f, 1.0f
+            new Vector4f(0.0f, 1.0f, 0.0f, 0.0f),
+            new Vector4f(0.0f, 1.0f, 0.0f, 0.0f),
+            new Vector4f(0.0f, 1.0f, 0.0f, 0.0f),
+            new Vector4f(0.0f, 1.0f, 0.0f, 0.0f)
     };
 
-    return normals;
-  }
-
-  @Override
-  protected float[] getTextureCoordinates() {
-    float[] textureCoordinates = {
-            0.0f, 0.0f,
-            0.0f, 1.0f,
-            1.0f, 0.0f,
-            1.0f, 1.0f,
+    this.normals = new Vector3f[] {
+            new Vector3f(0.0f, 0.0f, 1.0f),
+            new Vector3f(.0f, 0.0f, 1.0f),
+            new Vector3f(.0f, 0.0f, 1.0f),
+            new Vector3f(.0f, 0.0f, 1.0f)
     };
-    return textureCoordinates;
-  }
 
-  public Plane(float shift) {
-    super();
-    this.shift = shift;
-    this.vertices = getVertices();
+    this.textureCoordinates = new Vector2f[] {
+            new Vector2f(0.0f, 0.0f),
+            new Vector2f(0.0f, 1.0f),
+            new Vector2f(1.0f, 0.0f),
+            new Vector2f(1.0f, 1.0f)
+    };
   }
 }

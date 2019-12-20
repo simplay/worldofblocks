@@ -1,104 +1,125 @@
 package worldofblocks.rendering.drawables;
 
-import org.joml.Matrix4f;
-import org.joml.Vector3f;
-import org.joml.Vector4f;
-import worldofblocks.rendering.Texture;
+import org.joml.*;
 
 public class Cube extends Shape {
-  @Override
-  protected float[] getTextureCoordinates() {
-    float[] textureCoordinates = {
-            0, 0, 1, 0, 1, 1, 0, 1,
-            0, 0, 1, 0, 1, 1, 0, 1,
-            0, 0, 1, 0, 1, 1, 0, 1,
-            0, 0, 1, 0, 1, 1, 0, 1,
-            0, 0, 1, 0, 1, 1, 0, 1,
-            0, 0, 1, 0, 1, 1, 0, 1
-    };
-    return textureCoordinates;
-  }
+  public Cube() {
+    this.textureCoordinates = new Vector2f[]{
+            new Vector2f(0, 0),
+            new Vector2f(1, 0),
+            new Vector2f(1, 1),
+            new Vector2f(0, 1),
 
-  @Override
-  protected int[] getIndices() {
-    int[] indices = {
-            0, 2, 3, 0, 1, 2,      // front face
-            4, 6, 7, 4, 5, 6,      // left face
-            8, 10, 11, 8, 9, 10,    // back face
-            12, 14, 15, 12, 13, 14,    // right face
-            16, 18, 19, 16, 17, 18,    // top face
-            20, 22, 23, 20, 21, 22 // bottom face
-    };
-    return indices;
-  }
+            new Vector2f(0, 0),
+            new Vector2f(1, 0),
+            new Vector2f(1, 1),
+            new Vector2f(0, 1),
 
-  @Override
-  protected float[] getNormals() {
-    float normals[] = {
-            0.0f, 0.0f, 1.0f,
-            0.0f, 0.0f, 1.0f,
-            0.0f, 0.0f, 1.0f,
-            0.0f, 0.0f, 1.0f,
-            -1.0f, 0.0f, 0.0f,
-            -1.0f, 0.0f, 0.0f,
-            -1.0f, 0.0f, 0.0f,
-            -1.0f, 0.0f, 0.0f,
-            0.0f, 0.0f, -1.0f,
-            0.0f, 0.0f, -1.0f,
-            0.0f, 0.0f, -1.0f,
-            0.0f, 0.0f, -1.0f,
-            1.0f, 0.0f, 0.0f,
-            1.0f, 0.0f, 0.0f,
-            1.0f, 0.0f, 0.0f,
-            1.0f, 0.0f, 0.0f,
-            0.0f, 1.0f, 0.0f,
-            0.0f, 1.0f, 0.0f,
-            0.0f, 1.0f, 0.0f,
-            0.0f, 1.0f, 0.0f,
-            0.0f, -1.0f, 0.0f,
-            0.0f, -1.0f, 0.0f,
-            0.0f, -1.0f, 0.0f,
-            0.0f, -1.0f, 0.0f
-    };
-    return normals;
-  }
+            new Vector2f(0, 0),
+            new Vector2f(1, 0),
+            new Vector2f(1, 1),
+            new Vector2f(0, 1),
 
-  @Override
-  protected float[] getColors() {
-    float[] colors = {
-            1.0f, 0.0f, 0.0f, 0.0f,
-            1.0f, 0.0f, 0.0f, 0.0f,
-            1.0f, 0.0f, 0.0f, 0.0f,
-            1.0f, 0.0f, 0.0f, 0.0f,
-            0.0f, 1.0f, 0.0f, 0.0f,
-            0.0f, 1.0f, 0.0f, 0.0f,
-            0.0f, 1.0f, 0.0f, 0.0f,
-            0.0f, 1.0f, 0.0f, 0.0f,
-            1.0f, 1.0f, 0.0f, 0.0f,
-            1.0f, 1.0f, 0.0f, 0.0f,
-            1.0f, 1.0f, 0.0f, 0.0f,
-            1.0f, 1.0f, 0.0f, 0.0f,  //back
+            new Vector2f(0, 0),
+            new Vector2f(1, 0),
+            new Vector2f(1, 1),
+            new Vector2f(0, 1),
 
-            0.0f, 1.0f, 1.0f, 0.0f,
-            0.0f, 1.0f, 1.0f, 0.0f,
-            0.0f, 1.0f, 1.0f, 0.0f,
-            0.0f, 1.0f, 1.0f, 0.0f,
-            0.0f, 0.0f, 1.0f, 0.0f,
-            0.0f, 0.0f, 1.0f, 0.0f,
-            0.0f, 0.0f, 1.0f, 0.0f,
-            0.0f, 0.0f, 1.0f, 0.0f,
-            1.0f, 0.0f, 1.0f, 0.0f,
-            1.0f, 0.0f, 1.0f, 0.0f,
-            1.0f, 0.0f, 1.0f, 0.0f,
-            1.0f, 0.0f, 1.0f, 0.0f,
+            new Vector2f(0, 0),
+            new Vector2f(1, 0),
+            new Vector2f(1, 1),
+            new Vector2f(0, 1),
+
+            new Vector2f(0, 0),
+            new Vector2f(1, 0),
+            new Vector2f(1, 1),
+            new Vector2f(0, 1)
     };
 
-    return colors;
-  }
+    this.indices = new Vector3i[]{
+            // front face
+            new Vector3i(0, 2, 3),
+            new Vector3i(0, 1, 2),
 
-  @Override
-  protected Vector4f[] getVertices() {
-    Vector4f[] origVertices = new Vector4f[]{
+            // left face
+            new Vector3i(4, 6, 7),
+            new Vector3i(4, 5, 6),
+
+            // back face
+            new Vector3i(8, 10, 11),
+            new Vector3i(8, 9, 10),
+
+            // right face
+            new Vector3i(12, 14, 15),
+            new Vector3i(12, 13, 14),
+
+            // top face
+            new Vector3i(16, 18, 19),
+            new Vector3i(16, 17, 18),
+
+            // bottom face
+            new Vector3i(20, 22, 23),
+            new Vector3i(20, 21, 22)
+    };
+
+    this.normals = new Vector3f[]{
+            new Vector3f(0.0f, 0.0f, 1.0f),
+            new Vector3f(.0f, 0.0f, 1.0f),
+            new Vector3f(.0f, 0.0f, 1.0f),
+            new Vector3f(.0f, 0.0f, 1.0f),
+            new Vector3f(1.0f, 0.0f, 0.0f),
+            new Vector3f(1.0f, 0.0f, 0.0f),
+            new Vector3f(1.0f, 0.0f, 0.0f),
+            new Vector3f(1.0f, 0.0f, 0.0f),
+            new Vector3f(.0f, 0.0f, -1.0f),
+            new Vector3f(.0f, 0.0f, -1.0f),
+            new Vector3f(.0f, 0.0f, -1.0f),
+            new Vector3f(.0f, 0.0f, -1.0f),
+            new Vector3f(.0f, 0.0f, 0.0f),
+            new Vector3f(.0f, 0.0f, 0.0f),
+            new Vector3f(.0f, 0.0f, 0.0f),
+            new Vector3f(.0f, 0.0f, 0.0f),
+            new Vector3f(.0f, 1.0f, 0.0f),
+            new Vector3f(.0f, 1.0f, 0.0f),
+            new Vector3f(.0f, 1.0f, 0.0f),
+            new Vector3f(.0f, 1.0f, 0.0f),
+            new Vector3f(.0f, -1.0f, 0.0f),
+            new Vector3f(.0f, -1.0f, 0.0f),
+            new Vector3f(.0f, -1.0f, 0.0f),
+            new Vector3f(.0f, -1.0f, 0.0f)
+    };
+
+
+    this.colors = new Vector4f[]{
+            new Vector4f(1.0f, 0.0f, 0.0f, 0.0f),
+            new Vector4f(1.0f, 0.0f, 0.0f, 0.0f),
+            new Vector4f(1.0f, 0.0f, 0.0f, 0.0f),
+            new Vector4f(1.0f, 0.0f, 0.0f, 0.0f),
+            new Vector4f(0.0f, 1.0f, 0.0f, 0.0f),
+            new Vector4f(0.0f, 1.0f, 0.0f, 0.0f),
+            new Vector4f(0.0f, 1.0f, 0.0f, 0.0f),
+            new Vector4f(0.0f, 1.0f, 0.0f, 0.0f),
+            new Vector4f(1.0f, 1.0f, 0.0f, 0.0f),
+            new Vector4f(1.0f, 1.0f, 0.0f, 0.0f),
+            new Vector4f(1.0f, 1.0f, 0.0f, 0.0f),
+            new Vector4f(1.0f, 1.0f, 0.0f, 0.0f),  //back
+
+            new Vector4f(0.0f, 1.0f, 1.0f, 0.0f),
+            new Vector4f(0.0f, 1.0f, 1.0f, 0.0f),
+            new Vector4f(0.0f, 1.0f, 1.0f, 0.0f),
+            new Vector4f(0.0f, 1.0f, 1.0f, 0.0f),
+            new Vector4f(0.0f, 0.0f, 1.0f, 0.0f),
+            new Vector4f(0.0f, 0.0f, 1.0f, 0.0f),
+            new Vector4f(0.0f, 0.0f, 1.0f, 0.0f),
+            new Vector4f(0.0f, 0.0f, 1.0f, 0.0f),
+            new Vector4f(1.0f, 0.0f, 1.0f, 0.0f),
+            new Vector4f(1.0f, 0.0f, 1.0f, 0.0f),
+            new Vector4f(1.0f, 0.0f, 1.0f, 0.0f),
+            new Vector4f(1.0f, 0.0f, 1.0f, 0.0f)
+    };
+
+
+    this.vertices = new Vector4f[]{
             // front face
             new Vector4f(-1.0f, -1.0f, 1.0f, 1.0f),
             new Vector4f(1.0f, -1.0f, 1.0f, 1.0f),
@@ -136,14 +157,8 @@ public class Cube extends Shape {
             new Vector4f(1.0f, -1.0f, 1.0f, 1.0f)
     };
 
-    for (Vector4f v : origVertices) {
+    for (Vector4f v : vertices) {
       v.mul(transformation);
     }
-
-    return origVertices;
-  }
-
-  public Cube() {
-    super();
   }
 }

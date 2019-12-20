@@ -56,23 +56,23 @@ public class RenderItem {
 
     cId = glGenBuffers();
     glBindBuffer(GL_ARRAY_BUFFER, cId);
-    glBufferData(GL_ARRAY_BUFFER, createBuffer(shape.colors), GL_STATIC_DRAW);
+    glBufferData(GL_ARRAY_BUFFER, createBuffer(shape.colorsAsFloatArray()), GL_STATIC_DRAW);
 
     nId = glGenBuffers();
     glBindBuffer(GL_ARRAY_BUFFER, nId);
-    glBufferData(GL_ARRAY_BUFFER, createBuffer(shape.normals), GL_STATIC_DRAW);
+    glBufferData(GL_ARRAY_BUFFER, createBuffer(shape.normalsAsFloatArray()), GL_STATIC_DRAW);
 
     if (hasTextures) {
       tId = glGenBuffers();
       glBindBuffer(GL_ARRAY_BUFFER, tId);
-      glBufferData(GL_ARRAY_BUFFER, createBuffer(shape.textureCoordinates), GL_STATIC_DRAW);
+      glBufferData(GL_ARRAY_BUFFER, createBuffer(shape.textureCoordinatesAsFloatArray()), GL_STATIC_DRAW);
     }
 
     fId = glGenBuffers();
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, fId);
 
-    IntBuffer buffer = BufferUtils.createIntBuffer(shape.indices.length);
-    buffer.put(shape.indices);
+    IntBuffer buffer = BufferUtils.createIntBuffer(shape.indices.length * 3);
+    buffer.put(shape.indicesAsIntArray());
     buffer.flip();
     glBufferData(GL_ELEMENT_ARRAY_BUFFER, buffer, GL_STATIC_DRAW);
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
@@ -139,7 +139,7 @@ public class RenderItem {
     );
 
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, fId);
-    glDrawElements(GL_TRIANGLES, shape.indices.length, GL_UNSIGNED_INT, 0);
+    glDrawElements(GL_TRIANGLES, shape.indices.length * 3, GL_UNSIGNED_INT, 0);
 
     unbind();
   }
