@@ -71,7 +71,7 @@ public class RenderItem {
     fId = glGenBuffers();
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, fId);
 
-    IntBuffer buffer = BufferUtils.createIntBuffer(shape.indices.length * 3);
+    IntBuffer buffer = BufferUtils.createIntBuffer(shape.faceCount());
     buffer.put(shape.indicesAsIntArray());
     buffer.flip();
     glBufferData(GL_ELEMENT_ARRAY_BUFFER, buffer, GL_STATIC_DRAW);
@@ -139,7 +139,7 @@ public class RenderItem {
     );
 
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, fId);
-    glDrawElements(GL_TRIANGLES, shape.indices.length * 3, GL_UNSIGNED_INT, 0);
+    glDrawElements(GL_TRIANGLES, shape.faceCount(), GL_UNSIGNED_INT, 0);
 
     unbind();
   }

@@ -10,6 +10,10 @@ public abstract class Shape {
   protected Vector2f[] textureCoordinates;
   protected Vector4f[] colors;
 
+  public int faceCount() {
+    return indices.length * 3;
+  }
+
   protected float[] verticesAsFloatArray() {
     float[] vertices = new float[this.vertices.length * 3];
 
