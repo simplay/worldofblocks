@@ -16,6 +16,7 @@ import worldofblocks.entities.cameras.Frustum;
 import worldofblocks.entities.gameobjects.Player;
 import worldofblocks.gui.Window;
 import worldofblocks.rendering.drawables.RenderItem;
+import worldofblocks.rendering.drawables.Sphere;
 
 import java.util.LinkedList;
 
@@ -49,6 +50,7 @@ public class Game implements Subscriber {
   private final LinkedList<RenderItem> renderItems = new LinkedList<>();
   private Shader shader;
   private Player player;
+  private Sphere sunShape;
 
   public Game(int windowWidth, int windowHeight, boolean fullscreen) {
     this.running = true;
@@ -97,9 +99,12 @@ public class Game implements Subscriber {
 
     this.plane = new Plane(10);
     this.cube = new Cube();
+    this.sunShape = new Sphere(10);
+    sunShape.transform(new Matrix4f().identity().translation(0, 4, 0));
 
     renderItems.add(new RenderItem(plane, shader));
     renderItems.add(new RenderItem(cube, shader, new Texture("./assets/textures/trollface.png")));
+    renderItems.add(new RenderItem(sunShape, shader));
 
     Cube playerShape = new Cube();
     Matrix4f scale = new Matrix4f().identity().translation(0, 0, 4).scale(0.01f);

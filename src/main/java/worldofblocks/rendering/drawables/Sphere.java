@@ -11,9 +11,11 @@ public class Sphere extends Shape {
     int v_resolution = resolution;
     int u_resolution = 2 * resolution;
     int n_vertices = (v_resolution) * u_resolution;
+    int n_triangles  = 2 * (v_resolution-1) * (u_resolution-1);
+
 
     Vector4f[] vertices = new Vector4f[n_vertices];
-    Vector3i[] indices = new Vector3i[n_vertices];
+    Vector3i[] indices = new Vector3i[n_triangles];
     Vector3f[] normals = new Vector3f[n_vertices];
     Vector2f[] textureCoordinates = new Vector2f[n_vertices];
     Vector4f[] colors = new Vector4f[n_vertices];

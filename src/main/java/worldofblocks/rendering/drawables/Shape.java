@@ -2,6 +2,8 @@ package worldofblocks.rendering.drawables;
 
 import org.joml.*;
 
+// TODO: speedup verticesAsFloatArray methods by memorizing their state. Whenever a transformation was applied,
+// we would have to update the memorized values.
 public abstract class Shape {
   protected Matrix4f transformation = new Matrix4f().identity();
   protected Vector4f[] vertices;
