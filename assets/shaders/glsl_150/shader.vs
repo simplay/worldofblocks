@@ -33,7 +33,7 @@ void main() {
         contribution += lightColor * max(dot(lightDir.xyz, normal), 0.0);
     }
 
-    vec3 sunContribution = sunRadiance * max(dot(sunDirection.xyz, normal), 0.0);
+    vec3 sunContribution = sunRadiance * sunDirection.xyz;
     passColor = normalize(vec4(sunContribution, 0) + vec4(contribution, 0) + color);
 
     gl_Position = vertexPosition;

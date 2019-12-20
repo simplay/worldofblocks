@@ -4,6 +4,7 @@ import org.joml.Matrix4f;
 import org.joml.Vector2i;
 import org.joml.Vector3f;
 import org.joml.Vector4f;
+import worldofblocks.entities.gameobjects.Sun;
 import worldofblocks.rendering.GraphicDetails;
 import worldofblocks.entities.lights.DirectionalLight;
 import worldofblocks.entities.lights.PointLight;
@@ -35,9 +36,6 @@ public class Game implements Subscriber {
 
   private boolean running;
 
-  private Cube cube;
-  private Plane plane;
-
   private FpsCounter fpsCounter;
   private WorldTimer worldTimer;
 
@@ -50,7 +48,7 @@ public class Game implements Subscriber {
   private final LinkedList<RenderItem> renderItems = new LinkedList<>();
   private Shader shader;
   private Player player;
-  private Sphere sunShape;
+  private Sun sun;
 
   public Game(int windowWidth, int windowHeight, boolean fullscreen) {
     this.running = true;
@@ -91,31 +89,25 @@ public class Game implements Subscriber {
   }
 
   private final LinkedList<PointLight> pointLights = new LinkedList<>();
-  private DirectionalLight sun;
 
   private void initShapes() {
     String shaderFilePath = GraphicDetails.usedShader() + "/shader";
     this.shader = new Shader(shaderFilePath);
 
-    this.plane = new Plane(10);
-    this.cube = new Cube();
-    this.sunShape = new Sphere(10);
-    sunShape.transform(new Matrix4f().identity().translation(0, 4, 0));
+    renderItems.add(new RenderItem(new Plane(10), shader));
+    renderItems.add(new RenderItem(new Cube(), shader, new Texture("./assets/textures/trollface.png")));
 
-    renderItems.add(new RenderItem(plane, shader));
-    renderItems.add(new RenderItem(cube, shader, new Texture("./assets/textures/trollface.png")));
-    renderItems.add(new RenderItem(sunShape, shader));
+    Sphere sunShape = new Sphere(10);
+    sunShape.transform(new Matrix4f().identity().translation(0, 1, 0));
+    this.sun = new Sun(window.getInputHandler(), new RenderItem(sunShape, shader));
 
     Cube playerShape = new Cube();
-    Matrix4f scale = new Matrix4f().identity().translation(0, 0, 4).scale(0.01f);
-    playerShape.transform(scale);
-
+    playerShape.transform(new Matrix4f().identity().translation(0, 0, 4).scale(0.01f));
     this.player = new Player(window.getInputHandler(), new RenderItem(playerShape, shader));
+
     camera.attachPlayer(player);
 
     pointLights.add(new PointLight(new Vector3f(0f, 1.0f, 1.0f), new Vector4f(1, 0, 0, 0)));
-
-    this.sun = new DirectionalLight(new Vector3f(1, 1, 1), new Vector4f(0, -1, 0, 0));
   }
 
   public void start() {
@@ -144,6 +136,7 @@ public class Game implements Subscriber {
     }
 
     player.update();
+    sun.update();
     camera.update();
   }
 
@@ -152,14 +145,16 @@ public class Game implements Subscriber {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
     player.render();
+    sun.render();
+
     for (RenderItem renderItem : renderItems) {
       renderItem.getShader().bind();
       renderItem.getShader().setUniform("sampler", 0);
       renderItem.getShader().setUniform("modelview", camera.getTransformation());
       renderItem.getShader().setUniform("projection", frustum.getTransformation());
       renderItem.getShader().setUniform(pointLights);
-      renderItem.getShader().setUniform("sunDirection", sun.getDirection());
-      renderItem.getShader().setUniform("sunRadiance", sun.getRadiance());
+      renderItem.getShader().setUniform("sunDirection", sun.getLight().getDirection());
+      renderItem.getShader().setUniform("sunRadiance", sun.getLight().getRadiance());
       renderItem.render();
       renderItem.getShader().unbind();
     }

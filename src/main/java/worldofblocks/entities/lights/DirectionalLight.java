@@ -5,7 +5,7 @@ import org.joml.Vector4f;
 
 public class DirectionalLight {
   private final Vector3f radiance;
-  private final Vector4f direction;
+  private Vector4f direction;
 
   public DirectionalLight(Vector3f radiance, Vector4f direction) {
     this.radiance = radiance;
@@ -18,5 +18,9 @@ public class DirectionalLight {
 
   public Vector3f getRadiance() {
     return radiance;
+  }
+
+  public void updateDirection(Vector3f position) {
+    this.direction = new Vector4f(position, 0);
   }
 }
