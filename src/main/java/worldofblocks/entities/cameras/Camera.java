@@ -10,7 +10,6 @@ import worldofblocks.gui.handlers.CursorHandler;
  * the world-to-camera transform .
  */
 
-// TODO: implement camera rotation
 public class Camera {
   private final CursorHandler cursorHandler;
 
@@ -49,6 +48,9 @@ public class Camera {
     Matrix4f t = new Matrix4f();
     getRotation().mul(cameraMatrix, t);
     t.mul(transformation, t);
+
+    // TODO: don't update the player's viewing direction here
+    player.updateViewingDirection(deltaYaw());
 
     return t;
   }
@@ -113,9 +115,15 @@ public class Camera {
     this.cameraMatrix = invC;
   }
 
+  public float deltaYaw() {
+    return yaw - prevYaw;
+  }
+
+  private float prevYaw = 0;
   public void update() {
-    yaw = yaw + (cursorHandler.getDx() * sensivity) % 360;
-    pitch = pitch + (cursorHandler.getDy() * sensivity) % 360;
+    this.prevYaw = yaw;
+    this.yaw = yaw + (cursorHandler.getDx() * sensivity) % 360;
+    this.pitch = pitch + (cursorHandler.getDy() * sensivity) % 360;
 
     this.transformation = player.getTransform();
   }
