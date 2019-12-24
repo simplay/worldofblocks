@@ -27,7 +27,8 @@ public class Player {
     }
 
     // TODO: don't call this from the camera: rework this when refactoring the camera
-    public void updateViewingDirection(float angle) {
+    public void updateViewingDirection(float yaw) {
+        double angle = 0.5 * yaw;
         double a = viewingDireciton.x;
         double b = viewingDireciton.z;
 
@@ -49,10 +50,12 @@ public class Player {
     float scale = 0.01f;
 
     public void update() {
+        // TODO: can get inverted: fix me
         if (inputHandler.isKeyDown(GLFW_KEY_A)) {
             updatePosition(new Vector3f(0.01f, 0, 0));
         }
 
+        // TODO: can get inverted: fix me
         if (inputHandler.isKeyDown(GLFW_KEY_D)) {
             updatePosition(new Vector3f(-0.01f, 0, 0));
         }
