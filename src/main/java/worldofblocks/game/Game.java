@@ -61,6 +61,9 @@ public class Game implements Subscriber {
   private void init() {
     this.window = new Window(windowWidth, windowHeight, fullscreen);
 
+    // hide cursor but enable mouse grab.
+    glfwSetInputMode(window.getId(), GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+
     glEnable(GL_TEXTURE_2D);
     glEnable(GL_DEPTH_TEST);
     glDepthFunc(GL_LESS);
@@ -79,7 +82,7 @@ public class Game implements Subscriber {
   private void initFrustum() {
     Vector2i res = window.getResolution();
     float aspectRatio = res.x / res.y;
-    this.frustum = new Frustum(aspectRatio, EPS, 5000, 60.0f);
+    this.frustum = new Frustum(aspectRatio, EPS, 500, 60.0f);
   }
 
   // TODO: fixme - crashes the app
