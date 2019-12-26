@@ -12,13 +12,15 @@ public class Player {
     private final InputHandler inputHandler;
     private final RenderItem renderItem;
     private final Vector3f position;
-    private Vector3f viewingDireciton;
+    private Vector3f viewingDirection;
+    private Vector3f sideWalkingDirection;
 
     public Player(InputHandler inputHandler, RenderItem renderItem) {
         this.inputHandler = inputHandler;
         this.position = new Vector3f();
         this.renderItem = renderItem;
-        this.viewingDireciton = new Vector3f(0.0f, 0.0f, 1.0f);
+        this.viewingDirection = new Vector3f(0.0f, 0.0f, 1.0f);
+        this.sideWalkingDirection = new Vector3f(1.0f, 0.0f, 0.0f);
     }
 
     public void updatePosition(Vector3f shift) {
@@ -26,17 +28,19 @@ public class Player {
         position.add(shift);
     }
 
-    // TODO: don't call this from the camera: rework this when refactoring the camera
     public void updateViewingDirection(float yaw) {
         double angle = 0.5 * yaw;
-        double a = viewingDireciton.x;
-        double b = viewingDireciton.z;
+        double a = viewingDirection.x;
+        double b = viewingDirection.z;
 
-        this.viewingDireciton = new Vector3f(
+        this.viewingDirection = new Vector3f(
                 (float)(Math.cos(angle) * a - Math.sin(angle) * b),
                 0.0f,
                 (float) (Math.sin(angle) * a + Math.cos(angle) * b)
         );
+
+        Vector3f tmp = new Vector3f(viewingDirection);
+        this.sideWalkingDirection = tmp.rotateY((float) (Math.PI / 2.0));
     }
 
     public Matrix4f getTransform() {
@@ -50,22 +54,20 @@ public class Player {
     float scale = 0.01f;
 
     public void update() {
-        // TODO: can get inverted: fix me
         if (inputHandler.isKeyDown(GLFW_KEY_A)) {
-            updatePosition(new Vector3f(0.01f, 0, 0));
+            updatePosition(new Vector3f(sideWalkingDirection.x, 0, sideWalkingDirection.z).mul(scale));
         }
 
-        // TODO: can get inverted: fix me
         if (inputHandler.isKeyDown(GLFW_KEY_D)) {
-            updatePosition(new Vector3f(-0.01f, 0, 0));
+            updatePosition(new Vector3f(-sideWalkingDirection.x, 0, -sideWalkingDirection.z).mul(scale));
         }
 
         if (inputHandler.isKeyDown(GLFW_KEY_W)) {
-            updatePosition(new Vector3f(viewingDireciton.x, 0, viewingDireciton.z).mul(scale));
+            updatePosition(new Vector3f(viewingDirection.x, 0, viewingDirection.z).mul(scale));
         }
 
         if (inputHandler.isKeyDown(GLFW_KEY_S)) {
-            updatePosition(new Vector3f(-viewingDireciton.x, 0, -viewingDireciton.z).mul(scale));
+            updatePosition(new Vector3f(-viewingDirection.x, 0, -viewingDirection.z).mul(scale));
         }
 
         if (inputHandler.isKeyDown(GLFW_KEY_SPACE)) {
