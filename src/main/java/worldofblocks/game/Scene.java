@@ -6,6 +6,7 @@ import org.joml.Vector3f;
 import org.joml.Vector4f;
 import worldofblocks.entities.cameras.Camera;
 import worldofblocks.entities.cameras.Frustum;
+import worldofblocks.entities.gameobjects.Block;
 import worldofblocks.entities.gameobjects.Gameobject;
 import worldofblocks.entities.gameobjects.Player;
 import worldofblocks.entities.gameobjects.Sun;
@@ -62,6 +63,16 @@ public class Scene {
 
     gameobjects.add(player);
     gameobjects.add(sun);
+
+    int items = 10;
+    float step = 0.5f;
+    float center = -items * step * 0.5f;
+    float gap = 0.02f;
+    for (int k = 0; k < items; k++) {
+      for (int l = 0; l < items; l++) {
+        gameobjects.add(new Block(new Vector3f(center + k * (step + gap), center + l * (step + gap), 3f)));
+      }
+    }
   }
 
   private void initLights() {

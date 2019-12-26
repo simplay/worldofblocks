@@ -37,6 +37,11 @@ public class Sun implements Gameobject {
   }
 
   @Override
+  public RenderItem getRenderItem() {
+    return renderItem;
+  }
+
+  @Override
   public void update() {
     if (inputHandler.isKeyDown(GLFW_KEY_LEFT)) {
       updatePosition(new Vector3f(-0.01f, 0, 0));

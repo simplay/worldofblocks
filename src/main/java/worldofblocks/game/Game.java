@@ -90,8 +90,22 @@ public class Game implements Subscriber {
     // clear the framebuffer
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
+    // TODO: unify iteration over game objects and render-items
     for (Gameobject gameobject : this.scene.getGameobjects()) {
-      gameobject.render();
+      if (gameobject.getRenderItem() == null) {
+        gameobject.render();
+        continue;
+      }
+
+      gameobject.getRenderItem().getShader().bind();
+      gameobject.getRenderItem().getShader().setUniform("sampler", 0);
+      gameobject.getRenderItem().getShader().setUniform("modelview", scene.getCamera().getTransformation());
+      gameobject.getRenderItem().getShader().setUniform("projection", scene.getFrustum().getTransformation());
+      gameobject.getRenderItem().getShader().setUniform(scene.getPointLights());
+      gameobject.getRenderItem().getShader().setUniform("sunDirection", scene.getSun().getLight().getDirection());
+      gameobject.getRenderItem().getShader().setUniform("sunRadiance", scene.getSun().getLight().getRadiance());
+      gameobject.getRenderItem().render();
+      gameobject.getRenderItem().getShader().unbind();
     }
 
     for (RenderItem renderItem : scene.getRenderItems()) {

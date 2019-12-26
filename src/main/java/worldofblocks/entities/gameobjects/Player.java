@@ -49,6 +49,10 @@ public class Player implements Gameobject {
     renderItem.render();
   }
 
+  @Override
+  public RenderItem getRenderItem() {
+    return null;
+  }
 
   @Override
   public void update() {
