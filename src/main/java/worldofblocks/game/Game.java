@@ -6,7 +6,6 @@ import org.joml.Vector3f;
 import org.joml.Vector4f;
 import worldofblocks.entities.gameobjects.Sun;
 import worldofblocks.rendering.GraphicDetails;
-import worldofblocks.entities.lights.DirectionalLight;
 import worldofblocks.entities.lights.PointLight;
 import worldofblocks.rendering.Shader;
 import worldofblocks.rendering.Texture;
@@ -98,7 +97,7 @@ public class Game implements Subscriber {
     this.shader = new Shader(shaderFilePath);
 
     renderItems.add(new RenderItem(new Plane(10), shader));
-    renderItems.add(new RenderItem(new Cube(), shader, new Texture("./assets/textures/trollface.png")));
+    renderItems.add(new RenderItem(new Cube(), shader, new Texture("assets/textures/trollface.png")));
 
     Sphere sunShape = new Sphere(10);
     sunShape.transform(new Matrix4f().identity().translation(0, 1, 0));

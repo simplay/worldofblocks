@@ -6,8 +6,8 @@ import org.lwjgl.BufferUtils;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
-import java.io.File;
 import java.io.IOException;
+import java.net.URL;
 import java.nio.ByteBuffer;
 
 public class Texture {
@@ -19,7 +19,8 @@ public class Texture {
     BufferedImage imageBuffer;
 
     try {
-      imageBuffer = ImageIO.read(new File(filename));
+      URL textureUrl = getClass().getClassLoader().getResource(filename);
+      imageBuffer = ImageIO.read(textureUrl.openStream());
       width = imageBuffer.getWidth();
       height = imageBuffer.getHeight();
 

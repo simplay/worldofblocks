@@ -7,13 +7,13 @@ apply plugin: 'idea'
 import org.gradle.internal.os.OperatingSystem
 
 mainClassName = 'worldofblocks.Main'
-group = 'com.github.elegantwhelp'
+group = 'com.github.simplay'
 version = '1.0.0-SNAPSHOT'
 java {
     sourceCompatibility = JavaVersion.VERSION_11
     targetCompatibility = JavaVersion.VERSION_11
 }
-description = "LWJGL-3-Tutorial"
+description = "World of Blocks"
 
 project.ext.lwjglVersion = "3.2.4-SNAPSHOT"
 
@@ -112,4 +112,16 @@ dependencies {
     runtimeOnly "org.lwjgl:lwjgl-xxhash::$lwjglNatives"
     runtimeOnly "org.lwjgl:lwjgl-yoga::$lwjglNatives"
     runtimeOnly "org.lwjgl:lwjgl-zstd::$lwjglNatives"
+}
+
+
+jar {
+    manifest {
+        attributes(
+                'Main-Class': 'worldofblocks.Main'
+        )
+    }
+    from {
+        configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) }
+    }
 }
