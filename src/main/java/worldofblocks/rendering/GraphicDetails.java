@@ -41,8 +41,7 @@ public class GraphicDetails {
 
   private String extractAttribute(String versionString, int index) {
     String[] splits = versionString.split(" ");
-    String attribute = splits[index].replace(".", "");
-    return attribute;
+    return splits[index].replace(".", "");
   }
 
   public static boolean runsReducedMode() {

@@ -6,11 +6,11 @@ import org.joml.Vector4f;
 
 public class Frustum {
   private Matrix4f projectionMatrix;
-  private float aspectRatio;
-  private float near;
-  private float far;
-  private float verticalFieldView;
-  private Vector3f[] planeNormals = new Vector3f[6];
+  private final float aspectRatio;
+  private final float near;
+  private final float far;
+  private final float verticalFieldView;
+  private final Vector3f[] planeNormals = new Vector3f[6];
 
   /**
    * @return the 4x4 projection matrix
@@ -120,22 +120,6 @@ public class Frustum {
     newProjectionMatrix.setColumn(3, column3);
 
     this.projectionMatrix = newProjectionMatrix;
-  }
-
-  public float getAspectRatio() {
-    return this.aspectRatio;
-  }
-
-  public float getFarPlane() {
-    return this.far;
-  }
-
-  public float getNearPlane() {
-    return this.near;
-  }
-
-  public float getVertFOV() {
-    return this.verticalFieldView;
   }
 }
 

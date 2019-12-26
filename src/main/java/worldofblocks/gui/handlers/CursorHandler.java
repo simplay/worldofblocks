@@ -3,8 +3,8 @@ package worldofblocks.gui.handlers;
 import org.lwjgl.glfw.GLFWCursorPosCallback;
 
 public class CursorHandler extends GLFWCursorPosCallback {
-  private int windowWidth;
-  private int windowHeight;
+  private final int windowWidth;
+  private final int windowHeight;
 
   private float mousePosX;
   private float mousePosY;

@@ -12,15 +12,15 @@ import worldofblocks.gui.handlers.CursorHandler;
 
 public class Camera {
   private final CursorHandler cursorHandler;
+  private final float sensitivity = 1.2f;
 
   private Matrix4f cameraMatrix;
   private Matrix4f transformation = new Matrix4f().identity();
   private Matrix4f invCameraMatrix;
-  private Vector3f projectionCenterPoint;
-  private Vector3f lookAtPoint;
-  private Vector3f upVector;
+  private final Vector3f projectionCenterPoint;
+  private final Vector3f lookAtPoint;
+  private final Vector3f upVector;
   private Player player;
-  private float sensivity = 1.2f;
 
   private float yaw = 0;
   private float pitch = 0;
@@ -122,8 +122,8 @@ public class Camera {
   private float prevYaw = 0;
   public void update() {
     this.prevYaw = yaw;
-    this.yaw = yaw + (cursorHandler.getDx() * sensivity) % 360;
-    this.pitch = pitch + (cursorHandler.getDy() * sensivity) % 360;
+    this.yaw = yaw + (cursorHandler.getDx() * sensitivity) % 360;
+    this.pitch = pitch + (cursorHandler.getDy() * sensitivity) % 360;
 
     this.transformation = player.getTransform();
   }

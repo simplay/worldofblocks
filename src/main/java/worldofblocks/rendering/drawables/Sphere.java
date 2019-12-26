@@ -11,7 +11,7 @@ public class Sphere extends Shape {
     int v_resolution = resolution;
     int u_resolution = 2 * resolution;
     int n_vertices = (v_resolution) * u_resolution;
-    int n_triangles  = 2 * (v_resolution-1) * (u_resolution-1);
+    int n_triangles = 2 * (v_resolution - 1) * (u_resolution - 1);
 
 
     Vector4f[] vertices = new Vector4f[n_vertices];
@@ -46,7 +46,7 @@ public class Sphere extends Shape {
       }
     }
 
-    int idx= 0;
+    int idx = 0;
     for (int v = 0; v < v_resolution - 1; v++) {
       for (int u = 0; u < u_resolution - 1; u++) {
         int i0 = u + v * u_resolution;
