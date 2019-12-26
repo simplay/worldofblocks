@@ -27,12 +27,6 @@ public class Sun {
     return light;
   }
 
-  public void updatePosition(Vector3f shift) {
-    renderItem.moveShape(new Vector3f(-shift.x, -shift.y, -shift.z));
-    position.add(shift);
-    light.updateDirection(position);
-  }
-
   public Matrix4f getTransform() {
     return new Matrix4f().translate(position);
   }
@@ -57,5 +51,11 @@ public class Sun {
     if (inputHandler.isKeyDown(GLFW_KEY_DOWN)) {
       updatePosition(new Vector3f(0, -0.01f, 0));
     }
+  }
+
+  private void updatePosition(Vector3f shift) {
+    renderItem.moveShape(new Vector3f(-shift.x, -shift.y, -shift.z));
+    position.add(shift);
+    light.updateDirection(position);
   }
 }
