@@ -8,7 +8,7 @@ import worldofblocks.rendering.drawables.RenderItem;
 import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.glfw.GLFW.GLFW_KEY_LEFT_SHIFT;
 
-public class Player {
+public class Player implements Gameobject {
   private final float scale = 0.01f;
 
   private final InputHandler inputHandler;
@@ -44,11 +44,13 @@ public class Player {
     return new Matrix4f().translate(position);
   }
 
+  @Override
   public void render() {
     renderItem.render();
   }
 
 
+  @Override
   public void update() {
     if (inputHandler.isKeyDown(GLFW_KEY_A)) {
       updatePosition(new Vector3f(sideWalkingDirection.x, 0, sideWalkingDirection.z).mul(scale));

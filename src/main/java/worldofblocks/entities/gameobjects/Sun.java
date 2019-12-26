@@ -10,7 +10,7 @@ import worldofblocks.rendering.drawables.RenderItem;
 
 import static org.lwjgl.glfw.GLFW.*;
 
-public class Sun {
+public class Sun implements Gameobject {
   private final InputHandler inputHandler;
   private final RenderItem renderItem;
   private final Vector3f position;
@@ -31,10 +31,12 @@ public class Sun {
     return new Matrix4f().translate(position);
   }
 
+  @Override
   public void render() {
     renderItem.render();
   }
 
+  @Override
   public void update() {
     if (inputHandler.isKeyDown(GLFW_KEY_LEFT)) {
       updatePosition(new Vector3f(-0.01f, 0, 0));
