@@ -5,7 +5,6 @@ import org.joml.*;
 // TODO: speedup verticesAsFloatArray methods by memorizing their state. Whenever a transformation was applied,
 // we would have to update the memorized values.
 public abstract class Shape {
-  protected Matrix4f transformation = new Matrix4f().identity();
   protected Vector4f[] vertices;
   protected Vector3i[] indices;
   protected Vector3f[] normals;
@@ -84,19 +83,5 @@ public abstract class Shape {
     }
 
     return indices;
-  }
-
-  public void transform(Matrix4f t) {
-    transformation.mul(t);
-  }
-
-  public Matrix4f getTransformation() {
-    return transformation;
-  }
-
-  public void translate(Vector3f shift) {
-    transformation.translation(shift); //= new Matrix4f().identity().translation(shift);
-    System.out.println("shift = \n" + shift);
-    System.out.println("t = \n" + transformation);
   }
 }
