@@ -17,17 +17,10 @@ public abstract class Shape {
   }
 
   protected float[] verticesAsFloatArray() {
-    Vector4f[] clonedVertices = vertices.clone();
-
-    Matrix4f t = new Matrix4f(transformation);
-    for (Vector4f v : clonedVertices) {
-      v.mul(t);
-    }
-
     float[] vertices = new float[this.vertices.length * 3];
 
     int k = 0;
-    for (Vector4f v : clonedVertices) {
+    for (Vector4f v : this.vertices) {
       vertices[3 * k] = v.x;
       vertices[3 * k + 1] = v.y;
       vertices[3 * k + 2] = v.z;
