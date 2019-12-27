@@ -2,9 +2,13 @@ package worldofblocks.rendering.drawables;
 
 import org.joml.*;
 
-// TODO: speedup verticesAsFloatArray methods by memorizing their state. Whenever a transformation was applied,
-// we would have to update the memorized values.
 public abstract class Shape {
+  private float[] cachedVertices;
+  private int[] cachedIndices;
+  private float[] cachedNormals;
+  private float[] cachedTextureCoordinates;
+  private float[] cachedColors;
+
   protected Vector4f[] vertices;
   protected Vector3i[] indices;
   protected Vector3f[] normals;
@@ -16,72 +20,92 @@ public abstract class Shape {
   }
 
   protected float[] verticesAsFloatArray() {
-    float[] vertices = new float[this.vertices.length * 3];
+    if (cachedVertices != null) {
+      return cachedVertices;
+    }
+
+    this.cachedVertices = new float[vertices.length * 3];
 
     int k = 0;
-    for (Vector4f v : this.vertices) {
-      vertices[3 * k] = v.x;
-      vertices[3 * k + 1] = v.y;
-      vertices[3 * k + 2] = v.z;
+    for (Vector4f v : vertices) {
+      cachedVertices[3 * k] = v.x;
+      cachedVertices[3 * k + 1] = v.y;
+      cachedVertices[3 * k + 2] = v.z;
       k++;
     }
 
-    return vertices;
+    return cachedVertices;
   }
 
   protected float[] colorsAsFloatArray() {
-    float[] colors = new float[this.colors.length * 4];
+    if (cachedColors != null) {
+      return cachedColors;
+    }
+
+    this.cachedColors = new float[colors.length * 4];
 
     int k = 0;
-    for (Vector4f c : this.colors) {
-      colors[4 * k] = c.x;
-      colors[4 * k + 1] = c.y;
-      colors[4 * k + 2] = c.z;
-      colors[4 * k + 3] = c.w;
+    for (Vector4f c : colors) {
+      cachedColors[4 * k] = c.x;
+      cachedColors[4 * k + 1] = c.y;
+      cachedColors[4 * k + 2] = c.z;
+      cachedColors[4 * k + 3] = c.w;
       k++;
     }
 
-    return colors;
+    return cachedColors;
   }
 
   protected float[] normalsAsFloatArray() {
-    float[] normals = new float[this.normals.length * 3];
+    if (cachedNormals != null) {
+      return cachedNormals;
+    }
+
+    this.cachedNormals = new float[normals.length * 3];
 
     int k = 0;
-    for (Vector3f n : this.normals) {
-      normals[3 * k] = n.x;
-      normals[3 * k + 1] = n.y;
-      normals[3 * k + 2] = n.z;
+    for (Vector3f n : normals) {
+      cachedNormals[3 * k] = n.x;
+      cachedNormals[3 * k + 1] = n.y;
+      cachedNormals[3 * k + 2] = n.z;
       k++;
     }
 
-    return normals;
+    return cachedNormals;
   }
 
   protected float[] textureCoordinatesAsFloatArray() {
-    float[] textureCoordinates = new float[this.textureCoordinates.length * 2];
+    if (cachedTextureCoordinates != null) {
+      return cachedTextureCoordinates;
+    }
+
+    this.cachedTextureCoordinates = new float[textureCoordinates.length * 2];
 
     int k = 0;
-    for (Vector2f t : this.textureCoordinates) {
-      textureCoordinates[2 * k] = t.x;
-      textureCoordinates[2 * k + 1] = t.y;
+    for (Vector2f t : textureCoordinates) {
+      cachedTextureCoordinates[2 * k] = t.x;
+      cachedTextureCoordinates[2 * k + 1] = t.y;
       k++;
     }
 
-    return textureCoordinates;
+    return cachedTextureCoordinates;
   }
 
   protected int[] indicesAsIntArray() {
-    int[] indices = new int[this.indices.length * 3];
+    if (cachedIndices != null) {
+      return cachedIndices;
+    }
+
+    this.cachedIndices = new int[indices.length * 3];
 
     int k = 0;
-    for (Vector3i i : this.indices) {
-      indices[3 * k] = i.x;
-      indices[3 * k + 1] = i.y;
-      indices[3 * k + 2] = i.z;
+    for (Vector3i i : indices) {
+      cachedIndices[3 * k] = i.x;
+      cachedIndices[3 * k + 1] = i.y;
+      cachedIndices[3 * k + 2] = i.z;
       k++;
     }
 
-    return indices;
+    return cachedIndices;
   }
 }
