@@ -141,6 +141,9 @@ public class RenderItem {
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, fId);
     glDrawElements(GL_TRIANGLES, shape.faceCount(), GL_UNSIGNED_INT, 0);
 
+    System.out.println(shape.transformation);
+    shader.setUniform("transformation", shape.getTransformation());
+
     unbind();
   }
 

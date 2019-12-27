@@ -90,7 +90,11 @@ public abstract class Shape {
     transformation.mul(t);
   }
 
+  public Matrix4f getTransformation() {
+    return transformation;
+  }
+
   public void translate(Vector3f shift) {
-    transformation = new Matrix4f().identity().translation(shift);
+    transformation.translation(shift); //= new Matrix4f().identity().translation(shift);
   }
 }

@@ -35,7 +35,7 @@ public class Game implements Subscriber {
     this.window = new Window(windowWidth, windowHeight, fullscreen);
 
     // hide cursor but enable mouse grab.
-    glfwSetInputMode(window.getId(), GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+//    glfwSetInputMode(window.getId(), GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 
     glEnable(GL_TEXTURE_2D);
     glEnable(GL_DEPTH_TEST);

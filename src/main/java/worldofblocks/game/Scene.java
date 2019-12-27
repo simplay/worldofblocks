@@ -50,29 +50,29 @@ public class Scene {
     Shader shader = new Shader(shaderFilePath);
 
     renderItems.add(new RenderItem(new Plane(10), shader));
-    renderItems.add(new RenderItem(new Cube(), shader, new Texture("assets/textures/trollface.png")));
-
+//    renderItems.add(new RenderItem(new Cube(), shader, new Texture("assets/textures/trollface.png")));
+//
     Sphere sunShape = new Sphere(10);
     sunShape.transform(new Matrix4f().identity().translation(0, 1, 0));
     this.sun = new Sun(window.getInputHandler(), new RenderItem(sunShape, shader));
-
+//
     Cube playerShape = new Cube();
     playerShape.transform(new Matrix4f().identity().translation(0, 0, 4).scale(0.01f));
     this.player = new Player(window.getInputHandler(), new RenderItem(playerShape, shader));
     camera.attachPlayer(player);
-
-    gameobjects.add(player);
-    gameobjects.add(sun);
-
-    int items = 10;
-    float step = 0.5f;
-    float center = -items * step * 0.5f;
-    float gap = 0.02f;
-    for (int k = 0; k < items; k++) {
-      for (int l = 0; l < items; l++) {
-        gameobjects.add(new Block(new Vector3f(center + k * (step + gap), center + l * (step + gap), 3f)));
-      }
-    }
+//
+//    gameobjects.add(player);
+//    gameobjects.add(sun);
+//
+//    int items = 10;
+//    float step = 0.5f;
+//    float center = -items * step * 0.5f;
+//    float gap = 0.02f;
+//    for (int k = 0; k < items; k++) {
+//      for (int l = 0; l < items; l++) {
+//        gameobjects.add(new Block(new Vector3f(center + k * (step + gap), center + l * (step + gap), 3f)));
+//      }
+//    }
   }
 
   private void initLights() {
