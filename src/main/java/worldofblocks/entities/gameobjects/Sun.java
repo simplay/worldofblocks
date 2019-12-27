@@ -61,8 +61,9 @@ public class Sun implements Gameobject {
   }
 
   private void updatePosition(Vector3f shift) {
-    renderItem.moveShape(new Vector3f(-shift.x, -shift.y, -shift.z));
+    renderItem.moveShape(position);
     position.add(shift);
+    System.out.println("sun pos: \n" + position);
     light.updateDirection(position);
   }
 }

@@ -96,5 +96,7 @@ public abstract class Shape {
 
   public void translate(Vector3f shift) {
     transformation.translation(shift); //= new Matrix4f().identity().translation(shift);
+    System.out.println("shift = \n" + shift);
+    System.out.println("t = \n" + transformation);
   }
 }

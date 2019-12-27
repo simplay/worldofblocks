@@ -102,6 +102,7 @@ public class Game implements Subscriber {
       gameobject.getRenderItem().getShader().setUniform("modelview", scene.getCamera().getTransformation());
       gameobject.getRenderItem().getShader().setUniform("projection", scene.getFrustum().getTransformation());
       gameobject.getRenderItem().getShader().setUniform(scene.getPointLights());
+      gameobject.getRenderItem().getShader().setUniform("transformation", gameobject.getRenderItem().getShape().getTransformation());
       gameobject.getRenderItem().getShader().setUniform("sunDirection", scene.getSun().getLight().getDirection());
       gameobject.getRenderItem().getShader().setUniform("sunRadiance", scene.getSun().getLight().getRadiance());
       gameobject.getRenderItem().render();
@@ -113,6 +114,8 @@ public class Game implements Subscriber {
       renderItem.getShader().setUniform("sampler", 0);
       renderItem.getShader().setUniform("modelview", scene.getCamera().getTransformation());
       renderItem.getShader().setUniform("projection", scene.getFrustum().getTransformation());
+
+      renderItem.getShader().setUniform("transformation", renderItem.getShape().getTransformation());
       renderItem.getShader().setUniform(scene.getPointLights());
       renderItem.getShader().setUniform("sunDirection", scene.getSun().getLight().getDirection());
       renderItem.getShader().setUniform("sunRadiance", scene.getSun().getLight().getRadiance());

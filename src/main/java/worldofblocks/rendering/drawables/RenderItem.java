@@ -39,13 +39,17 @@ public class RenderItem {
     return shader;
   }
 
+  public Shape getShape() {
+    return shape;
+  }
+
   public RenderItem(Shape shape, Shader shader) {
     this(shape, shader, null);
     this.hasTextures = false;
   }
 
-  public void moveShape(Vector3f shift) {
-    shape.translate(new Vector3f(-shift.x, -shift.y, -shift.z));
+  public void moveShape(Vector3f position) {
+    shape.translate(position);
     initialize();
   }
 
@@ -141,8 +145,8 @@ public class RenderItem {
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, fId);
     glDrawElements(GL_TRIANGLES, shape.faceCount(), GL_UNSIGNED_INT, 0);
 
-    System.out.println(shape.transformation);
-    shader.setUniform("transformation", shape.getTransformation());
+//    System.out.println(shape.getClass().toString() + ":\n" + shape.transformation);
+//    shader.setUniform("transformation", shape.getTransformation());
 
     unbind();
   }
