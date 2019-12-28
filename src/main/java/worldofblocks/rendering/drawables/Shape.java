@@ -1,6 +1,7 @@
 package worldofblocks.rendering.drawables;
 
 import org.joml.*;
+import worldofblocks.rendering.VertexAttributes;
 
 public abstract class Shape {
   private float[] cachedVertices;
@@ -16,7 +17,7 @@ public abstract class Shape {
   protected Vector4f[] colors;
 
   public int faceCount() {
-    return indices.length * 3;
+    return indices.length * VertexAttributes.FACE.getElementCount();
   }
 
   protected float[] verticesAsFloatArray() {
@@ -24,13 +25,14 @@ public abstract class Shape {
       return cachedVertices;
     }
 
-    this.cachedVertices = new float[vertices.length * 3];
+    int elementCount = VertexAttributes.POSITION.getElementCount();
+    this.cachedVertices = new float[vertices.length * elementCount];
 
     int k = 0;
     for (Vector4f v : vertices) {
-      cachedVertices[3 * k] = v.x;
-      cachedVertices[3 * k + 1] = v.y;
-      cachedVertices[3 * k + 2] = v.z;
+      cachedVertices[elementCount * k] = v.x;
+      cachedVertices[elementCount * k + 1] = v.y;
+      cachedVertices[elementCount * k + 2] = v.z;
       k++;
     }
 
@@ -42,14 +44,15 @@ public abstract class Shape {
       return cachedColors;
     }
 
-    this.cachedColors = new float[colors.length * 4];
+    int elementCount = VertexAttributes.COLOR.getElementCount();
+    this.cachedColors = new float[colors.length * elementCount];
 
     int k = 0;
     for (Vector4f c : colors) {
-      cachedColors[4 * k] = c.x;
-      cachedColors[4 * k + 1] = c.y;
-      cachedColors[4 * k + 2] = c.z;
-      cachedColors[4 * k + 3] = c.w;
+      cachedColors[elementCount * k] = c.x;
+      cachedColors[elementCount * k + 1] = c.y;
+      cachedColors[elementCount * k + 2] = c.z;
+      cachedColors[elementCount * k + 3] = c.w;
       k++;
     }
 
@@ -61,13 +64,14 @@ public abstract class Shape {
       return cachedNormals;
     }
 
-    this.cachedNormals = new float[normals.length * 3];
+    int elementCount = VertexAttributes.NORMAL.getElementCount();
+    this.cachedNormals = new float[normals.length * elementCount];
 
     int k = 0;
     for (Vector3f n : normals) {
-      cachedNormals[3 * k] = n.x;
-      cachedNormals[3 * k + 1] = n.y;
-      cachedNormals[3 * k + 2] = n.z;
+      cachedNormals[elementCount * k] = n.x;
+      cachedNormals[elementCount * k + 1] = n.y;
+      cachedNormals[elementCount * k + 2] = n.z;
       k++;
     }
 
@@ -79,12 +83,13 @@ public abstract class Shape {
       return cachedTextureCoordinates;
     }
 
-    this.cachedTextureCoordinates = new float[textureCoordinates.length * 2];
+    int elementCount = VertexAttributes.TEXTURE.getElementCount();
+    this.cachedTextureCoordinates = new float[textureCoordinates.length * elementCount];
 
     int k = 0;
     for (Vector2f t : textureCoordinates) {
-      cachedTextureCoordinates[2 * k] = t.x;
-      cachedTextureCoordinates[2 * k + 1] = t.y;
+      cachedTextureCoordinates[elementCount * k] = t.x;
+      cachedTextureCoordinates[elementCount * k + 1] = t.y;
       k++;
     }
 
@@ -96,13 +101,14 @@ public abstract class Shape {
       return cachedIndices;
     }
 
-    this.cachedIndices = new int[indices.length * 3];
+    int elementCount = VertexAttributes.FACE.getElementCount();
+    this.cachedIndices = new int[indices.length * elementCount];
 
     int k = 0;
     for (Vector3i i : indices) {
-      cachedIndices[3 * k] = i.x;
-      cachedIndices[3 * k + 1] = i.y;
-      cachedIndices[3 * k + 2] = i.z;
+      cachedIndices[elementCount * k] = i.x;
+      cachedIndices[elementCount * k + 1] = i.y;
+      cachedIndices[elementCount * k + 2] = i.z;
       k++;
     }
 

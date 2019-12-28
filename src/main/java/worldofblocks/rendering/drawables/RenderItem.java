@@ -104,7 +104,7 @@ public class RenderItem {
     glBindBuffer(GL_ARRAY_BUFFER, vId);
     glVertexAttribPointer(
       VertexAttributes.POSITION.getIndex(),
-      3,
+      VertexAttributes.POSITION.getElementCount(),
       GL_FLOAT,
       false,
       0,
@@ -115,7 +115,7 @@ public class RenderItem {
       glBindBuffer(GL_ARRAY_BUFFER, tId);
       glVertexAttribPointer(
         VertexAttributes.TEXTURE.getIndex(),
-        2,
+        VertexAttributes.TEXTURE.getElementCount(),
         GL_FLOAT,
         false,
         0,
@@ -126,7 +126,7 @@ public class RenderItem {
     glBindBuffer(GL_ARRAY_BUFFER, cId);
     glVertexAttribPointer(
       VertexAttributes.COLOR.getIndex(),
-      4,
+      VertexAttributes.COLOR.getElementCount(),
       GL_FLOAT,
       false,
       0,
@@ -136,7 +136,7 @@ public class RenderItem {
     glBindBuffer(GL_ARRAY_BUFFER, nId);
     glVertexAttribPointer(
       VertexAttributes.NORMAL.getIndex(),
-      3,
+      VertexAttributes.NORMAL.getElementCount(),
       GL_FLOAT,
       false,
       0,
