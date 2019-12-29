@@ -4,7 +4,7 @@ import org.joml.Matrix4f;
 import org.joml.Vector2i;
 import org.joml.Vector3f;
 import org.joml.Vector4f;
-import worldofblocks.entities.cameras.Camera;
+import worldofblocks.entities.cameras.LegacyCamera;
 import worldofblocks.entities.cameras.Frustum;
 import worldofblocks.entities.gameobjects.Block;
 import worldofblocks.entities.gameobjects.Gameobject;
@@ -23,7 +23,7 @@ public class Scene {
   private final float EPS = 0.1f;
 
   private final Window window;
-  private Camera camera;
+  private LegacyCamera legacyCamera;
   private Frustum frustum;
 
   private final LinkedList<RenderItem> renderItems = new LinkedList<>();
@@ -65,7 +65,7 @@ public class Scene {
     Instance playerInstance = new Instance(playerShape);
     playerInstance.transform(new Matrix4f().identity().translation(0, 0, 4).scale(0.01f));
     this.player = new Player(window.getInputHandler(), new RenderItem(playerInstance, shader));
-    camera.attachPlayer(player);
+    legacyCamera.attachPlayer(player);
 
     gameobjects.add(player);
     gameobjects.add(sun);
@@ -101,7 +101,7 @@ public class Scene {
     Vector3f eye = new Vector3f(0, 0, 4f);
     Vector3f lookAtPoint = new Vector3f(0.0f, 0.2f, 0.0f);
     Vector3f up = new Vector3f(0, 0, 1);
-    this.camera = new Camera(window.getCursorHandler(), eye, lookAtPoint, up);
+    this.legacyCamera = new LegacyCamera(window.getCursorHandler(), eye, lookAtPoint, up);
   }
 
   public LinkedList<RenderItem> getRenderItems() {
@@ -120,8 +120,8 @@ public class Scene {
     return sun;
   }
 
-  public Camera getCamera() {
-    return camera;
+  public LegacyCamera getLegacyCamera() {
+    return legacyCamera;
   }
 
   public Frustum getFrustum() {

@@ -83,7 +83,7 @@ public class Game implements Subscriber {
     for (Gameobject gameobject : this.scene.getGameobjects()) {
       gameobject.update();
     }
-    scene.getCamera().update();
+    scene.getLegacyCamera().update();
   }
 
   private void render() {
@@ -99,7 +99,7 @@ public class Game implements Subscriber {
 
       gameobject.getRenderItem().getShader().bind();
       gameobject.getRenderItem().getShader().setUniform("sampler", 0);
-      gameobject.getRenderItem().getShader().setUniform("modelview", scene.getCamera().getTransformation());
+      gameobject.getRenderItem().getShader().setUniform("modelview", scene.getLegacyCamera().getTransformation());
       gameobject.getRenderItem().getShader().setUniform("projection", scene.getFrustum().getTransformation());
       gameobject.getRenderItem().getShader().setUniform(scene.getPointLights());
       gameobject.getRenderItem().getShader().setUniform("transformation", gameobject.getRenderItem().getTransformation());
@@ -112,7 +112,7 @@ public class Game implements Subscriber {
     for (RenderItem renderItem : scene.getRenderItems()) {
       renderItem.getShader().bind();
       renderItem.getShader().setUniform("sampler", 0);
-      renderItem.getShader().setUniform("modelview", scene.getCamera().getTransformation());
+      renderItem.getShader().setUniform("modelview", scene.getLegacyCamera().getTransformation());
       renderItem.getShader().setUniform("projection", scene.getFrustum().getTransformation());
 
       renderItem.getShader().setUniform("transformation", renderItem.getTransformation());

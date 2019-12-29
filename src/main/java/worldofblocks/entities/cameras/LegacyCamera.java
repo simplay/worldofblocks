@@ -10,7 +10,7 @@ import worldofblocks.gui.handlers.CursorHandler;
  * the world-to-camera transform .
  */
 
-public class Camera {
+public class LegacyCamera {
   private final CursorHandler cursorHandler;
   private final float sensitivity = 1.2f;
 
@@ -30,7 +30,7 @@ public class Camera {
    * @param lookAtPoint
    * @param upVector
    */
-  public Camera(CursorHandler cursorHandler, Vector3f projectionCenterPoint, Vector3f lookAtPoint, Vector3f upVector) {
+  public LegacyCamera(CursorHandler cursorHandler, Vector3f projectionCenterPoint, Vector3f lookAtPoint, Vector3f upVector) {
     this.cursorHandler = cursorHandler;
     this.projectionCenterPoint = projectionCenterPoint;
     this.lookAtPoint = lookAtPoint;
