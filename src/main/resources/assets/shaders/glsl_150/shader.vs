@@ -12,6 +12,7 @@ out vec4 passColor;
 
 uniform mat4 modelview;
 uniform mat4 projection;
+uniform mat4 transformation;
 
 uniform int pointLightCount;
 uniform vec3 pointLightRadiances[MAX_LIGHTS];
@@ -21,7 +22,7 @@ uniform vec3 sunRadiance;
 uniform vec4 sunDirection;
 
 void main() {
-    vec4 vertexPosition = projection * modelview * vec4(position, 1);
+    vec4 vertexPosition =  projection * modelview * transformation * vec4(position, 1);
     tex_coords = texture;
 
     vec3 contribution = vec3(0);

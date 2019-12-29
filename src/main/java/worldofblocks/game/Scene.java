@@ -15,10 +15,7 @@ import worldofblocks.gui.Window;
 import worldofblocks.rendering.GraphicDetails;
 import worldofblocks.rendering.Shader;
 import worldofblocks.rendering.Texture;
-import worldofblocks.rendering.drawables.Cube;
-import worldofblocks.rendering.drawables.Plane;
-import worldofblocks.rendering.drawables.RenderItem;
-import worldofblocks.rendering.drawables.Sphere;
+import worldofblocks.rendering.drawables.*;
 
 import java.util.LinkedList;
 
@@ -46,19 +43,28 @@ public class Scene {
   }
 
   private void initEntities() {
+    Plane plane = new Plane(10);
+    Sphere sunShape = new Sphere(10);
+    Cube playerShape = new Cube();
+
     String shaderFilePath = GraphicDetails.usedShader() + "/shader";
     Shader shader = new Shader(shaderFilePath);
+    Matrix4f transform = new Matrix4f().identity();
+    Cube cube = new Cube();
 
-    renderItems.add(new RenderItem(new Plane(10), shader));
-    renderItems.add(new RenderItem(new Cube(), shader, new Texture("assets/textures/trollface.png")));
 
-    Sphere sunShape = new Sphere(10);
-    sunShape.transform(new Matrix4f().identity().translation(0, 1, 0));
-    this.sun = new Sun(window.getInputHandler(), new RenderItem(sunShape, shader));
+    renderItems.add(new RenderItem(new Instance(plane), shader));
 
-    Cube playerShape = new Cube();
-    playerShape.transform(new Matrix4f().identity().translation(0, 0, 4).scale(0.01f));
-    this.player = new Player(window.getInputHandler(), new RenderItem(playerShape, shader));
+    renderItems.add(new RenderItem(new Instance(cube), shader, new Texture("assets/textures/trollface.png")));
+
+    Instance sunInstance = new Instance(sunShape);
+
+    sunInstance.transform(new Matrix4f().identity().translation(0, 1, 0));
+    this.sun = new Sun(window.getInputHandler(), new RenderItem(sunInstance, shader));
+
+    Instance playerInstance = new Instance(playerShape);
+    playerInstance.transform(new Matrix4f().identity().translation(0, 0, 4).scale(0.01f));
+    this.player = new Player(window.getInputHandler(), new RenderItem(playerInstance, shader));
     camera.attachPlayer(player);
 
     gameobjects.add(player);
@@ -70,7 +76,13 @@ public class Scene {
     float gap = 0.02f;
     for (int k = 0; k < items; k++) {
       for (int l = 0; l < items; l++) {
-        gameobjects.add(new Block(new Vector3f(center + k * (step + gap), center + l * (step + gap), 3f)));
+        gameobjects.add(
+          new Block(
+            new Vector3f(center + k * (step + gap), center + l * (step + gap), 3f),
+            cube,
+            shader
+          )
+        );
       }
     }
   }

@@ -1,11 +1,15 @@
 package worldofblocks.rendering.drawables;
 
 import org.joml.*;
+import worldofblocks.rendering.VertexAttributes;
 
-// TODO: speedup verticesAsFloatArray methods by memorizing their state. Whenever a transformation was applied,
-// we would have to update the memorized values.
 public abstract class Shape {
-  protected Matrix4f transformation = new Matrix4f().identity();
+  private float[] cachedVertices;
+  private int[] cachedIndices;
+  private float[] cachedNormals;
+  private float[] cachedTextureCoordinates;
+  private float[] cachedColors;
+
   protected Vector4f[] vertices;
   protected Vector3i[] indices;
   protected Vector3f[] normals;
@@ -13,91 +17,101 @@ public abstract class Shape {
   protected Vector4f[] colors;
 
   public int faceCount() {
-    return indices.length * 3;
+    return indices.length * VertexAttributes.FACE.getElementCount();
   }
 
   protected float[] verticesAsFloatArray() {
-    Vector4f[] clonedVertices = vertices.clone();
-
-    Matrix4f t = new Matrix4f(transformation);
-    for (Vector4f v : clonedVertices) {
-      v.mul(t);
+    if (cachedVertices != null) {
+      return cachedVertices;
     }
 
-    float[] vertices = new float[this.vertices.length * 3];
+    int elementCount = VertexAttributes.POSITION.getElementCount();
+    this.cachedVertices = new float[vertices.length * elementCount];
 
     int k = 0;
-    for (Vector4f v : clonedVertices) {
-      vertices[3 * k] = v.x;
-      vertices[3 * k + 1] = v.y;
-      vertices[3 * k + 2] = v.z;
+    for (Vector4f v : vertices) {
+      cachedVertices[elementCount * k] = v.x;
+      cachedVertices[elementCount * k + 1] = v.y;
+      cachedVertices[elementCount * k + 2] = v.z;
       k++;
     }
 
-    return vertices;
+    return cachedVertices;
   }
 
   protected float[] colorsAsFloatArray() {
-    float[] colors = new float[this.colors.length * 4];
+    if (cachedColors != null) {
+      return cachedColors;
+    }
+
+    int elementCount = VertexAttributes.COLOR.getElementCount();
+    this.cachedColors = new float[colors.length * elementCount];
 
     int k = 0;
-    for (Vector4f c : this.colors) {
-      colors[4 * k] = c.x;
-      colors[4 * k + 1] = c.y;
-      colors[4 * k + 2] = c.z;
-      colors[4 * k + 3] = c.w;
+    for (Vector4f c : colors) {
+      cachedColors[elementCount * k] = c.x;
+      cachedColors[elementCount * k + 1] = c.y;
+      cachedColors[elementCount * k + 2] = c.z;
+      cachedColors[elementCount * k + 3] = c.w;
       k++;
     }
 
-    return colors;
+    return cachedColors;
   }
 
   protected float[] normalsAsFloatArray() {
-    float[] normals = new float[this.normals.length * 3];
+    if (cachedNormals != null) {
+      return cachedNormals;
+    }
+
+    int elementCount = VertexAttributes.NORMAL.getElementCount();
+    this.cachedNormals = new float[normals.length * elementCount];
 
     int k = 0;
-    for (Vector3f n : this.normals) {
-      normals[3 * k] = n.x;
-      normals[3 * k + 1] = n.y;
-      normals[3 * k + 2] = n.z;
+    for (Vector3f n : normals) {
+      cachedNormals[elementCount * k] = n.x;
+      cachedNormals[elementCount * k + 1] = n.y;
+      cachedNormals[elementCount * k + 2] = n.z;
       k++;
     }
 
-    return normals;
+    return cachedNormals;
   }
 
   protected float[] textureCoordinatesAsFloatArray() {
-    float[] textureCoordinates = new float[this.textureCoordinates.length * 2];
+    if (cachedTextureCoordinates != null) {
+      return cachedTextureCoordinates;
+    }
+
+    int elementCount = VertexAttributes.TEXTURE.getElementCount();
+    this.cachedTextureCoordinates = new float[textureCoordinates.length * elementCount];
 
     int k = 0;
-    for (Vector2f t : this.textureCoordinates) {
-      textureCoordinates[2 * k] = t.x;
-      textureCoordinates[2 * k + 1] = t.y;
+    for (Vector2f t : textureCoordinates) {
+      cachedTextureCoordinates[elementCount * k] = t.x;
+      cachedTextureCoordinates[elementCount * k + 1] = t.y;
       k++;
     }
 
-    return textureCoordinates;
+    return cachedTextureCoordinates;
   }
 
   protected int[] indicesAsIntArray() {
-    int[] indices = new int[this.indices.length * 3];
+    if (cachedIndices != null) {
+      return cachedIndices;
+    }
+
+    int elementCount = VertexAttributes.FACE.getElementCount();
+    this.cachedIndices = new int[indices.length * elementCount];
 
     int k = 0;
-    for (Vector3i i : this.indices) {
-      indices[3 * k] = i.x;
-      indices[3 * k + 1] = i.y;
-      indices[3 * k + 2] = i.z;
+    for (Vector3i i : indices) {
+      cachedIndices[elementCount * k] = i.x;
+      cachedIndices[elementCount * k + 1] = i.y;
+      cachedIndices[elementCount * k + 2] = i.z;
       k++;
     }
 
-    return indices;
-  }
-
-  public void transform(Matrix4f t) {
-    transformation.mul(t);
-  }
-
-  public void translate(Vector3f shift) {
-    transformation = new Matrix4f().identity().translation(shift);
+    return cachedIndices;
   }
 }

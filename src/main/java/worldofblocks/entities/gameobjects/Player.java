@@ -46,7 +46,7 @@ public class Player implements Gameobject {
 
   @Override
   public void render() {
-    renderItem.render();
+    // TODO: implement me once the renderer has been fixed.
   }
 
   @Override
